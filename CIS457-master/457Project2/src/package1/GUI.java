@@ -3,11 +3,13 @@ package package1;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -15,43 +17,114 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+/**
+ * GUI - an interface that allows the user to perform various actions and interact
+ * with the program.
+ * 
+ * @author David Fletcher, Taylor Coleman
+ * @version 1.0 | Last Updated: 10/25/16
+ */
 public class GUI extends JFrame{
+	
+	/** An instance of a Controller class */
+	private Controller controller;
 
+	/** Main panel on the JFrame */
 	private JPanel mainPanel;
+	
+	/** Top panel for the Connection components */
 	private JPanel topPanel;
+	
+	/** The upper panel for the Connection components */
 	private JPanel toptopPanel;
+	
+	/** The lower panel for the Connection components */
 	private JPanel topBottomPanel;
+	
+	/** The center panel for the Search components */
 	private JPanel centerPanel;
+	
+	/** The upper panel for the Search components */
 	private JPanel centerTopPanel;
+	
+	/** The lower panel for the Search components */
 	private JPanel centerBottomPanel;
+	
+	/** The bottom panel for the FTP components */
 	private JPanel bottomPanel;
+	
+	/** The upper panel for the FTP components */
 	private JPanel bottomTopPanel;
+	
+	/** The lower panel for the FTP components */
 	private JPanel bottomBottomPanel;
 	
+	/** Label for the Server Hostname */
 	private JLabel serverHostnameLabel;
+	
+	/** The text field for the Server Hostname */
 	private JTextField serverHostnameField;
+	
+	/** The Label for the Port number */
 	private JLabel portLabel;
+	
+	/** The text field for the Port number */
 	private JTextField portField;
+	
+	/** The label for the username */
 	private JLabel usernameLabel;
+	
+	/** The text field for the username */
 	private JTextField usernameField;
+	
+	/** The label for the hostname */
 	private JLabel hostnameLabel;
+	
+	/** The text field for the hostname */
 	private JTextField hostnameField;
+	
+	/** The label for the speed */
 	private JLabel speedLabel;
+	
+	/** A combo box for the speed */
 	private JComboBox speedComboBox;
+	
+	/** List of strings for the speed combo box */
 	private String[] speedList = {"Modem", "Ethernet", "T1", "T3"};
+	
+	/** A button to connect */
 	private JButton connectButton;
 	
+	/** A label for the keyword */
 	private JLabel keywordLabel;
+	
+	/** The text field for the keyword */
 	private JTextField keywordField;
+	
+	/** A button that allows the user to search */
 	private JButton searchButton;
 	
+	/** A label for the command */
 	private JLabel enterCommandLabel;
+	
+	/** A text field for the command */
 	private JTextField enterCommandField;
+	
+	/** A button that submits the command */
 	private JButton goButton;
+	
+	/** A text area for the results of the command */
 	private JTextArea ftpArea;
+	
+	/** A scroll pane for the text area */
 	private JScrollPane ftpAreaScrollPane;
 	
+	/**
+	 * Constructor that initializes the GUI 
+	 */
 	public GUI(){
+		
+		controller = new Controller();
 		
 		mainPanel = new JPanel();
 		mainPanel.setOpaque(true);
@@ -115,8 +188,7 @@ public class GUI extends JFrame{
 		searchButton.setEnabled(false);
 		centerTopPanel.add(keywordLabel);
 		centerTopPanel.add(keywordField);
-		centerTopPanel.add(searchButton);
-		
+		centerTopPanel.add(searchButton);		
 		centerPanel.add(BorderLayout.NORTH, centerTopPanel);
 		centerPanel.add(BorderLayout.SOUTH, centerBottomPanel);
 		
@@ -155,8 +227,96 @@ public class GUI extends JFrame{
 		
 		setTitle("GV-NAP File Sharing System");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		//setSize(1000,1000);
 		pack();
 		setVisible(true);
 	}
+	
+	/**
+	 * Sets the port number in the Controller class
+	 */
+	void setPortNumber(){
+		
+		controller.setPortNumber(Integer.parseInt(portField.getText()));
+	}
+	
+	/**
+	 * Sets the server hostname number in the Controller class
+	 */
+	void setServerHostname(){
+		
+		controller.setServerHostname(serverHostnameField.getText());
+	}
+	
+	/**
+	 * Sets the command in the Controller class
+	 */
+	void setCommand(){
+		
+		controller.setCommand(enterCommandField.getText());
+	}
+	
+	/**
+	 * Sets the keyword in the Controller class
+	 */
+	void setKeyword(){
+		
+		controller.setKeyword(keywordField.getText());
+	}
+	
+	/**
+	 * Sets the hostname in the Controller class
+	 */
+	void setHostname(){
+		
+		controller.setHostname(hostnameField.getText());
+	}
+	
+	/**
+	 * Sets the speed in the Controller class
+	 */
+	void setSpeed(){
+		
+		controller.setSpeed((String) speedComboBox.getSelectedItem());
+	}
+	
+	public void actionPerformed(ActionEvent event){
+		
+		JComponent e = (JComponent)event.getSource();
+		
+		if(keywordField.getText() != null){
+			
+			searchButton.setEnabled(true);
+		}
+		
+		if(e == goButton){
+			
+			
+		}
+		
+		if(e == connectButton){
+			
+			
+		}
+		
+		if(e == searchButton && keywordField.getText() != null){
+			
+			
+		}
+		
+		if(e == goButton){
+			
+			if(enterCommandField.getText() == null){
+				
+				System.out.println("Please enter a command");
+			}
+			else{
+				
+			}
+		}
+	}
+	
+	
+	
+	
 }
+
