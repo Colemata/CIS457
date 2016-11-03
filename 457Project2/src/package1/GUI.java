@@ -5,18 +5,9 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 /**
  * GUI - an interface that allows the user to perform various actions and interact
@@ -119,6 +110,9 @@ public class GUI extends JFrame implements ActionListener{
 	
 	/** A scroll pane for the text area */
 	private JScrollPane ftpAreaScrollPane;
+
+
+	private JTable searchResultsTable;
 	
 	/**
 	 * Constructor that initializes the GUI 
@@ -188,11 +182,34 @@ public class GUI extends JFrame implements ActionListener{
 		keywordField = new JTextField(15);
 		searchButton = new JButton("Search");
 		searchButton.setEnabled(false);
+		searchButton.addActionListener(this);
 		centerTopPanel.add(keywordLabel);
 		centerTopPanel.add(keywordField);
 		centerTopPanel.add(searchButton);		
 		centerPanel.add(BorderLayout.NORTH, centerTopPanel);
 		centerPanel.add(BorderLayout.SOUTH, centerBottomPanel);
+
+		JScrollPane jScrollPane = new JScrollPane();
+		jScrollPane.setSize(200,500);
+		centerBottomPanel.setSize(200, 500);
+		centerBottomPanel.add(jScrollPane);
+		searchResultsTable = new JTable();
+		searchResultsTable.setModel(new javax.swing.table.DefaultTableModel(
+				new Object [][] {
+						{null, "adasd", null, "asdasd"},
+						{null, null, null, null}
+				},
+				new String [] {
+						"asdasd", "asdasd", "asdasd", "asdasd"
+				}
+		));
+		centerBottomPanel.add(searchResultsTable);
+		searchResultsTable.setCellSelectionEnabled(false);
+		searchResultsTable.setColumnSelectionAllowed(false);
+		searchResultsTable.setRowSelectionAllowed(true);
+		searchResultsTable.setSize(150, 200);
+		searchResultsTable.setGridColor(Color.gray);
+
 		
 		//Bottom Panel Components
 		bottomPanel = new JPanel(new BorderLayout());
@@ -320,7 +337,9 @@ public class GUI extends JFrame implements ActionListener{
 		}
 		
 		if(e == searchButton && keywordField.getText() != null){
-			
+
+			setKeyword();
+			ArrayList<FileData> retVal = controller.sendSearchCritera();
 			
 		}
 		

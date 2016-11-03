@@ -2,6 +2,7 @@ package package1;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.*;
@@ -87,17 +88,32 @@ public class ServerThread implements Runnable {
 
 
 
-
-
-                System.out.println("Waiting for input from the client...");
+                System.out.println("Handshake complete, waiting for client action...");
                 while (true) {
 
-                    byte[] buffer;
-                    String cmd = "";
-                    String filename = "";
+//                    byte[] buffer;
+//                    String cmd = "";
+//                    String filename = "";
 
                     //get the line in from the client
                     String line = in.readUTF();
+
+                    switch (line) {
+
+                        case "search":
+                            String searchCritera = in.readUTF();
+                            ArrayList<FileData> retVal = SearchXMLForMatch(searchCritera);
+
+                            for(FileData sendBack: retVal){
+                                out.writeUTF(sendBack.getSpeed());
+                                out.writeUTF(sendBack.getHostname());
+                                out.writeUTF(sendBack.getFilename());
+                            }
+
+                            out.writeUTF("search_completed");
+                            out.flush();
+                    }
+
 
 //                    //split all the spaces from the line in from the client
 //                    String[] strList = line.split("\\s+");
@@ -111,68 +127,68 @@ public class ServerThread implements Runnable {
 //                    if(strList.length > 1){
 //                        filename = strList[1];
 //                    }
-
-
-
-                        if (cmd.equalsIgnoreCase("quit")) {
-                        System.out.println("Disconnect requested from : " + socket.getInetAddress());
-                        //in.close();
-
-                        //flush and shutdown the sockets, not sure why it even matters.
-                        out.flush();
-                        socket.shutdownInput();
-                        socket.shutdownOutput();
-                        socket.close();
-                        //kill the thread.
-                        Runtime.getRuntime().exit(0);
-
-                        //pretty sure this is not needed...
-                        return;
-
-
-                    } else if (cmd.equalsIgnoreCase("list")) {
-                        System.out.println("Listing contents for connection: " + socket.getInetAddress());
-                        SendBackAllFilesInCurDir(out);
-
-
-                    }else if(line.equalsIgnoreCase("retr")){
-
-                        //I don't think this in.read is needed because we already have the variable filename assigned above, debug this and see
-                        filename = in.readUTF();
-                        System.out.println("Getting file " + filename +
-                                "for connection: " + socket.getInetAddress());
-                        GetFileForClient(out, filename);
-                        System.out.println("File send done.");
-
-                    }else if(cmd.equalsIgnoreCase("stor")){
-
-                        //same thing here as above.
-                        filename = in.readUTF();
-
-                        //current dir, plus file sep ("/") plus filename for the new file.
-                        File newFile = new File(System.getProperty("user.dir") + File.separator + filename);
-
-                        //file output steam will stream from the server process to the file specified.
-                        FileOutputStream fos = new FileOutputStream(newFile);
-                        buffer = new byte[4098];
-
-                        //need the filesize to tell us when to stop reading in
-                        Long filesize = in.readLong();
-                        int read = 0;
-
-                        //init the filesize.
-                        int remaining = filesize.intValue();
-
-                        //Not sure what this Math stuff does, but basically read until there isn't anything else to read.
-                        while((read = in.read(buffer, 0, Math.min(buffer.length, remaining))) > 0) {
-                            remaining -= read;
-                            fos.write(buffer, 0, read);
-                        }
-
-                        //close the fileoutput stream.
-                        fos.close();
-                        System.out.println("File retrieved from client: " + filename);
-                    }
+//
+//
+//
+//                        if (cmd.equalsIgnoreCase("quit")) {
+//                        System.out.println("Disconnect requested from : " + socket.getInetAddress());
+//                        //in.close();
+//
+//                        //flush and shutdown the sockets, not sure why it even matters.
+//                        out.flush();
+//                        socket.shutdownInput();
+//                        socket.shutdownOutput();
+//                        socket.close();
+//                        //kill the thread.
+//                        Runtime.getRuntime().exit(0);
+//
+//                        //pretty sure this is not needed...
+//                        return;
+//
+//
+//                    } else if (cmd.equalsIgnoreCase("list")) {
+//                        System.out.println("Listing contents for connection: " + socket.getInetAddress());
+//                        SendBackAllFilesInCurDir(out);
+//
+//
+//                    }else if(line.equalsIgnoreCase("retr")){
+//
+//                        //I don't think this in.read is needed because we already have the variable filename assigned above, debug this and see
+//                        filename = in.readUTF();
+//                        System.out.println("Getting file " + filename +
+//                                "for connection: " + socket.getInetAddress());
+//                        GetFileForClient(out, filename);
+//                        System.out.println("File send done.");
+//
+//                    }else if(cmd.equalsIgnoreCase("stor")){
+//
+//                        //same thing here as above.
+//                        filename = in.readUTF();
+//
+//                        //current dir, plus file sep ("/") plus filename for the new file.
+//                        File newFile = new File(System.getProperty("user.dir") + File.separator + filename);
+//
+//                        //file output steam will stream from the server process to the file specified.
+//                        FileOutputStream fos = new FileOutputStream(newFile);
+//                        buffer = new byte[4098];
+//
+//                        //need the filesize to tell us when to stop reading in
+//                        Long filesize = in.readLong();
+//                        int read = 0;
+//
+//                        //init the filesize.
+//                        int remaining = filesize.intValue();
+//
+//                        //Not sure what this Math stuff does, but basically read until there isn't anything else to read.
+//                        while((read = in.read(buffer, 0, Math.min(buffer.length, remaining))) > 0) {
+//                            remaining -= read;
+//                            fos.write(buffer, 0, read);
+//                        }
+//
+//                        //close the fileoutput stream.
+//                        fos.close();
+//                        System.out.println("File retrieved from client: " + filename);
+//                    }
                 }
 
             } catch (IOException e) {
@@ -191,9 +207,132 @@ public class ServerThread implements Runnable {
         }
     }
 
+    private ArrayList<FileData> SearchXMLForMatch(String searchCritera) {
+
+        ArrayList<FileData> fileDataList = new ArrayList<FileData>();
+
+        //get all files in XML dir.
+        //Next, we should check if this user exists, if not, create their xml file.
+        try {
+        File curDir = new File(DBXML_DIR_SHORTCUT);
+        File[] FileList = curDir.listFiles();
+
+        for(File file: FileList){
+            if(file.getName().contains(".filelist")){
+
+                DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder dBuilder = null;
+                dBuilder = dbFactory.newDocumentBuilder();
+                Document doc = dBuilder.parse(file);
+                NodeList thisNodeList = doc.getElementsByTagName("file");
+
+                for (int temp = 0; temp < thisNodeList.getLength(); temp++) {
+                    Node nNode = thisNodeList.item(temp);
+                    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                        Element eElement = (Element) nNode;
+                        String description = eElement.getElementsByTagName("description").item(0).getTextContent();
+                        if(description.contains(searchCritera)) {
+
+                            String hostname = getHostNameForUserName(file.getName().substring(0, file.getName().lastIndexOf(".")));
+                            String filename = eElement.getElementsByTagName("name").item(0).getTextContent();
+                            String speed = getSpeedForUserName(file.getName().substring(0, file.getName().lastIndexOf(".")));
+                            FileData fileData = new FileData(speed, hostname, filename);
+                            fileDataList.add(fileData);
+                        }
+
+
+                    }
+                }
+
+            }
+
+        }
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return fileDataList;
+    }
+
+    private String getHostNameForUserName(String userName) {
+        try {
+            String hostname;
+            File curDir = new File(DBXML_DIR_SHORTCUT);
+            File[] FileList = curDir.listFiles();
+
+            for(File file: FileList) {
+                if (file.getName().equalsIgnoreCase(userName + ".xml")) {
+                    Document dom;
+                    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                    DocumentBuilder db = dbf.newDocumentBuilder();
+                    dom = db.parse(file);
+                    Element doc = dom.getDocumentElement();
+                    NodeList thisNodeList = doc.getElementsByTagName("userdetails");
+
+                    for (int temp = 0; temp < thisNodeList.getLength(); temp++) {
+                        Node nNode = thisNodeList.item(temp);
+                        if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                            Element eElement = (Element) nNode;
+
+                            hostname = eElement.getElementsByTagName("hostname").item(0).getTextContent();
+                            break;
+                        }
+                    }
+                }
+            }
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return hostname;
+    }
+
+    private String getSpeedForUserName(String userName) {
+        try {
+            String speed;
+            File curDir = new File(DBXML_DIR_SHORTCUT);
+            File[] FileList = curDir.listFiles();
+
+            for(File file: FileList) {
+                if (file.getName().equalsIgnoreCase(userName + ".xml")) {
+                    Document dom;
+                    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                    DocumentBuilder db = dbf.newDocumentBuilder();
+                    dom = db.parse(file);
+                    Element doc = dom.getDocumentElement();
+                    NodeList thisNodeList = doc.getElementsByTagName("userdetails");
+
+                    for (int temp = 0; temp < thisNodeList.getLength(); temp++) {
+                        Node nNode = thisNodeList.item(temp);
+                        if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                            Element eElement = (Element) nNode;
+
+                            speed = eElement.getElementsByTagName("speed").item(0).getTextContent();
+                            break;
+                        }
+                    }
+                }
+            }
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return speed;
+    }
+
     //same thing here with the current dir as below, maybe there is a better way. (does this way work on linux?)
     //
     private void GetFileForClient(DataOutputStream out, String filename) {
+
         File dir = new File(".");
         File fileToSend = new File(dir, filename);
         int n = 0;
@@ -278,11 +417,9 @@ public class ServerThread implements Runnable {
     }
 
     public static void PutContentsInUsersExistingXMLFile(File XMLFile) {
-
-        Document dom;
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-
         try {
+            Document dom;
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             dom = db.parse(XMLFile);
             Element doc = dom.getDocumentElement();
@@ -304,11 +441,22 @@ public class ServerThread implements Runnable {
                 }
             }
 
+            //shitty attempt to append two xml files
+//            Element newFile = dom.createElement("file");
+//            Element name = dom.createElement("hostname");
+//            name.appendChild(dom.createTextNode("asdasd"));
+//            newFile.appendChild(name);
+//            Element desc = dom.createElement("speed");
+//            desc.appendChild(dom.createTextNode("123123"));
+//            newFile.appendChild(desc);
+
+            //repeat this for the user specifics files to append it to the xml doc.
+
             DOMSource source = new DOMSource(dom);
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
-            StreamResult result = new StreamResult(DBXML_DIR_SHORTCUT + File.separator + username + ".xmlz");
+            StreamResult result = new StreamResult(DBXML_DIR_SHORTCUT + File.separator + username + ".filelist");
             transformer.transform(source, result);
 
 
@@ -351,8 +499,7 @@ public class ServerThread implements Runnable {
             tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
             tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 
-            tr.transform(new DOMSource(dom),
-                    new StreamResult(new FileOutputStream(newUserXML.getPath())));
+            tr.transform(new DOMSource(dom), new StreamResult(new FileOutputStream(newUserXML.getPath())));
         } catch (ParserConfigurationException e1) {
             e1.printStackTrace();
         } catch (TransformerConfigurationException e1) {
