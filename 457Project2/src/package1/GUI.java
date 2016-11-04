@@ -107,12 +107,10 @@ public class GUI extends JFrame implements ActionListener{
 	
 	/** A text area for the results of the command */
 	private JTextArea ftpArea;
-	
-	/** A scroll pane for the text area */
-	private JScrollPane ftpAreaScrollPane;
-
 
 	private JTable searchResultsTable;
+
+	private JScrollPane jScrollPane1;
 	
 	/**
 	 * Constructor that initializes the GUI 
@@ -189,18 +187,23 @@ public class GUI extends JFrame implements ActionListener{
 		centerPanel.add(BorderLayout.NORTH, centerTopPanel);
 		centerPanel.add(BorderLayout.SOUTH, centerBottomPanel);
 
-		JScrollPane jScrollPane = new JScrollPane();
-		jScrollPane.setSize(200,500);
-		centerBottomPanel.setSize(200, 500);
-		centerBottomPanel.add(jScrollPane);
+		jScrollPane1 = new javax.swing.JScrollPane();
+		jScrollPane1.setSize(250,300);
+		centerBottomPanel.setSize(250, 300);
+		centerBottomPanel.add(jScrollPane1);
 		searchResultsTable = new JTable();
 		searchResultsTable.setModel(new javax.swing.table.DefaultTableModel(
 				new Object [][] {
-						{null, "adasd", null, "asdasd"},
-						{null, null, null, null}
+						{null, null, null},
+						{null, null, null},
+						{null, null, null},
+						{null, null, null},
+						{null, null, null},
+						{null, null, null},
+						{null, null, null}
 				},
 				new String [] {
-						"asdasd", "asdasd", "asdasd", "asdasd"
+						"Speed", "Hostname", "Filename"
 				}
 		));
 		centerBottomPanel.add(searchResultsTable);
@@ -209,6 +212,7 @@ public class GUI extends JFrame implements ActionListener{
 		searchResultsTable.setRowSelectionAllowed(true);
 		searchResultsTable.setSize(150, 200);
 		searchResultsTable.setGridColor(Color.gray);
+		jScrollPane1.setViewportView(searchResultsTable);
 
 		
 		//Bottom Panel Components
@@ -225,10 +229,10 @@ public class GUI extends JFrame implements ActionListener{
 		enterCommandLabel = new JLabel("Enter Command:");
 		enterCommandField = new JTextField(30);
 		goButton = new JButton("Go");
+		goButton.addActionListener(this);
 		ftpArea = new JTextArea(10, 50);
 		ftpArea.setBackground(Color.LIGHT_GRAY);
 		ftpArea.setEditable(false);
-		ftpAreaScrollPane = new JScrollPane(ftpArea);
 		bottomTopPanel.add(enterCommandLabel);
 		bottomTopPanel.add(enterCommandField);
 		bottomTopPanel.add(goButton);
@@ -340,7 +344,15 @@ public class GUI extends JFrame implements ActionListener{
 
 			setKeyword();
 			ArrayList<FileData> retVal = controller.sendSearchCritera();
-			
+			int index = 0;
+			for(FileData file: retVal){
+				searchResultsTable.setValueAt(file.getSpeed(), index, 0);
+				searchResultsTable.setValueAt(file.getHostname(), index, 1);
+				searchResultsTable.setValueAt(file.getFilename(), index, 2);
+				index++;
+			}
+			searchResultsTable.revalidate();
+			searchResultsTable.repaint();
 		}
 		
 		if(e == goButton){
@@ -350,7 +362,15 @@ public class GUI extends JFrame implements ActionListener{
 				System.out.println("Please enter a command");
 			}
 			else{
-				
+
+				setCommand();
+				ftpArea.append("\n>> " + controller.getCommand());
+				ftpArea.revalidate();
+				ftpArea.repaint();
+				String status = controller.sendCommandToOtherClient();
+				ftpArea.append("\n" + status);
+				ftpArea.revalidate();
+				ftpArea.repaint();
 			}
 		}
 	}

@@ -18,6 +18,8 @@ public class Controller {
      */
     private int port;
 
+    public Socket socket;
+
     /**
      * The server host name
      */
@@ -292,5 +294,35 @@ public class Controller {
             e.printStackTrace();
         }
         return retVal;
+    }
+
+    public String sendCommandToOtherClient() {
+
+        String status = "";
+        try {
+            //attempt to connect to other client.
+            String command = getCommand();
+            String[] splitCommand = command.split("\\s+");
+            if (splitCommand.length == 3) {
+                if (splitCommand[0].equalsIgnoreCase("connect")) {
+                    socket = new Socket(splitCommand[1], Integer.parseInt(splitCommand[2]));
+                    status = "Connected to: " + socket.getInetAddress();
+                }
+            } else if (splitCommand.length == 2) {
+                if(splitCommand[0].equalsIgnoreCase("retr")){
+                    out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+                    out.writeUTF("retr");
+                    out.writeUTF(splitCommand[1]);
+                    out.flush();
+                }
+            } else if (splitCommand.length == 1) {
+                if(splitCommand[0].equalsIgnoreCase("quit")){
+
+                }
+            }
+        } catch (Exception e) {
+            status = "Connection refused, please try again...";
+        }
+        return status;
     }
 }

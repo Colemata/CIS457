@@ -82,12 +82,6 @@ public class ServerThread implements Runnable {
 
                 RetrieveFileFromServer(in, username);
 
-
-
-
-
-
-
                 System.out.println("Handshake complete, waiting for client action...");
                 while (true) {
 
