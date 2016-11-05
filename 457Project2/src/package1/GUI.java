@@ -9,6 +9,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 /**
  * GUI - an interface that allows the user to perform various actions and interact
@@ -112,6 +113,12 @@ public class GUI extends JFrame implements ActionListener{
 	private JTable searchResultsTable;
 
 	private JScrollPane jScrollPane1;
+
+	private JLabel listeningLabel;
+
+	private JTextField listeningPortField;
+
+	private JButton quitButton;
 	
 	/**
 	 * Constructor that initializes the GUI 
@@ -144,6 +151,8 @@ public class GUI extends JFrame implements ActionListener{
 		serverHostnameField = new JTextField(10);
 		portLabel = new JLabel("Port:");
 		portField = new JTextField(5);
+		listeningLabel = new JLabel("Listening Port: ");
+		listeningPortField = new JTextField(5);
 		connectButton = new JButton("Connect");
 		connectButton.addActionListener(this);
 		usernameLabel = new JLabel("Username:");
@@ -156,6 +165,8 @@ public class GUI extends JFrame implements ActionListener{
 		toptopPanel.add(serverHostnameField);
 		toptopPanel.add(portLabel);
 		toptopPanel.add(portField);
+		toptopPanel.add(listeningLabel);
+		toptopPanel.add(listeningPortField);
 		toptopPanel.add(connectButton);
 		topBottomPanel.add(usernameLabel);
 		topBottomPanel.add(usernameField);
@@ -169,6 +180,9 @@ public class GUI extends JFrame implements ActionListener{
 		//Center Panel Components
 		centerTopPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		centerBottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		quitButton = new JButton("Disconnect");
+		quitButton.setEnabled(false);
+		quitButton.addActionListener(this);
 		centerTopPanel.setOpaque(true);
 		centerBottomPanel.setOpaque(true);
 		centerTopPanel.setBackground(Color.WHITE);
@@ -184,7 +198,8 @@ public class GUI extends JFrame implements ActionListener{
 		searchButton.addActionListener(this);
 		centerTopPanel.add(keywordLabel);
 		centerTopPanel.add(keywordField);
-		centerTopPanel.add(searchButton);		
+		centerTopPanel.add(searchButton);
+		centerTopPanel.add(quitButton);
 		centerPanel.add(BorderLayout.NORTH, centerTopPanel);
 		centerPanel.add(BorderLayout.SOUTH, centerBottomPanel);
 
@@ -195,13 +210,7 @@ public class GUI extends JFrame implements ActionListener{
 		searchResultsTable = new JTable();
 		searchResultsTable.setModel(new javax.swing.table.DefaultTableModel(
 				new Object [][] {
-						{null, null, null},
-						{null, null, null},
-						{null, null, null},
-						{null, null, null},
-						{null, null, null},
-						{null, null, null},
-						{null, null, null}
+
 				},
 				new String [] {
 						"Speed", "Hostname", "Filename"
@@ -258,6 +267,7 @@ public class GUI extends JFrame implements ActionListener{
 		hostnameField.setText("localhost");
 		serverHostnameField.setText("localhost");
 		portField.setText("33333");
+		listeningPortField.setText("6278");
 
 	}
 	
@@ -267,6 +277,11 @@ public class GUI extends JFrame implements ActionListener{
 	void setPortNumber(){
 		
 		controller.setPortNumber(Integer.parseInt(portField.getText()));
+	}
+
+	void setListeningPortNumber(){
+
+		controller.setListeningPortNumber(Integer.parseInt(listeningPortField.getText()));
 	}
 	
 	/**
@@ -320,11 +335,23 @@ public class GUI extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent event){
 		
 		JComponent e = (JComponent)event.getSource();
+		String status;
 
 
 		if(keywordField.getText() != null){
 			
-			searchButton.setEnabled(true);
+
+		}
+
+		if(e == quitButton){
+
+			status = controller.sendQuitCommandToServer();
+			connectButton.setBackground(Color.red);
+			quitButton.setEnabled(false);
+			searchButton.setEnabled(false);
+			ftpArea.append("\n" + status);
+			ftpArea.revalidate();
+			ftpArea.repaint();
 		}
 		
 		if(e == connectButton){
@@ -333,10 +360,32 @@ public class GUI extends JFrame implements ActionListener{
 			setUsername();
 			setHostname();
 			setSpeed();
-			controller.connectToServer();
+			setListeningPortNumber();
+			boolean connectionMade = controller.connectToServer();
+			if(connectionMade){
+				quitButton.setEnabled(true);
+				searchButton.setEnabled(true);
+				connectButton.setBackground(Color.green);
+				status = "Connect to server: " + controller.getServerHostname() + ":" + controller.getPortNumber();
+			}else{
+				connectButton.setBackground(Color.red);
+				status = "Unable to connect to server: " + controller.getServerHostname() + ":" + controller.getPortNumber();
+			}
+			ftpArea.append("\n" + status);
+			ftpArea.revalidate();
+			ftpArea.repaint();
 		}
 		
 		if(e == searchButton && keywordField.getText() != null){
+
+			//each time we do a search, clear the table.
+			DefaultTableModel dm = (DefaultTableModel) searchResultsTable.getModel();
+			int rowCount = dm.getRowCount();
+
+			//gotta remove it backwards.
+			for (int i = rowCount - 1; i >= 0; i--) {
+				dm.removeRow(i);
+			}
 
 			setKeyword();
 			ArrayList<FileData> retVal = controller.sendSearchCritera();
@@ -351,8 +400,10 @@ public class GUI extends JFrame implements ActionListener{
 					}
 				}
 				if(!weDontHaveFileAlready) {
+					DefaultTableModel model = (DefaultTableModel) searchResultsTable.getModel();
+					model.addRow(new Object[]{null, null, null});
 					searchResultsTable.setValueAt(file.getSpeed(), index, 0);
-					searchResultsTable.setValueAt(file.getHostname(), index, 1);
+					searchResultsTable.setValueAt(file.getHostname() + ":" + file.getPort(), index, 1);
 					searchResultsTable.setValueAt(file.getFilename(), index, 2);
 					index++;
 				}
@@ -374,7 +425,7 @@ public class GUI extends JFrame implements ActionListener{
 				ftpArea.append("\n>> " + controller.getCommand());
 				ftpArea.revalidate();
 				ftpArea.repaint();
-				String status = controller.sendCommandToOtherClient();
+				status = controller.sendCommandToOtherClient();
 				ftpArea.append("\n" + status);
 				ftpArea.revalidate();
 				ftpArea.repaint();

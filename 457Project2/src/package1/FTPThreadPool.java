@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
  */
 public class FTPThreadPool implements Runnable {
 
-    private static final int PORT = 6279;
+    private static int PORT = 6279;
     private ServerSocket serverListener;
     private static final int MAX_CONNECTIONS = 100;
 
@@ -29,11 +29,16 @@ public class FTPThreadPool implements Runnable {
             try {
                 System.out.println("Waiting for a connection...");
                 FTPServerThread serverThread = new FTPServerThread(serverListener.accept());
-                serverThread.run();
-                //executorService.submit(serverThread);
+                //serverThread.run();
+                executorService.submit(serverThread);
             } catch (IOException e) {
                 throw new RuntimeException();
             }
         }
+    }
+
+    public void setListeningPortNumber(int listeningPortNumber){
+
+        this.PORT = listeningPortNumber;
     }
 }

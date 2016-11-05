@@ -1,28 +1,34 @@
 package package1;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
-import javax.xml.parsers.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.*;
-import javax.xml.transform.stream.*;
-import org.xml.sax.*;
-import org.w3c.dom.*;
 
 /**
- *
+ * This class will handle the connection between each client and the server.
  */
 public class ServerThread implements Runnable {
 
+    public static String username;
+    public static String DBXML_DIR_SHORTCUT = System.getProperty("user.dir") + File.separator + "DBXML";
+    public String hostname;
+    public String speed;
+    public int port;
     private DataInputStream in;
     private DataOutputStream out;
     private Socket socket;
-    public static String username;
-    public String hostname;
-    public String speed;
-    public static String DBXML_DIR_SHORTCUT = System.getProperty("user.dir") + File.separator + "DBXML";
-    public final String SERVER_FAILURE_TEXT = "zxczxczxc";
 
     //pass the socket into this thread.
     public ServerThread(Socket socket) {
@@ -30,11 +36,100 @@ public class ServerThread implements Runnable {
         System.out.println("Client connected from: " + socket.getInetAddress());
     }
 
+    private static void RetrieveFileFromServer(DataInputStream in, String username) {
+
+        //Should we make this buffer a different size?
+        byte[] buffer = new byte[4098];
+
+        try {
+
+            //Make the file object for the file output stream.
+            File newFile = new File(System.getProperty("user.dir") + File.separator + username + ".temp");
+            FileOutputStream fos = new FileOutputStream(newFile);
+
+            //read in the file size, this is important.
+            Long filesize = in.readLong();
+            int read = 0;
+            int remaining = filesize.intValue();
+
+            //while there is data being read in, read.
+            while ((read = in.read(buffer, 0, Math.min(buffer.length, remaining))) > 0) {
+                //the remaining size left is = to the remaining size minus the size of what we just read.
+                remaining -= read;
+
+                //write these bytes that are buffered to the new file.
+                fos.write(buffer, 0, read);
+            }
+
+            //close the file output stream.
+            fos.close();
+
+            PutContentsInUsersExistingXMLFile(newFile);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Rearrange the files so that we can access and parse them later.
+     * @param XMLFile
+     */
+    public static void PutContentsInUsersExistingXMLFile(File XMLFile) {
+        try {
+            Document dom;
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            dom = db.parse(XMLFile);
+            Element doc = dom.getDocumentElement();
+            NodeList thisNodeList = doc.getElementsByTagName("file");
+
+            for (int temp = 0; temp < thisNodeList.getLength(); temp++) {
+                Node nNode = thisNodeList.item(temp);
+                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element eElement = (Element) nNode;
+                    System.out.println("desc : " + eElement.getElementsByTagName("description").item(0).getTextContent());
+
+                    Element newFile = dom.createElement("file");
+                    Element name = dom.createElement("name");
+                    name.appendChild(dom.createTextNode(eElement.getElementsByTagName("name").item(0).getTextContent()));
+                    newFile.appendChild(name);
+                    Element desc = dom.createElement("description");
+                    desc.appendChild(dom.createTextNode(eElement.getElementsByTagName("description").item(0).getTextContent()));
+                    newFile.appendChild(desc);
+                }
+            }
+
+            DOMSource source = new DOMSource(dom);
+
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            StreamResult result = new StreamResult(DBXML_DIR_SHORTCUT + File.separator + username + ".filelist");
+            transformer.transform(source, result);
+
+            File newFile = new File(System.getProperty("user.dir") + File.separator + username + ".temp");
+            newFile.delete();
+
+
+        } catch (ParserConfigurationException pce) {
+            System.out.println(pce.getMessage());
+        } catch (SAXException se) {
+            System.out.println(se.getMessage());
+        } catch (IOException ioe) {
+            System.err.println(ioe.getMessage());
+        } catch (TransformerConfigurationException e) {
+            e.printStackTrace();
+        } catch (TransformerException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void run() {
 
         //unless we tell it otherwise, run
         while (true) {
             try {
+
 
                 //set up the streams using the global socket.
                 in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
@@ -45,7 +140,7 @@ public class ServerThread implements Runnable {
                 username = in.readUTF();
                 hostname = in.readUTF();
                 speed = in.readUTF();
-
+                port = in.readInt();
 
                 //Next, we should check if this user exists, if not, create their xml file.
                 File curDir = new File(DBXML_DIR_SHORTCUT);
@@ -85,10 +180,6 @@ public class ServerThread implements Runnable {
                 System.out.println("Handshake complete, waiting for client action...");
                 while (true) {
 
-//                    byte[] buffer;
-//                    String cmd = "";
-//                    String filename = "";
-
                     //get the line in from the client
                     String line = in.readUTF();
 
@@ -102,10 +193,26 @@ public class ServerThread implements Runnable {
                                 out.writeUTF(sendBack.getSpeed());
                                 out.writeUTF(sendBack.getHostname());
                                 out.writeUTF(sendBack.getFilename());
+                                out.writeInt(sendBack.getPort());
                             }
 
                             out.writeUTF("search_completed");
                             out.flush();
+                            break;
+                        case "quit":
+                            socket.close();
+                            curDir = new File(DBXML_DIR_SHORTCUT);
+                            FileList = curDir.listFiles();
+                            for (File f : FileList) {
+                                if (f.getName().contains(".xml") || f.getName().contains(".filelist")) {
+                                    if (f.getName().contains(username)) {
+                                        f.delete();
+                                    }
+                                }
+                            }
+                            //kill the thread.
+                            Thread.currentThread().interrupt();
+                            break;
                     }
 
                 }
@@ -121,10 +228,13 @@ public class ServerThread implements Runnable {
                 //Next, we should check if this user exists, if not, create their xml file.
                 File curDir = new File(DBXML_DIR_SHORTCUT);
                 File[] FileList = curDir.listFiles();
-                for (File f : FileList)
-                    if(f.getName().contains(".xml") || f.getName().contains(".filelist")) {
-                        f.delete();
+                for (File f : FileList) {
+                    if (f.getName().contains(".xml") || f.getName().contains(".filelist")) {
+                        if (f.getName().contains(username)) {
+                            f.delete();
+                        }
                     }
+                }
                 //kill the thread.
                 Thread.currentThread().interrupt();
                 return;
@@ -161,7 +271,8 @@ public class ServerThread implements Runnable {
                             String hostname = getHostNameForUserName(file.getName().substring(0, file.getName().lastIndexOf(".")));
                             String filename = eElement.getElementsByTagName("name").item(0).getTextContent();
                             String speed = getSpeedForUserName(file.getName().substring(0, file.getName().lastIndexOf(".")));
-                            FileData fileData = new FileData(speed, hostname, filename);
+                            int port = getPortForUserName(file.getName().substring(0, file.getName().lastIndexOf(".")));
+                            FileData fileData = new FileData(speed, hostname, filename, port);
                             fileDataList.add(fileData);
                         }
 
@@ -182,9 +293,10 @@ public class ServerThread implements Runnable {
         return fileDataList;
     }
 
-    private String getHostNameForUserName(String userName) {
+    private int getPortForUserName(String userName) {
+        int portNum = 0;
         try {
-            String hostname;
+
             File curDir = new File(DBXML_DIR_SHORTCUT);
             File[] FileList = curDir.listFiles();
 
@@ -195,17 +307,7 @@ public class ServerThread implements Runnable {
                     DocumentBuilder db = dbf.newDocumentBuilder();
                     dom = db.parse(file);
                     Element doc = dom.getDocumentElement();
-                    NodeList thisNodeList = doc.getElementsByTagName("userdetails");
-
-                    for (int temp = 0; temp < thisNodeList.getLength(); temp++) {
-                        Node nNode = thisNodeList.item(temp);
-                        if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-                            Element eElement = (Element) nNode;
-
-                            hostname = eElement.getElementsByTagName("hostname").item(0).getTextContent();
-                            break;
-                        }
-                    }
+                    portNum = Integer.parseInt(doc.getElementsByTagName("port").item(0).getTextContent());
                 }
             }
         } catch (ParserConfigurationException e) {
@@ -215,12 +317,40 @@ public class ServerThread implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return hostname;
+        return portNum;
+    }
+
+    private String getHostNameForUserName(String userName) {
+        String hostnamee = "";
+        try {
+
+            File curDir = new File(DBXML_DIR_SHORTCUT);
+            File[] FileList = curDir.listFiles();
+
+            for(File file: FileList) {
+                if (file.getName().equalsIgnoreCase(userName + ".xml")) {
+                    Document dom;
+                    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                    DocumentBuilder db = dbf.newDocumentBuilder();
+                    dom = db.parse(file);
+                    Element doc = dom.getDocumentElement();
+                    //NodeList thisNodeList = doc.getElementsByTagName("userdetails");
+                    hostnamee = doc.getElementsByTagName("hostname").item(0).getTextContent();
+                }
+            }
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return hostnamee;
     }
 
     private String getSpeedForUserName(String userName) {
+        String speedd = "";
         try {
-            String speed;
             File curDir = new File(DBXML_DIR_SHORTCUT);
             File[] FileList = curDir.listFiles();
 
@@ -233,12 +363,14 @@ public class ServerThread implements Runnable {
                     Element doc = dom.getDocumentElement();
                     NodeList thisNodeList = doc.getElementsByTagName("userdetails");
 
+                    speedd = doc.getElementsByTagName("speed").item(0).getTextContent();
+
                     for (int temp = 0; temp < thisNodeList.getLength(); temp++) {
                         Node nNode = thisNodeList.item(temp);
                         if (nNode.getNodeType() == Node.ELEMENT_NODE) {
                             Element eElement = (Element) nNode;
 
-                            speed = eElement.getElementsByTagName("speed").item(0).getTextContent();
+                            speedd = eElement.getElementsByTagName("speed").item(0).getTextContent();
                             break;
                         }
                     }
@@ -251,7 +383,7 @@ public class ServerThread implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return speed;
+        return speedd;
     }
 
     //same thing here with the current dir as below, maybe there is a better way. (does this way work on linux?)
@@ -306,101 +438,6 @@ public class ServerThread implements Runnable {
 
     }
 
-    private static void RetrieveFileFromServer(DataInputStream in, String username) {
-
-        //Should we make this buffer a different size?
-        byte[] buffer = new byte[4098];
-
-        try {
-
-            //Make the file object for the file output stream.
-            File newFile = new File(System.getProperty("user.dir") + File.separator + username + ".temp");
-            FileOutputStream fos = new FileOutputStream(newFile);
-
-            //read in the file size, this is important.
-            Long filesize = in.readLong();
-            int read = 0;
-            int remaining = filesize.intValue();
-
-            //while there is data being read in, read.
-            while ((read = in.read(buffer, 0, Math.min(buffer.length, remaining))) > 0) {
-                //the remaining size left is = to the remaining size minus the size of what we just read.
-                remaining -= read;
-
-                //write these bytes that are buffered to the new file.
-                fos.write(buffer, 0, read);
-            }
-
-            //close the file output stream.
-            fos.close();
-
-            PutContentsInUsersExistingXMLFile(newFile);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void PutContentsInUsersExistingXMLFile(File XMLFile) {
-        try {
-            Document dom;
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            dom = db.parse(XMLFile);
-            Element doc = dom.getDocumentElement();
-            NodeList thisNodeList = doc.getElementsByTagName("file");
-
-            for (int temp = 0; temp < thisNodeList.getLength(); temp++) {
-                Node nNode = thisNodeList.item(temp);
-                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-                    Element eElement = (Element) nNode;
-                    System.out.println("desc : " + eElement.getElementsByTagName("description").item(0).getTextContent());
-
-                    Element newFile = dom.createElement("file");
-                    Element name = dom.createElement("name");
-                    name.appendChild(dom.createTextNode(eElement.getElementsByTagName("name").item(0).getTextContent()));
-                    newFile.appendChild(name);
-                    Element desc = dom.createElement("description");
-                    desc.appendChild(dom.createTextNode(eElement.getElementsByTagName("description").item(0).getTextContent()));
-                    newFile.appendChild(desc);
-                }
-            }
-
-            //shitty attempt to append two xml files
-//            Element newFile = dom.createElement("file");
-//            Element name = dom.createElement("hostname");
-//            name.appendChild(dom.createTextNode("asdasd"));
-//            newFile.appendChild(name);
-//            Element desc = dom.createElement("speed");
-//            desc.appendChild(dom.createTextNode("123123"));
-//            newFile.appendChild(desc);
-
-            //repeat this for the user specifics files to append it to the xml doc.
-
-            DOMSource source = new DOMSource(dom);
-
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-            StreamResult result = new StreamResult(DBXML_DIR_SHORTCUT + File.separator + username + ".filelist");
-            transformer.transform(source, result);
-
-            File newFile = new File(System.getProperty("user.dir") + File.separator + username + ".temp");
-            newFile.delete();
-
-
-        } catch (ParserConfigurationException pce) {
-            System.out.println(pce.getMessage());
-        } catch (SAXException se) {
-            System.out.println(se.getMessage());
-        } catch (IOException ioe) {
-            System.err.println(ioe.getMessage());
-        } catch (TransformerConfigurationException e) {
-            e.printStackTrace();
-        } catch (TransformerException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void WriteXMLUserData(File newUserXML) {
 
         //This is basically straight off stack overflow...
@@ -413,12 +450,23 @@ public class ServerThread implements Runnable {
             db = dbf.newDocumentBuilder();
             dom = db.newDocument();
             Element rootEle = dom.createElement("userdetails");
+
+//            Element rootEle2 = dom.createElement("userdetails");
+//
+//            rootEle2.appendChild(rootEle2);
+
             e = dom.createElement("hostname");
             e.appendChild(dom.createTextNode(hostname));
             rootEle.appendChild(e);
+
             e = dom.createElement("speed");
             e.appendChild(dom.createTextNode(speed));
             rootEle.appendChild(e);
+
+            e = dom.createElement("port");
+            e.appendChild(dom.createTextNode("" + port));
+            rootEle.appendChild(e);
+
             dom.appendChild(rootEle);
 
             Transformer tr = TransformerFactory.newInstance().newTransformer();

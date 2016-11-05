@@ -5,15 +5,17 @@ package package1;
  */
 public class FileData {
 
-    FileData(String speed, String hostname, String filename){
+    FileData(String speed, String hostname, String filename, int port){
         this.speed = speed;
         this.filename = filename;
         this.hostname = hostname;
+        this.port = port;
     }
 
     private String speed;
     private String hostname;
     private String filename;
+    private int port;
 
     public String getSpeed() {
         return speed;
@@ -37,5 +39,13 @@ public class FileData {
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
     }
 }

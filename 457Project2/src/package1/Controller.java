@@ -3,6 +3,8 @@ package package1;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Controller - sets the variables and allows the model classes to access
@@ -18,9 +20,13 @@ public class Controller {
      */
     private int port;
 
+    private int listeningPortNumber;
+
     public Socket socket;
 
     public Socket ClientSocket;
+
+    private static ExecutorService executorService = Executors.newCachedThreadPool();
 
     /**
      * The server host name
@@ -73,6 +79,16 @@ public class Controller {
     void setServerHostname(String serverHostname) {
 
         this.serverHostname = serverHostname;
+    }
+
+    public void setListeningPortNumber(int listeningPortNumber) {
+
+        this.listeningPortNumber = listeningPortNumber;
+    }
+
+    public int getListeningPortNumber() {
+
+        return listeningPortNumber;
     }
 
     /**
@@ -186,7 +202,8 @@ public class Controller {
         return speed;
     }
 
-    public void connectToServer() {
+    public boolean connectToServer() {
+        boolean retVal = false;
         server = new Socket();
         try {
             server = new Socket(getServerHostname(), getPortNumber());
@@ -194,7 +211,7 @@ public class Controller {
             if (server.isConnected()) {
 
                 System.out.println("Connected to " + server.getInetAddress());
-
+                retVal = true;
                 //new up some input and output streams.
                 //in = new DataInputStream(new BufferedInputStream(server.getInputStream()));
                 out = new DataOutputStream(new BufferedOutputStream(server.getOutputStream()));
@@ -202,8 +219,14 @@ public class Controller {
                 out.writeUTF(getUsername());
                 out.writeUTF(getHostname());
                 out.writeUTF(getSpeed());
+                out.writeInt(getListeningPortNumber());
 
                 out.flush();
+
+                FTPThreadPool serverClientThreadPool = new FTPThreadPool();
+                serverClientThreadPool.setListeningPortNumber(getListeningPortNumber());
+                //serverClientThreadPool.run();
+                executorService.submit(serverClientThreadPool);
 
             } else {
                 System.out.println("Unable to connect to: " + server.getInetAddress());
@@ -214,7 +237,7 @@ public class Controller {
         } finally {
             waitForServerACK();
         }
-
+        return retVal;
     }
 
     private void waitForServerACK() {
@@ -288,7 +311,8 @@ public class Controller {
                 }
                 String hostname = in.readUTF();
                 String filename = in.readUTF();
-                FileData fd = new FileData(speed, hostname, filename);
+                int port = in.readInt();
+                FileData fd = new FileData(speed, hostname, filename, port);
                 retVal.add(fd);
             }
 
@@ -311,7 +335,7 @@ public class Controller {
                     status = "Connected to: " + ClientSocket.getInetAddress();
                 }
             } else if (splitCommand.length == 2) {
-                if(splitCommand[0].equalsIgnoreCase("retr")){
+                if (splitCommand[0].equalsIgnoreCase("retr")) {
                     out = new DataOutputStream(new BufferedOutputStream(ClientSocket.getOutputStream()));
                     out.writeUTF("retr");
                     String filename = splitCommand[1];
@@ -321,11 +345,12 @@ public class Controller {
                     status = "File copied from other client: " + filename;
                 }
             } else if (splitCommand.length == 1) {
-                if(splitCommand[0].equalsIgnoreCase("quit")){
+                if (splitCommand[0].equalsIgnoreCase("quit")) {
+                    status = "Disconnected from: " + ClientSocket.getInetAddress();
                     out = new DataOutputStream(new BufferedOutputStream(ClientSocket.getOutputStream()));
                     out.writeUTF("quit");
                     out.flush();
-                    status = "Disconnected from: " + ClientSocket.getInetAddress();
+                    ClientSocket.close();
                 }
             }
         } catch (Exception e) {
@@ -370,5 +395,21 @@ public class Controller {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public String sendQuitCommandToServer() {
+        String status = "Disconnected from: " + server.getInetAddress();
+        try {
+            out = new DataOutputStream(new BufferedOutputStream(server.getOutputStream()));
+            //DataOutputStream outServer = new DataOutputStream((new BufferedOutputStream(socket.getOutputStream())));
+            out.writeUTF("quit");
+            //outServer.writeUTF("quit");
+            out.flush();
+           // outServer.flush();
+            server.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return status;
     }
 }

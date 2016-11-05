@@ -1,5 +1,6 @@
 package package1;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.concurrent.ExecutorService;
@@ -16,6 +17,7 @@ public class ServerClientThreadOperations extends Thread {
     private static final int PORT = 33333;
     private ServerSocket serverListener;
     private static final int MAX_CONNECTIONS = 100;
+    public static String DBXML_DIR_SHORTCUT = System.getProperty("user.dir") + File.separator + "DBXML";
 
     private ExecutorService executorService = Executors.newCachedThreadPool();
 
@@ -27,6 +29,16 @@ public class ServerClientThreadOperations extends Thread {
     ServerClientThreadOperations() {
         try {
             serverListener = new ServerSocket(PORT);
+
+            //On startup of the server, we should delete all the files in the server registry.
+            File curDir = new File(DBXML_DIR_SHORTCUT);
+            File[] FileList = curDir.listFiles();
+            for (File f : FileList) {
+                if (f.getName().contains(".xml") || f.getName().contains(".filelist")) {
+                    f.delete();
+                }
+            }
+
         } catch (IOException e) {
             throw new RuntimeException();
         }
