@@ -20,6 +20,8 @@ public class Controller {
 
     public Socket socket;
 
+    public Socket ClientSocket;
+
     /**
      * The server host name
      */
@@ -305,24 +307,68 @@ public class Controller {
             String[] splitCommand = command.split("\\s+");
             if (splitCommand.length == 3) {
                 if (splitCommand[0].equalsIgnoreCase("connect")) {
-                    socket = new Socket(splitCommand[1], Integer.parseInt(splitCommand[2]));
-                    status = "Connected to: " + socket.getInetAddress();
+                    ClientSocket = new Socket(splitCommand[1], Integer.parseInt(splitCommand[2]));
+                    status = "Connected to: " + ClientSocket.getInetAddress();
                 }
             } else if (splitCommand.length == 2) {
                 if(splitCommand[0].equalsIgnoreCase("retr")){
-                    out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+                    out = new DataOutputStream(new BufferedOutputStream(ClientSocket.getOutputStream()));
                     out.writeUTF("retr");
-                    out.writeUTF(splitCommand[1]);
+                    String filename = splitCommand[1];
+                    out.writeUTF(filename);
                     out.flush();
+                    WaitForFileFromOtherClient();
+                    status = "File copied from other client: " + filename;
                 }
             } else if (splitCommand.length == 1) {
                 if(splitCommand[0].equalsIgnoreCase("quit")){
-
+                    out = new DataOutputStream(new BufferedOutputStream(ClientSocket.getOutputStream()));
+                    out.writeUTF("quit");
+                    out.flush();
+                    status = "Disconnected from: " + ClientSocket.getInetAddress();
                 }
             }
         } catch (Exception e) {
             status = "Connection refused, please try again...";
         }
         return status;
+    }
+
+    private void WaitForFileFromOtherClient() {
+
+        //Should we make this buffer a different size?
+        byte[] buffer = new byte[4098];
+
+        try {
+
+            in = new DataInputStream(new BufferedInputStream(ClientSocket.getInputStream()));
+            String dump = in.readUTF();
+            String filename = in.readUTF();
+
+            //Make the file object for the file output stream.
+            File newFile = new File(System.getProperty("user.dir") + File.separator + filename);
+            FileOutputStream fos = new FileOutputStream(newFile);
+
+            //read in the file size, this is important.
+            Long filesize = in.readLong();
+            int read = 0;
+            int remaining = filesize.intValue();
+
+            //while there is data being read in, read.
+            while ((read = in.read(buffer, 0, Math.min(buffer.length, remaining))) > 0) {
+                //the remaining size left is = to the remaining size minus the size of what we just read.
+                remaining -= read;
+
+                //write these bytes that are buffered to the new file.
+                fos.write(buffer, 0, read);
+            }
+
+            System.out.println("File copied from server: " + filename);
+
+            //close the file output stream.
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

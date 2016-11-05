@@ -108,85 +108,9 @@ public class ServerThread implements Runnable {
                             out.flush();
                     }
 
-
-//                    //split all the spaces from the line in from the client
-//                    String[] strList = line.split("\\s+");
-
-                    //get the first part of the line in for the command.
-//                    if(strList.length > 0){
-//                        cmd = line.split(" ")[0];
-//                    }
-//
-//                    //if it's big enough, get the second item of the line passed from the client
-//                    if(strList.length > 1){
-//                        filename = strList[1];
-//                    }
-//
-//
-//
-//                        if (cmd.equalsIgnoreCase("quit")) {
-//                        System.out.println("Disconnect requested from : " + socket.getInetAddress());
-//                        //in.close();
-//
-//                        //flush and shutdown the sockets, not sure why it even matters.
-//                        out.flush();
-//                        socket.shutdownInput();
-//                        socket.shutdownOutput();
-//                        socket.close();
-//                        //kill the thread.
-//                        Runtime.getRuntime().exit(0);
-//
-//                        //pretty sure this is not needed...
-//                        return;
-//
-//
-//                    } else if (cmd.equalsIgnoreCase("list")) {
-//                        System.out.println("Listing contents for connection: " + socket.getInetAddress());
-//                        SendBackAllFilesInCurDir(out);
-//
-//
-//                    }else if(line.equalsIgnoreCase("retr")){
-//
-//                        //I don't think this in.read is needed because we already have the variable filename assigned above, debug this and see
-//                        filename = in.readUTF();
-//                        System.out.println("Getting file " + filename +
-//                                "for connection: " + socket.getInetAddress());
-//                        GetFileForClient(out, filename);
-//                        System.out.println("File send done.");
-//
-//                    }else if(cmd.equalsIgnoreCase("stor")){
-//
-//                        //same thing here as above.
-//                        filename = in.readUTF();
-//
-//                        //current dir, plus file sep ("/") plus filename for the new file.
-//                        File newFile = new File(System.getProperty("user.dir") + File.separator + filename);
-//
-//                        //file output steam will stream from the server process to the file specified.
-//                        FileOutputStream fos = new FileOutputStream(newFile);
-//                        buffer = new byte[4098];
-//
-//                        //need the filesize to tell us when to stop reading in
-//                        Long filesize = in.readLong();
-//                        int read = 0;
-//
-//                        //init the filesize.
-//                        int remaining = filesize.intValue();
-//
-//                        //Not sure what this Math stuff does, but basically read until there isn't anything else to read.
-//                        while((read = in.read(buffer, 0, Math.min(buffer.length, remaining))) > 0) {
-//                            remaining -= read;
-//                            fos.write(buffer, 0, read);
-//                        }
-//
-//                        //close the fileoutput stream.
-//                        fos.close();
-//                        System.out.println("File retrieved from client: " + filename);
-//                    }
                 }
 
             } catch (IOException e) {
-                System.out.println("Something went wrong...");
                 System.out.println("Connection was not closed properly...");
                 try {
                     in.close();
@@ -194,8 +118,15 @@ public class ServerThread implements Runnable {
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
+                //Next, we should check if this user exists, if not, create their xml file.
+                File curDir = new File(DBXML_DIR_SHORTCUT);
+                File[] FileList = curDir.listFiles();
+                for (File f : FileList)
+                    if(f.getName().contains(".xml") || f.getName().contains(".filelist")) {
+                        f.delete();
+                    }
                 //kill the thread.
-                Runtime.getRuntime().exit(0);
+                Thread.currentThread().interrupt();
                 return;
             }
         }
@@ -452,6 +383,9 @@ public class ServerThread implements Runnable {
             Transformer transformer = transformerFactory.newTransformer();
             StreamResult result = new StreamResult(DBXML_DIR_SHORTCUT + File.separator + username + ".filelist");
             transformer.transform(source, result);
+
+            File newFile = new File(System.getProperty("user.dir") + File.separator + username + ".temp");
+            newFile.delete();
 
 
         } catch (ParserConfigurationException pce) {

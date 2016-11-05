@@ -29,8 +29,8 @@ public class FTPThreadPool implements Runnable {
             try {
                 System.out.println("Waiting for a connection...");
                 FTPServerThread serverThread = new FTPServerThread(serverListener.accept());
-                //serverThread.run();
-                executorService.submit(serverThread);
+                serverThread.run();
+                //executorService.submit(serverThread);
             } catch (IOException e) {
                 throw new RuntimeException();
             }

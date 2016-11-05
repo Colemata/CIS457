@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.*;
@@ -326,11 +327,6 @@ public class GUI extends JFrame implements ActionListener{
 			searchButton.setEnabled(true);
 		}
 		
-		if(e == goButton){
-			
-			
-		}
-		
 		if(e == connectButton){
 			setServerHostname();
 			setPortNumber();
@@ -345,11 +341,22 @@ public class GUI extends JFrame implements ActionListener{
 			setKeyword();
 			ArrayList<FileData> retVal = controller.sendSearchCritera();
 			int index = 0;
+			File curDir = new File(".");
+			File[] FileList = curDir.listFiles();
+			boolean weDontHaveFileAlready = false;
 			for(FileData file: retVal){
-				searchResultsTable.setValueAt(file.getSpeed(), index, 0);
-				searchResultsTable.setValueAt(file.getHostname(), index, 1);
-				searchResultsTable.setValueAt(file.getFilename(), index, 2);
-				index++;
+				for (File f : FileList) {
+					if (f.getName().equalsIgnoreCase(file.getFilename())) {
+						weDontHaveFileAlready = true;
+					}
+				}
+				if(!weDontHaveFileAlready) {
+					searchResultsTable.setValueAt(file.getSpeed(), index, 0);
+					searchResultsTable.setValueAt(file.getHostname(), index, 1);
+					searchResultsTable.setValueAt(file.getFilename(), index, 2);
+					index++;
+				}
+				weDontHaveFileAlready = false;
 			}
 			searchResultsTable.revalidate();
 			searchResultsTable.repaint();

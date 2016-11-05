@@ -37,8 +37,8 @@ public class ServerClientThreadOperations extends Thread {
             try {
                 System.out.println("Waiting for a connection...");
                 ServerThread serverThread = new ServerThread(serverListener.accept());
-                serverThread.run();
-                //executorService.submit(ftpOp);
+                //serverThread.run();
+                executorService.submit(serverThread);
             } catch (IOException e) {
                 throw new RuntimeException();
             }
