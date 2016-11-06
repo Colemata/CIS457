@@ -2,9 +2,6 @@ package gvsu457;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -14,9 +11,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -26,20 +21,30 @@ import java.util.Map;
  */
 public class ServerThread implements Runnable {
 
-    /** A DataInputStream object */
+    /**
+     * A DataInputStream object
+     */
     private DataInputStream in;
 
-    /** A DataOutputStream object */
+    /**
+     * A DataOutputStream object
+     */
     private DataOutputStream out;
 
-    /** A socket for the connection */
+    /**
+     * A socket for the connection
+     */
     private Socket socket;
 
-    /** The users username */
+    /**
+     * The users username
+     */
     public String username;
 
-    /** Shortcut for DBXML */
-    public static String DBXML_DIR_SHORTCUT = System.getProperty("user.dir") + File.separator + "DBXML";
+    /**
+     * Shortcut for DBXML
+     */
+    public static String DBXML_DIR_SHORTCUT = (new File(".").getAbsolutePath()) + File.separator + "DBXML";
 
     public HashMap<String, String> GameList;
 
@@ -75,7 +80,7 @@ public class ServerThread implements Runnable {
                 while (true) {
 
                     //get the line in from the client (the command sent)
-                    System.out.println("Waiting on command from: " +socket.getInetAddress());
+                    System.out.println("Waiting on command from: " + socket.getInetAddress());
                     String line = in.readUTF();
 
                     switch (line) {
@@ -107,14 +112,15 @@ public class ServerThread implements Runnable {
     }
 
     private void ListGamesForClient() {
-        for(String game: GameList.keySet()){
-            try {
+        try {
+            for (String game : GameList.keySet()) {
                 out.writeUTF(game);
-            } catch (IOException e) {
-                System.out.println("Something went wrong sending game list to client: " + socket.getInetAddress());
             }
+            out.writeUTF(EOT);
+            out.flush();
+        } catch (IOException e) {
+            System.out.println("Something went wrong sending game list to client: " + socket.getInetAddress());
         }
-        out.writeUTF()
     }
 
     private void InitalizeDataStructuresForServerCommands() {
