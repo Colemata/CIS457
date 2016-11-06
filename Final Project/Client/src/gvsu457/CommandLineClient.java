@@ -19,8 +19,11 @@ public class CommandLineClient {
     /*Hashmap that contains command parameter info for both h commands and param checking*/
     public static HashMap<String, String> CommandParameterHashMap;
 
+    /*Hashmap that contains command explinations for the help menu*/
+    public static HashMap<String, String> CommandExplinationHashMap;
+
     /*The server socket to maintain a connect*/
-    public static Socket server;
+    public static Socket server = new Socket();
 
     /*The data input stream from the server*/
     public static DataInputStream in_server;
@@ -29,10 +32,11 @@ public class CommandLineClient {
     public static DataOutputStream out_server;
 
     /*End of transmission for a stream.*/
-    public final String EOT = "end_of_transmission";
+    public static final String EOT = "end_of_transmission";
 
     /**
      * CommandLineClient method where all of our command line operations will happen.
+     *
      * @param args empty
      */
     public static void main(String[] args) {
@@ -64,37 +68,65 @@ public class CommandLineClient {
                 //If there are other parameters to the command we want to seperate those for later use.
                 userInputSplit = userInput.split("\\s+");
 
-                //switch based upon the first command in the line.
-                switch (userInputSplit[0]) {
-                    case "h":
-                        break;
-                    case "u":
-                        System.out.println("Please enter your desired username for this session: ");
-                        username = cmd.nextLine();
-                        System.out.println("Username has been changed sucessfully!");
-                        break;
-                    case "connect":
-                        if(userInputSplit.length != 3){
-                            InvalidParametersEntered(userInputSplit[0]);
+                if (!server.isConnected() && !(userInput.contains("connect") || userInput.equalsIgnoreCase("h") ||
+                        userInput.equalsIgnoreCase("u"))) {
+                    if(userInput.equalsIgnoreCase("quit")){
+                        System.out.println("You are not currently connected to a sever.");
+                    }else {
+                        System.out.println("Please connect to the server using the <connect> command, enter <h> for help.");
+                    }
+                } else {
+
+                    //switch based upon the first command in the line.
+                    switch (userInputSplit[0]) {
+                        case "h":
+                            DisplayCommandsForTheUser();
                             break;
-                        }
-                        ConnectToTheServer(userInputSplit[1], userInputSplit[2]);
-                        break;
-                    case "games":
-                        GetGameListFromServer();
-                        break;
-                    default:
-                        System.out.println("Invalid command, enter command (h) if you need help!");
+                        case "u":
+                            System.out.println("Please enter your desired username for this session: ");
+                            username = cmd.nextLine();
+                            System.out.println("Username has been changed sucessfully!");
+                            break;
+                        case "connect":
+                            if (userInputSplit.length != 3) {
+                                InvalidParametersEntered(userInputSplit[0]);
+                                break;
+                            }
+                            ConnectToTheServer(userInputSplit[1], userInputSplit[2]);
+                            break;
+                        case "games":
+                            GetGameListFromServer();
+                            break;
+                        default:
+                            System.out.println("Invalid command, enter command (h) if you need help!");
+                    }
                 }
             }
         }
     }
 
+    private static void DisplayCommandsForTheUser() {
+        for (String key : CommandExplinationHashMap.keySet()) {
+            System.out.println("\t<" + key + "> | " + CommandExplinationHashMap.get(key));
+        }
+    }
+
     private static void GetGameListFromServer() {
+        String gamename;
+        int index = 0;
         try {
             out_server.writeUTF("games");
             out_server.flush();
 
+            while (true) {
+                gamename = in_server.readUTF();
+                if (!gamename.equalsIgnoreCase(EOT)) {
+                    System.out.println("Game #" + index + ": " + gamename);
+                    index++;
+                } else {
+                    break;
+                }
+            }
 
 
         } catch (IOException e) {
@@ -105,7 +137,7 @@ public class CommandLineClient {
     private static boolean ConnectToTheServer(String ip, String port) {
         try {
             server = new Socket(ip, Integer.parseInt(port));
-            if(server.isConnected()){
+            if (server.isConnected()) {
 
                 //set up the streams using the global socket.
                 in_server = new DataInputStream(new BufferedInputStream(server.getInputStream()));
@@ -136,10 +168,21 @@ public class CommandLineClient {
         CommandParameterHashMap.put("u", "");
         CommandParameterHashMap.put("connect", "<ip> <port>");
         CommandParameterHashMap.put("quit", "");
+        CommandParameterHashMap.put("games", "");
+
+        CommandExplinationHashMap = new HashMap<String, String>();
+
+        //This can maybe be done another way if we want, but this is the easiest for now...
+        CommandExplinationHashMap.put("h", "This is the command that will display the other commands.");
+        CommandExplinationHashMap.put("u", "Allows the user to set their username once again.");
+        CommandExplinationHashMap.put("connect", "Parameters: <ip> <port> | Allows the user to connect to a main game server.");
+        CommandExplinationHashMap.put("quit", "Quits the server session currently connected too.");
+        CommandExplinationHashMap.put("games", "Lists the games from the server.");
     }
 
     /**
      * Prints the invalid parameter text to the user.
+     *
      * @param command the command that the user messed up.
      */
     private static void InvalidParametersEntered(String command) {
@@ -150,6 +193,7 @@ public class CommandLineClient {
 
     /**
      * Gets the parameters used for the command specified.
+     *
      * @param command the lookup value.
      * @return the parameters for the command.
      */
