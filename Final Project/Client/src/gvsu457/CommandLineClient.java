@@ -1,33 +1,41 @@
 package gvsu457;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Scanner;
-import java.util.concurrent.ConcurrentHashMap;
 
-public class Client {
+public class CommandLineClient {
 
     /*The user input for system.in*/
-    public String userInput;
+    public static String userInput;
 
     /*The split user input from system.in*/
-    public String[] userInputSplit;
+    public static String[] userInputSplit;
 
     /*The username that the user enters*/
-    private String username;
+    private static String username;
 
     /*Hashmap that contains command parameter info for both h commands and param checking*/
-    public HashMap<String, String> CommandParameterHashMap;
+    public static HashMap<String, String> CommandParameterHashMap;
 
     /*The server socket to maintain a connect*/
-    public Socket server;
+    public static Socket server;
+
+    /*The data input stream from the server*/
+    public static DataInputStream in_server;
+
+    /*The data output stream to the server.*/
+    public static DataOutputStream out_server;
+
+    /*End of transmission for a stream.*/
+    public final String EOT = "end_of_transmission";
 
     /**
-     * Client method where all of our command line operations will happen.
+     * CommandLineClient method where all of our command line operations will happen.
      * @param args empty
      */
-    public void main(String[] args) {
+    public static void main(String[] args) {
 
         //Init any important data structures for the commands issued by the user.
         InitializeClientDataLoad();
@@ -41,15 +49,14 @@ public class Client {
 
             //Get the first command from the user.
             Scanner cmd = new Scanner(System.in);
-            setUsername(cmd.nextLine());
+            username = cmd.nextLine();
 
             System.out.println("You have set your username as: " + getUsername());
             System.out.println("\n\nPlease enter a command (h for help)!");
-            System.out.println(">>:");
 
             while (true) {
                 //prompt the user for input.
-                System.out.println(">>:");
+                System.out.print(">>:");
 
                 //Read the user input from system.in
                 userInput = cmd.nextLine();
@@ -63,7 +70,7 @@ public class Client {
                         break;
                     case "u":
                         System.out.println("Please enter your desired username for this session: ");
-                        setUsername(cmd.nextLine());
+                        username = cmd.nextLine();
                         System.out.println("Username has been changed sucessfully!");
                         break;
                     case "connect":
@@ -73,6 +80,9 @@ public class Client {
                         }
                         ConnectToTheServer(userInputSplit[1], userInputSplit[2]);
                         break;
+                    case "games":
+                        GetGameListFromServer();
+                        break;
                     default:
                         System.out.println("Invalid command, enter command (h) if you need help!");
                 }
@@ -80,22 +90,45 @@ public class Client {
         }
     }
 
-    private void ConnectToTheServer(String ip, String port) {
+    private static void GetGameListFromServer() {
+        try {
+            out_server.writeUTF("games");
+            out_server.flush();
+
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static boolean ConnectToTheServer(String ip, String port) {
         try {
             server = new Socket(ip, Integer.parseInt(port));
             if(server.isConnected()){
+
+                //set up the streams using the global socket.
+                in_server = new DataInputStream(new BufferedInputStream(server.getInputStream()));
+                out_server = new DataOutputStream(new BufferedOutputStream(server.getOutputStream()));
+
                 System.out.println("Connection established to game server!");
+
+                out_server.writeUTF(getUsername());
+                out_server.flush();
+                return true;
             }
         } catch (IOException e) {
             System.out.println("Unable to connect to: " + ip + ":" + port);
         }
+        return false;
     }
 
     /**
      * This method will contain inits for all the important data we will use
      * during the execution of the program.
      */
-    private void InitializeClientDataLoad() {
+    private static void InitializeClientDataLoad() {
+
         CommandParameterHashMap = new HashMap<String, String>();
 
         //This can maybe be done another way if we want, but this is the easiest for now...
@@ -109,7 +142,7 @@ public class Client {
      * Prints the invalid parameter text to the user.
      * @param command the command that the user messed up.
      */
-    private void InvalidParametersEntered(String command) {
+    private static void InvalidParametersEntered(String command) {
         System.out.println("Invalid parameters for command: " + command);
         String properParameters = GetParametersForCommand(command);
         System.out.println("The proper parameters for <" + command + "> are: " + properParameters);
@@ -120,15 +153,11 @@ public class Client {
      * @param command the lookup value.
      * @return the parameters for the command.
      */
-    private String GetParametersForCommand(String command) {
+    private static String GetParametersForCommand(String command) {
         return CommandParameterHashMap.get(command);
     }
 
-    public String getUsername() {
+    public static String getUsername() {
         return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 }

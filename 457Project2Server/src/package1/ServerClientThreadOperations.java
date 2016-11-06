@@ -23,7 +23,7 @@ public class ServerClientThreadOperations extends Thread {
     private static final int MAX_CONNECTIONS = 100;
     
     /** Shortcut to DBXML */
-    public static String DBXML_DIR_SHORTCUT = System.getProperty("user.dir") + File.separator + "DBXML";
+    public static String DBXML_DIR_SHORTCUT = (new File(".").getAbsolutePath()) + File.separator + "DBXML";
 
     /** Instance of Thread Pool */
     private ExecutorService executorService = Executors.newCachedThreadPool();

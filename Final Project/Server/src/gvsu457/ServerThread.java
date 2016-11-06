@@ -15,6 +15,8 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -24,23 +26,25 @@ import java.util.ArrayList;
  */
 public class ServerThread implements Runnable {
 
-    /**
-     * A DataInputStream object
-     */
+    /** A DataInputStream object */
     private DataInputStream in;
 
-    /**
-     * A DataOutputStream object
-     */
+    /** A DataOutputStream object */
     private DataOutputStream out;
 
-    /**
-     * A socket for the connection
-     */
+    /** A socket for the connection */
     private Socket socket;
 
-    /*The users username*/
+    /** The users username */
     public String username;
+
+    /** Shortcut for DBXML */
+    public static String DBXML_DIR_SHORTCUT = System.getProperty("user.dir") + File.separator + "DBXML";
+
+    public HashMap<String, String> GameList;
+
+    /*End of transmission for a stream.*/
+    public final String EOT = "end_of_transmission";
 
     /**
      * Pass the socket into this thread.
@@ -52,10 +56,11 @@ public class ServerThread implements Runnable {
 
     public void run() {
 
+        InitalizeDataStructuresForServerCommands();
+
         //unless we tell it otherwise, run
         while (true) {
             try {
-
 
                 //set up the streams using the global socket.
                 in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
@@ -65,15 +70,17 @@ public class ServerThread implements Runnable {
 
                 //Once a user is connected, store their username and other relevant information in our DB.
                 username = in.readUTF();
-                StoreUserNameInDBXML(username);
+                StoreUserInDBXML(username, "" + socket.getInetAddress());
 
                 while (true) {
 
                     //get the line in from the client (the command sent)
+                    System.out.println("Waiting on command from: " +socket.getInetAddress());
                     String line = in.readUTF();
 
                     switch (line) {
-                        case "search":
+                        case "games":
+                            ListGamesForClient();
                             break;
 
                         case "quit":
@@ -98,5 +105,77 @@ public class ServerThread implements Runnable {
             }
         }
     }
+
+    private void ListGamesForClient() {
+        for(String game: GameList.keySet()){
+            try {
+                out.writeUTF(game);
+            } catch (IOException e) {
+                System.out.println("Something went wrong sending game list to client: " + socket.getInetAddress());
+            }
+        }
+        out.writeUTF()
+    }
+
+    private void InitalizeDataStructuresForServerCommands() {
+
+        GameList = new HashMap<String, String>();
+
+        GameList.put("tictactoe", "");
+        GameList.put("hangman", "");
+        GameList.put("battleship", "");
+        GameList.put("minesweeper", "");
+        GameList.put("placeholder", "");
+    }
+
+    private void StoreUserInDBXML(String username, String address) {
+
+        File userSpecificsFile = new File(DBXML_DIR_SHORTCUT + File.separator + username + ".xml");
+
+        //Build the dom.
+        Document dom;
+        Element ele = null;
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db = null;
+        try {
+
+            //Grab the specific user data and put it in the xml file.
+            db = dbf.newDocumentBuilder();
+            dom = db.newDocument();
+            Element rootEle = dom.createElement("userdetails");
+
+            ele = dom.createElement("username");
+            ele.appendChild(dom.createTextNode(username));
+            rootEle.appendChild(ele);
+
+            ele = dom.createElement("hostname");
+            ele.appendChild(dom.createTextNode(address));
+            rootEle.appendChild(ele);
+//
+//            ele = dom.createElement("port");
+//            ele.appendChild(dom.createTextNode("" + port));
+//            rootEle.appendChild(ele);
+
+            dom.appendChild(rootEle);
+
+            //save the file.
+            Transformer tr = TransformerFactory.newInstance().newTransformer();
+            tr.setOutputProperty(OutputKeys.INDENT, "yes");
+            tr.setOutputProperty(OutputKeys.METHOD, "xml");
+            tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+            tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+            tr.transform(new DOMSource(dom), new StreamResult(new FileOutputStream(userSpecificsFile.getPath())));
+
+        } catch (ParserConfigurationException e) {
+            System.out.println(e.getStackTrace());
+        } catch (TransformerConfigurationException e) {
+            System.out.println(e.getStackTrace());
+        } catch (TransformerException e) {
+            System.out.println(e.getStackTrace());
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getStackTrace());
+        }
+    }
+
 }
 

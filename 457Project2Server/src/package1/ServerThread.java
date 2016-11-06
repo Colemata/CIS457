@@ -28,7 +28,7 @@ public class ServerThread implements Runnable {
     public static String username;
     
     /** Shortcut for DBXML */
-    public static String DBXML_DIR_SHORTCUT = System.getProperty("user.dir") + File.separator + "DBXML";
+    public static String DBXML_DIR_SHORTCUT = (new File(".").getAbsolutePath()) + File.separator + "DBXML";
     
     /** String for the hostname */
     public String hostname;
