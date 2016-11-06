@@ -110,14 +110,19 @@ public class GUI extends JFrame implements ActionListener{
 	/** A text area for the results of the command */
 	private JTextArea ftpArea;
 
+	/** A JTable for the search results */
 	private JTable searchResultsTable;
 
+	/** A JScrollPane */
 	private JScrollPane jScrollPane1;
 
+	/** The listening label for the port number */
 	private JLabel listeningLabel;
 
+	/** A JTextField for the listening port */
 	private JTextField listeningPortField;
 
+	/** Button that quits */
 	private JButton quitButton;
 	
 	/**
@@ -279,6 +284,9 @@ public class GUI extends JFrame implements ActionListener{
 		controller.setPortNumber(Integer.parseInt(portField.getText()));
 	}
 
+	/**
+	 * Sets the listening port number
+	 */
 	void setListeningPortNumber(){
 
 		controller.setListeningPortNumber(Integer.parseInt(listeningPortField.getText()));
@@ -332,6 +340,11 @@ public class GUI extends JFrame implements ActionListener{
 		controller.setUsername(usernameField.getText());
 	}
 	
+	/**
+	 * Action Performed method that handles the events for the GUI.
+	 *
+	 * @param ActionEvent event
+	 */
 	public void actionPerformed(ActionEvent event){
 		
 		JComponent e = (JComponent)event.getSource();

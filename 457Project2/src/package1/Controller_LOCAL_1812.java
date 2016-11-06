@@ -15,10 +15,11 @@ import java.util.concurrent.Executors;
  */
 public class Controller {
 
-    /** The port number */
+    /**
+     * The port number
+     */
     private int port;
 
-<<<<<<< HEAD
     /**
      * The listening port number for client to client
      */
@@ -32,45 +33,38 @@ public class Controller {
     /**
      * The executor to be used when spawning a thread for the listening operation.
      */
-=======
-    /** The listening port number */
-    private int listeningPortNumber;
-
-    /** A socket to establish a connection */
-    public Socket socket;
-
-    /** A client socket */
-    public Socket ClientSocket;
-
-    /** A new Thread Pool */
->>>>>>> d679fe22e7e27795e31eed0db5ed32b2589fb123
     private static ExecutorService executorService = Executors.newCachedThreadPool();
 
-    /** The server host name */
+    /**
+     * The server host name
+     */
     private String serverHostname;
 
-    /** The keyword used to search */
+    /**
+     * The keyword used to search
+     */
     private String keyword;
 
-    /** The command entered by the user */
+    /**
+     * The command entered by the user
+     */
     private String command;
 
-    /** The hostname */
+    /**
+     * The hostname
+     */
     private String hostname;
 
-<<<<<<< HEAD
     /**
      * The users name
      */
-=======
-    /** The username */
->>>>>>> d679fe22e7e27795e31eed0db5ed32b2589fb123
     private String username;
 
-    /** The speed specified by the user */
+    /**
+     * The speed specified by the user
+     */
     private String speed;
 
-<<<<<<< HEAD
     /**
      * Used to determine if there was a failure between the server and client.
      */
@@ -89,18 +83,6 @@ public class Controller {
     /**
      * The data output stream.
      */
-=======
-    /** SERVER_FAILURE_TEXT */
-    public final String SERVER_FAILURE_TEXT = "zxczxczxc";
-
-    /** A server socket */
-    public static Socket server;
-    
-    /** DataInputStream object */
-    public static DataInputStream in;
-    
-    /** DataOutputStream object */
->>>>>>> d679fe22e7e27795e31eed0db5ed32b2589fb123
     public static DataOutputStream out;
 
     /**
@@ -123,21 +105,11 @@ public class Controller {
         this.serverHostname = serverHostname;
     }
 
-    /**
-     * Sets the listening port number from the GUI.
-     *
-     * @param listeningPortNumber the listening port number
-     */
     public void setListeningPortNumber(int listeningPortNumber) {
 
         this.listeningPortNumber = listeningPortNumber;
     }
 
-    /**
-     * Gets the listening port number.
-     *
-     * @return returns the listening port number.
-     */
     public int getListeningPortNumber() {
 
         return listeningPortNumber;
@@ -258,14 +230,8 @@ public class Controller {
     }
 
     /**
-<<<<<<< HEAD
      * Connect to the server at the specified port and host numbers.
      * @return
-=======
-     * Connects to the Server.
-     *
-     * @return returns true if connected to the server.
->>>>>>> d679fe22e7e27795e31eed0db5ed32b2589fb123
      */
     public boolean connectToServer() {
         boolean retVal = false;
@@ -307,12 +273,8 @@ public class Controller {
     }
 
     /**
-<<<<<<< HEAD
      * We know we are expecting something back from the server, so unless there was an error
      * get the ack then send our file list.
-=======
-     * Waits for acknowledgement from the server.
->>>>>>> d679fe22e7e27795e31eed0db5ed32b2589fb123
      */
     private void waitForServerACK() {
         try {
@@ -330,11 +292,7 @@ public class Controller {
     }
 
     /**
-<<<<<<< HEAD
      * Sends our filelist to the server.
-=======
-     * Sends the XML file.
->>>>>>> d679fe22e7e27795e31eed0db5ed32b2589fb123
      */
     private void sendXMLFile() {
         File dir = new File(".");
@@ -372,14 +330,8 @@ public class Controller {
     }
 
     /**
-<<<<<<< HEAD
      * Sends the search params to the server.
      * @return the array of file data found.
-=======
-     * Sends the search criteria.
-     *
-     * @return returns a list of file data objects.
->>>>>>> d679fe22e7e27795e31eed0db5ed32b2589fb123
      */
     public ArrayList<FileData> sendSearchCritera() {
 
@@ -416,14 +368,8 @@ public class Controller {
     }
 
     /**
-<<<<<<< HEAD
      * Sends the command to the other client.
      * @return the status of the command sent.
-=======
-     * Sends commands to other clients.
-     *
-     * @return returns the status of the connection.
->>>>>>> d679fe22e7e27795e31eed0db5ed32b2589fb123
      */
     public String sendCommandToOtherClient() {
 
@@ -463,12 +409,8 @@ public class Controller {
     }
 
     /**
-<<<<<<< HEAD
      * When we request a file from the other client we can call this method and wait for the file to be
      * sent to us.
-=======
-     * Waits for files from other clients.
->>>>>>> d679fe22e7e27795e31eed0db5ed32b2589fb123
      */
     private void WaitForFileFromOtherClient() {
 
@@ -511,14 +453,8 @@ public class Controller {
     }
 
     /**
-<<<<<<< HEAD
      * Send the quit command and disconnect from the server.
      * @return status of the operation.
-=======
-     * Disconnects from the server.
-     *
-     * @return returns the status of the connection.
->>>>>>> d679fe22e7e27795e31eed0db5ed32b2589fb123
      */
     public String sendQuitCommandToServer() {
         String status = "Disconnected from: " + server.getInetAddress();

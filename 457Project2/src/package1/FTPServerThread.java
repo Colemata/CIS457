@@ -4,13 +4,42 @@ import java.io.*;
 import java.net.Socket;
 
 /**
+<<<<<<< HEAD
  * This is the clients server thread which will handle comms between itself and other clients
+=======
+ * FTPServerThread 
+ *
+ * @author David Fletcher, Taylor Coleman
+>>>>>>> d679fe22e7e27795e31eed0db5ed32b2589fb123
  */
 public class FTPServerThread implements Runnable {
 
+    /** DataInputStream object */
     private DataInputStream in;
+    
+    /** DataOutputStream object */
     private DataOutputStream out;
+    
+    /** Socket object */
     private Socket socket;
+<<<<<<< HEAD
+=======
+    
+    /** String for the username */
+    public static String username;
+    
+    /** String for the hostname */
+    public String hostname;
+    
+    /** String for the speed */
+    public String speed;
+    
+    /** Shortcut for DBXML */
+    public static String DBXML_DIR_SHORTCUT = System.getProperty("user.dir") + File.separator + "DBXML";
+    
+    /** SERVER_FAILURE_TEXT */
+    public final String SERVER_FAILURE_TEXT = "zxczxczxc";
+>>>>>>> d679fe22e7e27795e31eed0db5ed32b2589fb123
 
     //pass the socket into this thread.
     public FTPServerThread(Socket socket) {
@@ -19,7 +48,11 @@ public class FTPServerThread implements Runnable {
     }
 
     /**
+<<<<<<< HEAD
      * The runnable for the client server
+=======
+     * Runs the FTPServerThread
+>>>>>>> d679fe22e7e27795e31eed0db5ed32b2589fb123
      */
     public void run() {
 
@@ -60,7 +93,11 @@ public class FTPServerThread implements Runnable {
     }
 
     /**
+<<<<<<< HEAD
      * If we get a quit command, we are going to call this method to disconnect from the other client.
+=======
+     * Disconnects from a client.
+>>>>>>> d679fe22e7e27795e31eed0db5ed32b2589fb123
      */
     private void DisconnectFromOtherClient() {
 
@@ -76,6 +113,9 @@ public class FTPServerThread implements Runnable {
         Thread.currentThread().interrupt();
     }
 
+    /**
+     * Waits for a file from another client.
+     */
     private void WaitForFileFromOtherClient() {
 
         //Should we make this buffer a different size?
@@ -114,8 +154,11 @@ public class FTPServerThread implements Runnable {
         }
     }
 
-    //same thing here with the current dir as below, maybe there is a better way. (does this way work on linux?)
-    //
+    /**
+     * Gets the file for the client.
+     *
+     * @param String filename.
+     */
     private void GetFileForClient(String filename) {
 
         try {

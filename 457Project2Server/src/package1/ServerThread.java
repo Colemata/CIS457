@@ -16,31 +16,60 @@ import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
+
 /**
- * This class will handle the connection between each client and the server.
+ * ServerThread - This class will handle the connection between each client and the server.
+ *
+ * @author Taylor Coleman, David Fletcher
  */
 public class ServerThread implements Runnable {
 
+    /** String for the username */
     public static String username;
+    
+    /** Shortcut for DBXML */
     public static String DBXML_DIR_SHORTCUT = System.getProperty("user.dir") + File.separator + "DBXML";
+    
+    /** String for the hostname */
     public String hostname;
+    
+    /** The speed of the connection */
     public String speed;
+    
+    /** The port number */
     public int port;
+    
+    /** A DataInputStream object */
     private DataInputStream in;
+    
+    /** A DataOutputStream object */
     private DataOutputStream out;
+    
+    /** A socket for the connection */
     private Socket socket;
 
-    //pass the socket into this thread.
+    /**
+     * Pass the socket into this thread.
+     *
+     * @param Socket the socket for the connection
+     */
     public ServerThread(Socket socket) {
         this.socket = socket;
         System.out.println("Client connected from: " + socket.getInetAddress());
     }
 
     /**
+<<<<<<< HEAD
      * This method will recieve the filelist from the client after they connect.
      *
      * @param in       the data input stream
      * @param username the username of the user sending the file.
+=======
+     * Retrieves file from the server.
+     *
+     * @param DataInputStream in
+     * @param String username
+>>>>>>> d679fe22e7e27795e31eed0db5ed32b2589fb123
      */
     private static void RetrieveFileFromServer(DataInputStream in, String username) {
 
@@ -80,7 +109,11 @@ public class ServerThread implements Runnable {
     /**
      * Rearrange the files so that we can access and parse them later.
      *
+<<<<<<< HEAD
      * @param XMLFile
+=======
+     * @param File XMLFile
+>>>>>>> d679fe22e7e27795e31eed0db5ed32b2589fb123
      */
     public static void PutContentsInUsersExistingXMLFile(File XMLFile) {
         try {
@@ -138,7 +171,11 @@ public class ServerThread implements Runnable {
     }
 
     /**
+<<<<<<< HEAD
      * This is the actually runnable method which will keep our server alive.
+=======
+     * Starts the thread.
+>>>>>>> d679fe22e7e27795e31eed0db5ed32b2589fb123
      */
     public void run() {
 
@@ -265,9 +302,16 @@ public class ServerThread implements Runnable {
     }
 
     /**
+<<<<<<< HEAD
      * Search the xml files for a match.
      * @param searchCritera the string the client entered to search for.
      * @return the arraylist of the file data.
+=======
+     * Search the XML for matching search criteria.
+     *
+     * @param String searchCriteria
+     * @return ArrayList<FileData> returns a list of FileData objects
+>>>>>>> d679fe22e7e27795e31eed0db5ed32b2589fb123
      */
     private ArrayList<FileData> SearchXMLForMatch(String searchCritera) {
 
@@ -328,9 +372,16 @@ public class ServerThread implements Runnable {
     }
 
     /**
+<<<<<<< HEAD
      * Get the port for the provided username using the xml data.
      * @param userName the provided username to get the port for.
      * @return the port number.
+=======
+     * Returns the port number for the username.
+     *
+     * @param String username
+     * @return int port number
+>>>>>>> d679fe22e7e27795e31eed0db5ed32b2589fb123
      */
     private int getPortForUserName(String userName) {
         int portNum = 0;
@@ -363,6 +414,12 @@ public class ServerThread implements Runnable {
         return portNum;
     }
 
+    /**
+     * Returns the hostname for the username.
+     *
+     * @param String username
+     * @return String 
+     */
     private String getHostNameForUserName(String userName) {
         String hostnamee = "";
         try {
@@ -391,6 +448,12 @@ public class ServerThread implements Runnable {
         return hostnamee;
     }
 
+    /**
+     * Returns the speed for the username.
+     *
+     * @param String username
+     * @return String 
+     */
     private String getSpeedForUserName(String userName) {
         String speedd = "";
         try {
@@ -430,9 +493,75 @@ public class ServerThread implements Runnable {
     }
 
     /**
+<<<<<<< HEAD
      * This method will grab the initial user data from the input stream and write it to their corresponding
      * file to keep their data for client to client connections.
      * @param newUserXML the file to be written to.
+=======
+     * Gets the file for the client.
+     *
+     * @param DataOutputStream out
+     * @param String filename
+     */
+    private void GetFileForClient(DataOutputStream out, String filename) {
+
+        File dir = new File(".");
+        File fileToSend = new File(dir, filename);
+        int n = 0;
+
+        //init buffer, apparently it's ok to hardcode the size.
+        byte[] buffer = new byte[4098];
+        try {
+
+            //file in will input the file from the dir to the server process
+            FileInputStream fis = new FileInputStream(fileToSend);
+
+            //this is writing the file size to the client so we know when to stop buffering stuff.
+            out.writeLong(fileToSend.length());
+
+            //while file in has stuff coming in, write to the client.
+            while((n = fis.read(buffer)) != -1) {
+                out.write(buffer, 0, n);
+            }
+
+            //flush the out and close the file input steam.
+            out.flush();
+            fis.close();
+
+            //we should do better error handling, we can even just print out the errors to the server cmd, since it's basically our log.
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Sends back all files in the current directory.
+     *
+     * @param DataOutputStream out
+     */
+    private void SendBackAllFilesInCurDir(DataOutputStream out) {
+        try {
+            File curDir = new File(".");
+            File[] FileList = curDir.listFiles();
+
+            for (File file : FileList) {
+                out.writeUTF(file.getName());
+            }
+            out.flush();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Writes the XML User data.
+     *
+     * @param File newUserXML
+>>>>>>> d679fe22e7e27795e31eed0db5ed32b2589fb123
      */
     private void WriteXMLUserData(File newUserXML) {
 
