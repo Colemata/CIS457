@@ -4,18 +4,13 @@ import java.io.*;
 import java.net.Socket;
 
 /**
- *
+ * This is the clients server thread which will handle comms between itself and other clients
  */
 public class FTPServerThread implements Runnable {
 
     private DataInputStream in;
     private DataOutputStream out;
     private Socket socket;
-    public static String username;
-    public String hostname;
-    public String speed;
-    public static String DBXML_DIR_SHORTCUT = System.getProperty("user.dir") + File.separator + "DBXML";
-    public final String SERVER_FAILURE_TEXT = "zxczxczxc";
 
     //pass the socket into this thread.
     public FTPServerThread(Socket socket) {
@@ -23,6 +18,9 @@ public class FTPServerThread implements Runnable {
         System.out.println("Client connected from: " + socket.getInetAddress());
     }
 
+    /**
+     * The runnable for the client server
+     */
     public void run() {
 
         //unless we tell it otherwise, run
@@ -37,6 +35,7 @@ public class FTPServerThread implements Runnable {
 
                 String line = in.readUTF();
 
+                //These are the commands from the other clients.
                 switch (line) {
 
                     case "search":
@@ -60,6 +59,9 @@ public class FTPServerThread implements Runnable {
         }
     }
 
+    /**
+     * If we get a quit command, we are going to call this method to disconnect from the other client.
+     */
     private void DisconnectFromOtherClient() {
 
         //flush and shutdown the sockets, not sure why it even matters.
@@ -68,7 +70,7 @@ public class FTPServerThread implements Runnable {
             socket.shutdownOutput();
             socket.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getStackTrace());
         }
         //kill the thread.
         Thread.currentThread().interrupt();
@@ -108,7 +110,7 @@ public class FTPServerThread implements Runnable {
             //close the file output stream.
             fos.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getStackTrace());
         }
     }
 
@@ -149,9 +151,9 @@ public class FTPServerThread implements Runnable {
 
             //we should do better error handling, we can even just print out the errors to the server cmd, since it's basically our log.
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.out.println(e.getStackTrace());
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getStackTrace());
         }
     }
 }

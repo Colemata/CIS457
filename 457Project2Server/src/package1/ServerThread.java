@@ -36,9 +36,14 @@ public class ServerThread implements Runnable {
         System.out.println("Client connected from: " + socket.getInetAddress());
     }
 
+    /**
+     * This method will recieve the filelist from the client after they connect.
+     *
+     * @param in       the data input stream
+     * @param username the username of the user sending the file.
+     */
     private static void RetrieveFileFromServer(DataInputStream in, String username) {
 
-        //Should we make this buffer a different size?
         byte[] buffer = new byte[4098];
 
         try {
@@ -64,6 +69,7 @@ public class ServerThread implements Runnable {
             //close the file output stream.
             fos.close();
 
+            //Now that we have this file, let's put the contents into xml format in the proper dir.
             PutContentsInUsersExistingXMLFile(newFile);
 
         } catch (IOException e) {
@@ -73,25 +79,32 @@ public class ServerThread implements Runnable {
 
     /**
      * Rearrange the files so that we can access and parse them later.
+     *
      * @param XMLFile
      */
     public static void PutContentsInUsersExistingXMLFile(File XMLFile) {
         try {
+
+            //Init all the dom parsing stuff.
             Document dom;
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             dom = db.parse(XMLFile);
             Element doc = dom.getDocumentElement();
+
+            //Get every node under the files tag.
             NodeList thisNodeList = doc.getElementsByTagName("file");
 
+            //Each element under the file tags
             for (int temp = 0; temp < thisNodeList.getLength(); temp++) {
                 Node nNode = thisNodeList.item(temp);
                 if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-                    Element eElement = (Element) nNode;
-                    System.out.println("desc : " + eElement.getElementsByTagName("description").item(0).getTextContent());
 
+                    Element eElement = (Element) nNode;
                     Element newFile = dom.createElement("file");
                     Element name = dom.createElement("name");
+                    System.out.println("file  <" + eElement.getElementsByTagName("name").item(0).getTextContent() +
+                            "> uploaded by user <" + username + ">");
                     name.appendChild(dom.createTextNode(eElement.getElementsByTagName("name").item(0).getTextContent()));
                     newFile.appendChild(name);
                     Element desc = dom.createElement("description");
@@ -100,30 +113,33 @@ public class ServerThread implements Runnable {
                 }
             }
 
+            //Save the file
             DOMSource source = new DOMSource(dom);
-
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             StreamResult result = new StreamResult(DBXML_DIR_SHORTCUT + File.separator + username + ".filelist");
             transformer.transform(source, result);
 
+            //Delete the temp file that was sent to the server from the client to keep things tidy.
             File newFile = new File(System.getProperty("user.dir") + File.separator + username + ".temp");
             newFile.delete();
 
-
         } catch (ParserConfigurationException pce) {
-            System.out.println(pce.getMessage());
+            System.out.println(pce.getStackTrace());
         } catch (SAXException se) {
-            System.out.println(se.getMessage());
+            System.out.println(se.getStackTrace());
         } catch (IOException ioe) {
-            System.err.println(ioe.getMessage());
+            System.out.println(ioe.getStackTrace());
         } catch (TransformerConfigurationException e) {
-            e.printStackTrace();
+            System.out.println(e.getStackTrace());
         } catch (TransformerException e) {
-            e.printStackTrace();
+            System.out.println(e.getStackTrace());
         }
     }
 
+    /**
+     * This is the actually runnable method which will keep our server alive.
+     */
     public void run() {
 
         //unless we tell it otherwise, run
@@ -148,7 +164,7 @@ public class ServerThread implements Runnable {
                 boolean userFoundFlag = false;
 
                 for (File file : FileList) {
-                    if(file.getName().equalsIgnoreCase(username + ".xmloffline")){
+                    if (file.getName().equalsIgnoreCase(username + ".xmloffline")) {
                         //we have found the users file. make them appear online.
                         file.renameTo(new File(DBXML_DIR_SHORTCUT + File.separator + username + ".xml"));
                         userFoundFlag = true;
@@ -157,7 +173,7 @@ public class ServerThread implements Runnable {
                     }
                 }
 
-                if(!userFoundFlag){
+                if (!userFoundFlag) {
                     File newUserXML = new File(DBXML_DIR_SHORTCUT + File.separator + username + ".xml");
                     newUserXML.getParentFile().mkdirs();
                     newUserXML.createNewFile();
@@ -167,40 +183,46 @@ public class ServerThread implements Runnable {
 
 
                 //Now we want to send back the fact that we have registered, or found the user...
-                if(userFoundFlag) {
+                if (userFoundFlag) {
                     out.writeUTF("We have found a data entry for user: " + username + ".");
-                }else{
+                } else {
                     out.writeUTF("We have created a data entry for user: " + username + ".");
                 }
-
                 out.flush();
 
+                //We know that the next thing that is going to happen is the client is going to send us a filelist.
                 RetrieveFileFromServer(in, username);
 
                 System.out.println("Handshake complete, waiting for client action...");
                 while (true) {
 
-                    //get the line in from the client
+                    //get the line in from the client (the command sent)
                     String line = in.readUTF();
 
                     switch (line) {
-
                         case "search":
                             String searchCritera = in.readUTF();
+
+                            //Get the list of files per the user search critera.
                             ArrayList<FileData> retVal = SearchXMLForMatch(searchCritera);
 
-                            for(FileData sendBack: retVal){
+                            //Send back the file data to the client.
+                            for (FileData sendBack : retVal) {
                                 out.writeUTF(sendBack.getSpeed());
                                 out.writeUTF(sendBack.getHostname());
                                 out.writeUTF(sendBack.getFilename());
                                 out.writeInt(sendBack.getPort());
                             }
 
+                            //When we are done sending file data, let the client know we are done sending stuff.
                             out.writeUTF("search_completed");
                             out.flush();
                             break;
+
                         case "quit":
                             socket.close();
+
+                            //upon quit from a client delete their files.
                             curDir = new File(DBXML_DIR_SHORTCUT);
                             FileList = curDir.listFiles();
                             for (File f : FileList) {
@@ -225,7 +247,7 @@ public class ServerThread implements Runnable {
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
-                //Next, we should check if this user exists, if not, create their xml file.
+                //Delete this users files if they lost connection.
                 File curDir = new File(DBXML_DIR_SHORTCUT);
                 File[] FileList = curDir.listFiles();
                 for (File f : FileList) {
@@ -242,6 +264,11 @@ public class ServerThread implements Runnable {
         }
     }
 
+    /**
+     * Search the xml files for a match.
+     * @param searchCritera the string the client entered to search for.
+     * @return the arraylist of the file data.
+     */
     private ArrayList<FileData> SearchXMLForMatch(String searchCritera) {
 
         ArrayList<FileData> fileDataList = new ArrayList<FileData>();
@@ -249,50 +276,62 @@ public class ServerThread implements Runnable {
         //get all files in XML dir.
         //Next, we should check if this user exists, if not, create their xml file.
         try {
-        File curDir = new File(DBXML_DIR_SHORTCUT);
-        File[] FileList = curDir.listFiles();
+            File curDir = new File(DBXML_DIR_SHORTCUT);
+            File[] FileList = curDir.listFiles();
 
-        for(File file: FileList){
-            if(file.getName().contains(".filelist")){
+            //For each file in the current directory.
+            for (File file : FileList) {
 
-                DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder dBuilder = null;
-                dBuilder = dbFactory.newDocumentBuilder();
-                Document doc = dBuilder.parse(file);
-                NodeList thisNodeList = doc.getElementsByTagName("file");
+                //if it is a filelist file.
+                if (file.getName().contains(".filelist")) {
 
-                for (int temp = 0; temp < thisNodeList.getLength(); temp++) {
-                    Node nNode = thisNodeList.item(temp);
-                    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-                        Element eElement = (Element) nNode;
-                        String description = eElement.getElementsByTagName("description").item(0).getTextContent();
-                        if(description.contains(searchCritera)) {
+                    System.out.println("Checking <" + file.getName() + "> for user <" + username + "> search params.");
 
-                            String hostname = getHostNameForUserName(file.getName().substring(0, file.getName().lastIndexOf(".")));
-                            String filename = eElement.getElementsByTagName("name").item(0).getTextContent();
-                            String speed = getSpeedForUserName(file.getName().substring(0, file.getName().lastIndexOf(".")));
-                            int port = getPortForUserName(file.getName().substring(0, file.getName().lastIndexOf(".")));
-                            FileData fileData = new FileData(speed, hostname, filename, port);
-                            fileDataList.add(fileData);
+                    //build the dom parser stuff.
+                    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+                    DocumentBuilder dBuilder = null;
+                    dBuilder = dbFactory.newDocumentBuilder();
+                    Document doc = dBuilder.parse(file);
+                    NodeList thisNodeList = doc.getElementsByTagName("file");
+
+                    //See if each files desc meets the search criteria.
+                    for (int temp = 0; temp < thisNodeList.getLength(); temp++) {
+                        Node nNode = thisNodeList.item(temp);
+                        if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                            Element eElement = (Element) nNode;
+                            String description = eElement.getElementsByTagName("description").item(0).getTextContent();
+                            if (description.contains(searchCritera)) {
+
+                                String hostname = getHostNameForUserName(file.getName().substring(0, file.getName().lastIndexOf(".")));
+                                String filename = eElement.getElementsByTagName("name").item(0).getTextContent();
+                                String speed = getSpeedForUserName(file.getName().substring(0, file.getName().lastIndexOf(".")));
+                                int port = getPortForUserName(file.getName().substring(0, file.getName().lastIndexOf(".")));
+                                FileData fileData = new FileData(speed, hostname, filename, port);
+                                fileDataList.add(fileData);
+                            }
+
+
                         }
-
-
                     }
+
                 }
 
             }
-
-        }
         } catch (ParserConfigurationException e) {
-            e.printStackTrace();
+            System.out.println(e.getStackTrace());
         } catch (SAXException e) {
-            e.printStackTrace();
+            System.out.println(e.getStackTrace());
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getStackTrace());
         }
         return fileDataList;
     }
 
+    /**
+     * Get the port for the provided username using the xml data.
+     * @param userName the provided username to get the port for.
+     * @return the port number.
+     */
     private int getPortForUserName(String userName) {
         int portNum = 0;
         try {
@@ -300,8 +339,12 @@ public class ServerThread implements Runnable {
             File curDir = new File(DBXML_DIR_SHORTCUT);
             File[] FileList = curDir.listFiles();
 
-            for(File file: FileList) {
+            //For each file
+            for (File file : FileList) {
+                //If the file is the users xml file.
                 if (file.getName().equalsIgnoreCase(userName + ".xml")) {
+
+                    //build the dom and get the port number.
                     Document dom;
                     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
                     DocumentBuilder db = dbf.newDocumentBuilder();
@@ -311,11 +354,11 @@ public class ServerThread implements Runnable {
                 }
             }
         } catch (ParserConfigurationException e) {
-            e.printStackTrace();
+            System.out.println(e.getStackTrace());
         } catch (SAXException e) {
-            e.printStackTrace();
+            System.out.println(e.getStackTrace());
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getStackTrace());
         }
         return portNum;
     }
@@ -327,7 +370,7 @@ public class ServerThread implements Runnable {
             File curDir = new File(DBXML_DIR_SHORTCUT);
             File[] FileList = curDir.listFiles();
 
-            for(File file: FileList) {
+            for (File file : FileList) {
                 if (file.getName().equalsIgnoreCase(userName + ".xml")) {
                     Document dom;
                     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -339,11 +382,11 @@ public class ServerThread implements Runnable {
                 }
             }
         } catch (ParserConfigurationException e) {
-            e.printStackTrace();
+            System.out.println(e.getStackTrace());
         } catch (SAXException e) {
-            e.printStackTrace();
+            System.out.println(e.getStackTrace());
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getStackTrace());
         }
         return hostnamee;
     }
@@ -354,7 +397,7 @@ public class ServerThread implements Runnable {
             File curDir = new File(DBXML_DIR_SHORTCUT);
             File[] FileList = curDir.listFiles();
 
-            for(File file: FileList) {
+            for (File file : FileList) {
                 if (file.getName().equalsIgnoreCase(userName + ".xml")) {
                     Document dom;
                     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -377,113 +420,64 @@ public class ServerThread implements Runnable {
                 }
             }
         } catch (ParserConfigurationException e) {
-            e.printStackTrace();
+            System.out.println(e.getStackTrace());
         } catch (SAXException e) {
-            e.printStackTrace();
+            System.out.println(e.getStackTrace());
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getStackTrace());
         }
         return speedd;
     }
 
-    //same thing here with the current dir as below, maybe there is a better way. (does this way work on linux?)
-    //
-    private void GetFileForClient(DataOutputStream out, String filename) {
-
-        File dir = new File(".");
-        File fileToSend = new File(dir, filename);
-        int n = 0;
-
-        //init buffer, apparently it's ok to hardcode the size.
-        byte[] buffer = new byte[4098];
-        try {
-
-            //file in will input the file from the dir to the server process
-            FileInputStream fis = new FileInputStream(fileToSend);
-
-            //this is writing the file size to the client so we know when to stop buffering stuff.
-            out.writeLong(fileToSend.length());
-
-            //while file in has stuff coming in, write to the client.
-            while((n = fis.read(buffer)) != -1) {
-                out.write(buffer, 0, n);
-            }
-
-            //flush the out and close the file input steam.
-            out.flush();
-            fis.close();
-
-            //we should do better error handling, we can even just print out the errors to the server cmd, since it's basically our log.
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    //this is pretty simple, maybe we can get the current dir in a better way though, not sure.
-    private void SendBackAllFilesInCurDir(DataOutputStream out) {
-        try {
-            File curDir = new File(".");
-            File[] FileList = curDir.listFiles();
-
-            for (File file : FileList) {
-                out.writeUTF(file.getName());
-            }
-            out.flush();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
+    /**
+     * This method will grab the initial user data from the input stream and write it to their corresponding
+     * file to keep their data for client to client connections.
+     * @param newUserXML the file to be written to.
+     */
     private void WriteXMLUserData(File newUserXML) {
 
-        //This is basically straight off stack overflow...
-
+        //Build the dom.
         Document dom;
-        Element e = null;
+        Element ele = null;
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = null;
         try {
+
+            //Grab the specific user data and put it in the xml file.
             db = dbf.newDocumentBuilder();
             dom = db.newDocument();
             Element rootEle = dom.createElement("userdetails");
 
-//            Element rootEle2 = dom.createElement("userdetails");
-//
-//            rootEle2.appendChild(rootEle2);
+            ele = dom.createElement("hostname");
+            ele.appendChild(dom.createTextNode(hostname));
+            rootEle.appendChild(ele);
 
-            e = dom.createElement("hostname");
-            e.appendChild(dom.createTextNode(hostname));
-            rootEle.appendChild(e);
+            ele = dom.createElement("speed");
+            ele.appendChild(dom.createTextNode(speed));
+            rootEle.appendChild(ele);
 
-            e = dom.createElement("speed");
-            e.appendChild(dom.createTextNode(speed));
-            rootEle.appendChild(e);
-
-            e = dom.createElement("port");
-            e.appendChild(dom.createTextNode("" + port));
-            rootEle.appendChild(e);
+            ele = dom.createElement("port");
+            ele.appendChild(dom.createTextNode("" + port));
+            rootEle.appendChild(ele);
 
             dom.appendChild(rootEle);
 
+            //save the file.
             Transformer tr = TransformerFactory.newInstance().newTransformer();
             tr.setOutputProperty(OutputKeys.INDENT, "yes");
             tr.setOutputProperty(OutputKeys.METHOD, "xml");
             tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
             tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-
             tr.transform(new DOMSource(dom), new StreamResult(new FileOutputStream(newUserXML.getPath())));
-        } catch (ParserConfigurationException e1) {
-            e1.printStackTrace();
-        } catch (TransformerConfigurationException e1) {
-            e1.printStackTrace();
-        } catch (TransformerException e1) {
-            e1.printStackTrace();
-        } catch (FileNotFoundException e1) {
-            e1.printStackTrace();
+
+        } catch (ParserConfigurationException e) {
+            System.out.println(e.getStackTrace());
+        } catch (TransformerConfigurationException e) {
+            System.out.println(e.getStackTrace());
+        } catch (TransformerException e) {
+            System.out.println(e.getStackTrace());
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getStackTrace());
         }
 
     }

@@ -1,7 +1,7 @@
 package package1;
 
 /**
- * Created by Administrator on 11/3/2016.
+ * Pojo to contain file data for the search results.
  */
 public class FileData {
 

@@ -1,7 +1,7 @@
 package package1;
 
 /**
- * Created by Administrator on 11/3/2016.
+ * Pojo to contain all the file data.
  */
 public class FileData {
 

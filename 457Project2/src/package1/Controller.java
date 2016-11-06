@@ -20,12 +20,19 @@ public class Controller {
      */
     private int port;
 
+    /**
+     * The listening port number for client to client
+     */
     private int listeningPortNumber;
 
-    public Socket socket;
-
+    /**
+     * The client socket
+     */
     public Socket ClientSocket;
 
+    /**
+     * The executor to be used when spawning a thread for the listening operation.
+     */
     private static ExecutorService executorService = Executors.newCachedThreadPool();
 
     /**
@@ -48,6 +55,9 @@ public class Controller {
      */
     private String hostname;
 
+    /**
+     * The users name
+     */
     private String username;
 
     /**
@@ -55,10 +65,24 @@ public class Controller {
      */
     private String speed;
 
+    /**
+     * Used to determine if there was a failure between the server and client.
+     */
     public final String SERVER_FAILURE_TEXT = "zxczxczxc";
 
+    /**
+     * The server socket.
+     */
     public static Socket server;
+
+    /**
+     * The data input stream.
+     */
     public static DataInputStream in;
+
+    /**
+     * The data output stream.
+     */
     public static DataOutputStream out;
 
     /**
@@ -128,6 +152,9 @@ public class Controller {
         return username;
     }
 
+    /**
+     * Setter for the username.
+     */
     public void setUsername(String username) {
         this.username = username;
     }
@@ -202,6 +229,10 @@ public class Controller {
         return speed;
     }
 
+    /**
+     * Connect to the server at the specified port and host numbers.
+     * @return
+     */
     public boolean connectToServer() {
         boolean retVal = false;
         server = new Socket();
@@ -223,9 +254,9 @@ public class Controller {
 
                 out.flush();
 
+                //Once we are connected to the server we need to listen for client to client connections.
                 FTPThreadPool serverClientThreadPool = new FTPThreadPool();
                 serverClientThreadPool.setListeningPortNumber(getListeningPortNumber());
-                //serverClientThreadPool.run();
                 executorService.submit(serverClientThreadPool);
 
             } else {
@@ -233,13 +264,18 @@ public class Controller {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getStackTrace());
         } finally {
+            //Wait for the server to ack our presence.
             waitForServerACK();
         }
         return retVal;
     }
 
+    /**
+     * We know we are expecting something back from the server, so unless there was an error
+     * get the ack then send our file list.
+     */
     private void waitForServerACK() {
         try {
             in = new DataInputStream(new BufferedInputStream(server.getInputStream()));
@@ -250,11 +286,14 @@ public class Controller {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getStackTrace());
         }
 
     }
 
+    /**
+     * Sends our filelist to the server.
+     */
     private void sendXMLFile() {
         File dir = new File(".");
         File fileToSend = new File(dir, "filelist.xml");
@@ -284,12 +323,16 @@ public class Controller {
 
             //we should do better error handling, we can even just print out the errors to the server cmd, since it's basically our log.
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.out.println(e.getStackTrace());
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getStackTrace());
         }
     }
 
+    /**
+     * Sends the search params to the server.
+     * @return the array of file data found.
+     */
     public ArrayList<FileData> sendSearchCritera() {
 
         ArrayList<FileData> retVal = new ArrayList<FileData>();
@@ -312,16 +355,22 @@ public class Controller {
                 String hostname = in.readUTF();
                 String filename = in.readUTF();
                 int port = in.readInt();
+
+                //since we found something, make the pojo and add it to the list to add to the GUI.
                 FileData fd = new FileData(speed, hostname, filename, port);
                 retVal.add(fd);
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getStackTrace());
         }
         return retVal;
     }
 
+    /**
+     * Sends the command to the other client.
+     * @return the status of the command sent.
+     */
     public String sendCommandToOtherClient() {
 
         String status = "";
@@ -359,6 +408,10 @@ public class Controller {
         return status;
     }
 
+    /**
+     * When we request a file from the other client we can call this method and wait for the file to be
+     * sent to us.
+     */
     private void WaitForFileFromOtherClient() {
 
         //Should we make this buffer a different size?
@@ -367,6 +420,8 @@ public class Controller {
         try {
 
             in = new DataInputStream(new BufferedInputStream(ClientSocket.getInputStream()));
+
+            //dump the initial status message coded in the other clients sender.
             String dump = in.readUTF();
             String filename = in.readUTF();
 
@@ -397,15 +452,16 @@ public class Controller {
         }
     }
 
+    /**
+     * Send the quit command and disconnect from the server.
+     * @return status of the operation.
+     */
     public String sendQuitCommandToServer() {
         String status = "Disconnected from: " + server.getInetAddress();
         try {
             out = new DataOutputStream(new BufferedOutputStream(server.getOutputStream()));
-            //DataOutputStream outServer = new DataOutputStream((new BufferedOutputStream(socket.getOutputStream())));
             out.writeUTF("quit");
-            //outServer.writeUTF("quit");
             out.flush();
-           // outServer.flush();
             server.close();
         } catch (IOException e) {
             e.printStackTrace();

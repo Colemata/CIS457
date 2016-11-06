@@ -6,7 +6,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Created by Administrator on 11/3/2016.
+ * This class is to spawn threads for the clients ftp server.
  */
 public class FTPThreadPool implements Runnable {
 
@@ -29,7 +29,6 @@ public class FTPThreadPool implements Runnable {
             try {
                 System.out.println("Waiting for a connection...");
                 FTPServerThread serverThread = new FTPServerThread(serverListener.accept());
-                //serverThread.run();
                 executorService.submit(serverThread);
             } catch (IOException e) {
                 throw new RuntimeException();
@@ -38,7 +37,6 @@ public class FTPThreadPool implements Runnable {
     }
 
     public void setListeningPortNumber(int listeningPortNumber){
-
         this.PORT = listeningPortNumber;
     }
 }
