@@ -7,25 +7,38 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Created by Administrator on 9/23/2016.
- */
-/*
- * This class houses the server socket itself.  Handles connecting to multiple clients.
+ * ServerClientThreadOperations
+ *
+ * @author Taylor Coleman, David Fletcher
  */
 public class ServerClientThreadOperations extends Thread {
 
+    /** Port Number */
     private static final int PORT = 33333;
+    
+    /** Listening socket */
     private ServerSocket serverListener;
+    
+    /** Max number of connections */
     private static final int MAX_CONNECTIONS = 100;
+    
+    /** Shortcut to DBXML */
     public static String DBXML_DIR_SHORTCUT = System.getProperty("user.dir") + File.separator + "DBXML";
 
+    /** Instance of Thread Pool */
     private ExecutorService executorService = Executors.newCachedThreadPool();
 
+    /**
+     * Main method
+     */
     public static void main(String[] args) {
         ServerClientThreadOperations serverClientThreadPool = new ServerClientThreadOperations();
         serverClientThreadPool.startServer();
     }
 
+    /**
+     * Constructor for ServerClientThreadOperations.
+     */
     ServerClientThreadOperations() {
         try {
             serverListener = new ServerSocket(PORT);
@@ -44,6 +57,9 @@ public class ServerClientThreadOperations extends Thread {
         }
     }
 
+    /**
+     * Starts the server.
+     */
     public void startServer() {
         for(int i = 0; i < MAX_CONNECTIONS; i++) {
             try {
