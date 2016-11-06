@@ -16,26 +16,54 @@ import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
+
 /**
- * This class will handle the connection between each client and the server.
+ * ServerThread - This class will handle the connection between each client and the server.
+ *
+ * @author Taylor Coleman, David Fletcher
  */
 public class ServerThread implements Runnable {
 
+    /** String for the username */
     public static String username;
+    
+    /** Shortcut for DBXML */
     public static String DBXML_DIR_SHORTCUT = System.getProperty("user.dir") + File.separator + "DBXML";
+    
+    /** String for the hostname */
     public String hostname;
+    
+    /** The speed of the connection */
     public String speed;
+    
+    /** The port number */
     public int port;
+    
+    /** A DataInputStream object */
     private DataInputStream in;
+    
+    /** A DataOutputStream object */
     private DataOutputStream out;
+    
+    /** A socket for the connection */
     private Socket socket;
 
-    //pass the socket into this thread.
+    /**
+     * Pass the socket into this thread.
+     *
+     * @param Socket the socket for the connection
+     */
     public ServerThread(Socket socket) {
         this.socket = socket;
         System.out.println("Client connected from: " + socket.getInetAddress());
     }
 
+    /**
+     * Retrieves file from the server.
+     *
+     * @param DataInputStream in
+     * @param String username
+     */
     private static void RetrieveFileFromServer(DataInputStream in, String username) {
 
         //Should we make this buffer a different size?
@@ -73,7 +101,8 @@ public class ServerThread implements Runnable {
 
     /**
      * Rearrange the files so that we can access and parse them later.
-     * @param XMLFile
+     *
+     * @param File XMLFile
      */
     public static void PutContentsInUsersExistingXMLFile(File XMLFile) {
         try {
@@ -124,6 +153,9 @@ public class ServerThread implements Runnable {
         }
     }
 
+    /**
+     * Starts the thread.
+     */
     public void run() {
 
         //unless we tell it otherwise, run
@@ -242,6 +274,12 @@ public class ServerThread implements Runnable {
         }
     }
 
+    /**
+     * Search the XML for matching search criteria.
+     *
+     * @param String searchCriteria
+     * @return ArrayList<FileData> returns a list of FileData objects
+     */
     private ArrayList<FileData> SearchXMLForMatch(String searchCritera) {
 
         ArrayList<FileData> fileDataList = new ArrayList<FileData>();
@@ -293,6 +331,12 @@ public class ServerThread implements Runnable {
         return fileDataList;
     }
 
+    /**
+     * Returns the port number for the username.
+     *
+     * @param String username
+     * @return int port number
+     */
     private int getPortForUserName(String userName) {
         int portNum = 0;
         try {
@@ -320,6 +364,12 @@ public class ServerThread implements Runnable {
         return portNum;
     }
 
+    /**
+     * Returns the hostname for the username.
+     *
+     * @param String username
+     * @return String 
+     */
     private String getHostNameForUserName(String userName) {
         String hostnamee = "";
         try {
@@ -348,6 +398,12 @@ public class ServerThread implements Runnable {
         return hostnamee;
     }
 
+    /**
+     * Returns the speed for the username.
+     *
+     * @param String username
+     * @return String 
+     */
     private String getSpeedForUserName(String userName) {
         String speedd = "";
         try {
@@ -386,8 +442,12 @@ public class ServerThread implements Runnable {
         return speedd;
     }
 
-    //same thing here with the current dir as below, maybe there is a better way. (does this way work on linux?)
-    //
+    /**
+     * Gets the file for the client.
+     *
+     * @param DataOutputStream out
+     * @param String filename
+     */
     private void GetFileForClient(DataOutputStream out, String filename) {
 
         File dir = new File(".");
@@ -421,7 +481,11 @@ public class ServerThread implements Runnable {
         }
     }
 
-    //this is pretty simple, maybe we can get the current dir in a better way though, not sure.
+    /**
+     * Sends back all files in the current directory.
+     *
+     * @param DataOutputStream out
+     */
     private void SendBackAllFilesInCurDir(DataOutputStream out) {
         try {
             File curDir = new File(".");
@@ -438,6 +502,11 @@ public class ServerThread implements Runnable {
 
     }
 
+    /**
+     * Writes the XML User data.
+     *
+     * @param File newUserXML
+     */
     private void WriteXMLUserData(File newUserXML) {
 
         //This is basically straight off stack overflow...
