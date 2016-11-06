@@ -15,50 +15,49 @@ import java.util.concurrent.Executors;
  */
 public class Controller {
 
-    /**
-     * The port number
-     */
+    /** The port number */
     private int port;
 
+    /** The listening port number */
     private int listeningPortNumber;
 
+    /** A socket to establish a connection */
     public Socket socket;
 
+    /** A client socket */
     public Socket ClientSocket;
 
+    /** A new Thread Pool */
     private static ExecutorService executorService = Executors.newCachedThreadPool();
 
-    /**
-     * The server host name
-     */
+    /** The server host name */
     private String serverHostname;
 
-    /**
-     * The keyword used to search
-     */
+    /** The keyword used to search */
     private String keyword;
 
-    /**
-     * The command entered by the user
-     */
+    /** The command entered by the user */
     private String command;
 
-    /**
-     * The hostname
-     */
+    /** The hostname */
     private String hostname;
 
+    /** The username */
     private String username;
 
-    /**
-     * The speed specified by the user
-     */
+    /** The speed specified by the user */
     private String speed;
 
+    /** SERVER_FAILURE_TEXT */
     public final String SERVER_FAILURE_TEXT = "zxczxczxc";
 
+    /** A server socket */
     public static Socket server;
+    
+    /** DataInputStream object */
     public static DataInputStream in;
+    
+    /** DataOutputStream object */
     public static DataOutputStream out;
 
     /**
@@ -81,11 +80,21 @@ public class Controller {
         this.serverHostname = serverHostname;
     }
 
+    /**
+     * Sets the listening port number from the GUI.
+     *
+     * @param listeningPortNumber the listening port number
+     */
     public void setListeningPortNumber(int listeningPortNumber) {
 
         this.listeningPortNumber = listeningPortNumber;
     }
 
+    /**
+     * Gets the listening port number.
+     *
+     * @return returns the listening port number.
+     */
     public int getListeningPortNumber() {
 
         return listeningPortNumber;
@@ -202,6 +211,11 @@ public class Controller {
         return speed;
     }
 
+    /**
+     * Connects to the Server.
+     *
+     * @return returns true if connected to the server.
+     */
     public boolean connectToServer() {
         boolean retVal = false;
         server = new Socket();
@@ -240,6 +254,9 @@ public class Controller {
         return retVal;
     }
 
+    /**
+     * Waits for acknowledgement from the server.
+     */
     private void waitForServerACK() {
         try {
             in = new DataInputStream(new BufferedInputStream(server.getInputStream()));
@@ -255,6 +272,9 @@ public class Controller {
 
     }
 
+    /**
+     * Sends the XML file.
+     */
     private void sendXMLFile() {
         File dir = new File(".");
         File fileToSend = new File(dir, "filelist.xml");
@@ -290,6 +310,11 @@ public class Controller {
         }
     }
 
+    /**
+     * Sends the search criteria.
+     *
+     * @return returns a list of file data objects.
+     */
     public ArrayList<FileData> sendSearchCritera() {
 
         ArrayList<FileData> retVal = new ArrayList<FileData>();
@@ -322,6 +347,11 @@ public class Controller {
         return retVal;
     }
 
+    /**
+     * Sends commands to other clients.
+     *
+     * @return returns the status of the connection.
+     */
     public String sendCommandToOtherClient() {
 
         String status = "";
@@ -359,6 +389,9 @@ public class Controller {
         return status;
     }
 
+    /**
+     * Waits for files from other clients.
+     */
     private void WaitForFileFromOtherClient() {
 
         //Should we make this buffer a different size?
@@ -397,6 +430,11 @@ public class Controller {
         }
     }
 
+    /**
+     * Disconnects from the server.
+     *
+     * @return returns the status of the connection.
+     */
     public String sendQuitCommandToServer() {
         String status = "Disconnected from: " + server.getInetAddress();
         try {
