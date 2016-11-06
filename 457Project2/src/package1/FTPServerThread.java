@@ -4,17 +4,34 @@ import java.io.*;
 import java.net.Socket;
 
 /**
+ * FTPServerThread 
  *
+ * @author David Fletcher, Taylor Coleman
  */
 public class FTPServerThread implements Runnable {
 
+    /** DataInputStream object */
     private DataInputStream in;
+    
+    /** DataOutputStream object */
     private DataOutputStream out;
+    
+    /** Socket object */
     private Socket socket;
+    
+    /** String for the username */
     public static String username;
+    
+    /** String for the hostname */
     public String hostname;
+    
+    /** String for the speed */
     public String speed;
+    
+    /** Shortcut for DBXML */
     public static String DBXML_DIR_SHORTCUT = System.getProperty("user.dir") + File.separator + "DBXML";
+    
+    /** SERVER_FAILURE_TEXT */
     public final String SERVER_FAILURE_TEXT = "zxczxczxc";
 
     //pass the socket into this thread.
@@ -23,6 +40,9 @@ public class FTPServerThread implements Runnable {
         System.out.println("Client connected from: " + socket.getInetAddress());
     }
 
+    /**
+     * Runs the FTPServerThread
+     */
     public void run() {
 
         //unless we tell it otherwise, run
@@ -60,6 +80,9 @@ public class FTPServerThread implements Runnable {
         }
     }
 
+    /**
+     * Disconnects from a client.
+     */
     private void DisconnectFromOtherClient() {
 
         //flush and shutdown the sockets, not sure why it even matters.
@@ -74,6 +97,9 @@ public class FTPServerThread implements Runnable {
         Thread.currentThread().interrupt();
     }
 
+    /**
+     * Waits for a file from another client.
+     */
     private void WaitForFileFromOtherClient() {
 
         //Should we make this buffer a different size?
@@ -112,8 +138,11 @@ public class FTPServerThread implements Runnable {
         }
     }
 
-    //same thing here with the current dir as below, maybe there is a better way. (does this way work on linux?)
-    //
+    /**
+     * Gets the file for the client.
+     *
+     * @param String filename.
+     */
     private void GetFileForClient(String filename) {
 
         try {
