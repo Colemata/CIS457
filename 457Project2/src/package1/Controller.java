@@ -18,21 +18,6 @@ public class Controller {
     /** The port number */
     private int port;
 
-<<<<<<< HEAD
-    /**
-     * The listening port number for client to client
-     */
-    private int listeningPortNumber;
-
-    /**
-     * The client socket
-     */
-    public Socket ClientSocket;
-
-    /**
-     * The executor to be used when spawning a thread for the listening operation.
-     */
-=======
     /** The listening port number */
     private int listeningPortNumber;
 
@@ -43,7 +28,6 @@ public class Controller {
     public Socket ClientSocket;
 
     /** A new Thread Pool */
->>>>>>> d679fe22e7e27795e31eed0db5ed32b2589fb123
     private static ExecutorService executorService = Executors.newCachedThreadPool();
 
     /** The server host name */
@@ -58,38 +42,12 @@ public class Controller {
     /** The hostname */
     private String hostname;
 
-<<<<<<< HEAD
-    /**
-     * The users name
-     */
-=======
     /** The username */
->>>>>>> d679fe22e7e27795e31eed0db5ed32b2589fb123
     private String username;
 
     /** The speed specified by the user */
     private String speed;
 
-<<<<<<< HEAD
-    /**
-     * Used to determine if there was a failure between the server and client.
-     */
-    public final String SERVER_FAILURE_TEXT = "zxczxczxc";
-
-    /**
-     * The server socket.
-     */
-    public static Socket server;
-
-    /**
-     * The data input stream.
-     */
-    public static DataInputStream in;
-
-    /**
-     * The data output stream.
-     */
-=======
     /** SERVER_FAILURE_TEXT */
     public final String SERVER_FAILURE_TEXT = "zxczxczxc";
 
@@ -100,7 +58,6 @@ public class Controller {
     public static DataInputStream in;
     
     /** DataOutputStream object */
->>>>>>> d679fe22e7e27795e31eed0db5ed32b2589fb123
     public static DataOutputStream out;
 
     /**

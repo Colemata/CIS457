@@ -22,8 +22,6 @@ public class FTPServerThread implements Runnable {
     
     /** Socket object */
     private Socket socket;
-<<<<<<< HEAD
-=======
     
     /** String for the username */
     public static String username;
@@ -39,7 +37,6 @@ public class FTPServerThread implements Runnable {
     
     /** SERVER_FAILURE_TEXT */
     public final String SERVER_FAILURE_TEXT = "zxczxczxc";
->>>>>>> d679fe22e7e27795e31eed0db5ed32b2589fb123
 
     //pass the socket into this thread.
     public FTPServerThread(Socket socket) {
