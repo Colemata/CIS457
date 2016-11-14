@@ -3,6 +3,7 @@ package gvsu457;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javax.management.QueryEval;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -10,7 +11,9 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
+import java.lang.reflect.Array;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -46,7 +49,7 @@ public class ServerThread implements Runnable {
      */
     public static String DBXML_DIR_SHORTCUT = (new File(".").getAbsolutePath()) + File.separator + "DBXML";
 
-    public HashMap<String, String> GameList;
+    public ArrayList<String> GameList;
 
     /*End of transmission for a stream.*/
     public final String EOT = "end_of_transmission";
@@ -92,6 +95,10 @@ public class ServerThread implements Runnable {
                             socket.close();
                             Thread.currentThread().interrupt();
                             break;
+                        case "play":
+                            int gameNumber = in.readInt();
+                            PlayAGameWithSomeone(gameNumber);
+                            break;
                     }
 
                 }
@@ -111,9 +118,62 @@ public class ServerThread implements Runnable {
         }
     }
 
+    private void PlayAGameWithSomeone(int gameNumber) {
+
+        System.out.println("User: " + username + " has requested to play game #" + gameNumber + ".");
+        //TODO: This is where I left off, need to add users to an XML file for each
+        //game if they are waiting for an opponent then when there is two, pair them up
+        //and start the actual game (which in itself will act as a server, I think...).
+
+        switch (gameNumber){
+            case 0:
+                //tictactoe
+                AddUserToQueueForGame("tictactoe", username);
+                break;
+            case 1:
+                //hangman
+                AddUserToQueueForGame("hangman", username);
+                break;
+            case 2:
+                //battleship
+                AddUserToQueueForGame("battleship", username);
+                break;
+            case 3:
+                //minesweeper
+                AddUserToQueueForGame("minesweeper", username);
+
+                break;
+            case 4:
+                //placeholder
+                //AddUserToQueueForGame("minesweeper", username);
+                break;
+            case 5:
+                break;
+        }
+    }
+
+    private void AddUserToQueueForGame(String game, String username) {
+
+        System.out.println("User: " + username + " has been added to the queue for " + game + ".");
+
+        String opponentName = CheckQueueForOtherPlayers(game, username);
+        if(!opponentName.isEmpty()){
+            System.out.println("User: " + username + " has been paired against " + opponentName + " for a game of + " + game + ".");
+        }else{
+            System.out.println("User: " + username + " is waiting for an opponent for " + game + "...");
+        }
+    }
+
+    private String CheckQueueForOtherPlayers(String game, String username) {
+
+        //TODO: If the queue has another player waiting, connect them and play the game, else return "".
+
+        return "";
+    }
+
     private void ListGamesForClient() {
         try {
-            for (String game : GameList.keySet()) {
+            for (String game : GameList) {
                 out.writeUTF(game);
             }
             out.writeUTF(EOT);
@@ -125,13 +185,15 @@ public class ServerThread implements Runnable {
 
     private void InitalizeDataStructuresForServerCommands() {
 
-        GameList = new HashMap<String, String>();
+        GameList = new ArrayList<String>();
 
-        GameList.put("tictactoe", "");
-        GameList.put("hangman", "");
-        GameList.put("battleship", "");
-        GameList.put("minesweeper", "");
-        GameList.put("placeholder", "");
+        GameList.add("tictactoe");
+        GameList.add("hangman");
+        GameList.add("battleship");
+        GameList.add("minesweeper");
+        GameList.add("placeholder");
+
+
     }
 
     private void StoreUserInDBXML(String username, String address) {

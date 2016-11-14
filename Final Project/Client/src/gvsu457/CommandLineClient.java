@@ -70,9 +70,9 @@ public class CommandLineClient {
 
                 if (!server.isConnected() && !(userInput.contains("connect") || userInput.equalsIgnoreCase("h") ||
                         userInput.equalsIgnoreCase("u"))) {
-                    if(userInput.equalsIgnoreCase("quit")){
+                    if (userInput.equalsIgnoreCase("quit")) {
                         System.out.println("You are not currently connected to a sever.");
-                    }else {
+                    } else {
                         System.out.println("Please connect to the server using the <connect> command, enter <h> for help.");
                     }
                 } else {
@@ -97,11 +97,30 @@ public class CommandLineClient {
                         case "games":
                             GetGameListFromServer();
                             break;
+                        case "play":
+                            if (userInputSplit.length != 2) {
+                                InvalidParametersEntered(userInputSplit[0]);
+                                break;
+                            }
+                            PlayAGameFromTheServer(userInputSplit[0], userInputSplit[1]);
+                            break;
                         default:
                             System.out.println("Invalid command, enter command (h) if you need help!");
                     }
                 }
             }
+        }
+    }
+
+    private static void PlayAGameFromTheServer(String command, String gameNumber) {
+
+        try {
+            out_server = new DataOutputStream(new BufferedOutputStream(server.getOutputStream()));
+            out_server.writeUTF(command);
+            out_server.writeInt(Integer.parseInt(gameNumber));
+            out_server.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -169,6 +188,7 @@ public class CommandLineClient {
         CommandParameterHashMap.put("connect", "<ip> <port>");
         CommandParameterHashMap.put("quit", "");
         CommandParameterHashMap.put("games", "");
+        CommandParameterHashMap.put("play", "<game number>");
 
         CommandExplinationHashMap = new HashMap<String, String>();
 
@@ -178,6 +198,7 @@ public class CommandLineClient {
         CommandExplinationHashMap.put("connect", "Parameters: <ip> <port> | Allows the user to connect to a main game server.");
         CommandExplinationHashMap.put("quit", "Quits the server session currently connected too.");
         CommandExplinationHashMap.put("games", "Lists the games from the server.");
+        CommandExplinationHashMap.put("play", "Parameters: <game number> | Allows the user to play a game of the specified number.");
     }
 
     /**
