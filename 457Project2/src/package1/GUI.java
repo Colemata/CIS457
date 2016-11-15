@@ -145,7 +145,7 @@ public class GUI extends JFrame implements ActionListener{
 		topPanel.setOpaque(true);
 		topPanel.setBackground(Color.WHITE);
 		toptopPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		toptopPanel.setSize(200, 500);
+		toptopPanel.setSize(150, 200);
 		toptopPanel.setOpaque(true);
 		toptopPanel.setBackground(Color.WHITE);
 		topBottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -205,12 +205,10 @@ public class GUI extends JFrame implements ActionListener{
 		centerTopPanel.add(keywordField);
 		centerTopPanel.add(searchButton);
 		centerTopPanel.add(quitButton);
-		centerPanel.add(BorderLayout.NORTH, centerTopPanel);
-		centerPanel.add(BorderLayout.SOUTH, centerBottomPanel);
 
 		jScrollPane1 = new javax.swing.JScrollPane();
-		jScrollPane1.setSize(250,300);
-		centerBottomPanel.setSize(250, 300);
+		jScrollPane1.setSize(150,50);
+		centerBottomPanel.setSize(150, 50);
 		centerBottomPanel.add(jScrollPane1);
 		searchResultsTable = new JTable();
 		searchResultsTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -225,9 +223,12 @@ public class GUI extends JFrame implements ActionListener{
 		searchResultsTable.setCellSelectionEnabled(false);
 		searchResultsTable.setColumnSelectionAllowed(false);
 		searchResultsTable.setRowSelectionAllowed(true);
-		searchResultsTable.setSize(150, 200);
+		searchResultsTable.setSize(150, 50);
 		searchResultsTable.setGridColor(Color.gray);
 		jScrollPane1.setViewportView(searchResultsTable);
+
+		centerPanel.add(BorderLayout.NORTH, centerTopPanel);
+		centerPanel.add(BorderLayout.SOUTH, centerBottomPanel);
 
 		
 		//Bottom Panel Components
