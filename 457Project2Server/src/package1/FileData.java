@@ -1,13 +1,10 @@
 package package1;
 
 /**
-<<<<<<< HEAD
  * Pojo to contain file data for the search results.
-=======
  * FileData - getters and setters for the various fields needed.
  *
  * @author Taylor Coleman, David Fletcher
->>>>>>> d679fe22e7e27795e31eed0db5ed32b2589fb123
  */
 
 public class FileData {

@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="457Project2Server:jar">
+    <output-path>$PROJECT_DIR$/../Project2Jars/Server</output-path>
+    <root id="archive" name="457Project2Server.jar">
+      <element id="module-output" name="457Project2Server" />
+    </root>
+  </artifact>
+</component>
