@@ -2,6 +2,7 @@ package package1;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -205,10 +206,10 @@ public class GUI extends JFrame implements ActionListener{
 		centerTopPanel.add(keywordField);
 		centerTopPanel.add(searchButton);
 		centerTopPanel.add(quitButton);
-
+		
 		jScrollPane1 = new javax.swing.JScrollPane();
-		jScrollPane1.setSize(150,50);
-		centerBottomPanel.setSize(150, 50);
+		//jScrollPane1.setSize(150,50);
+		centerBottomPanel.setPreferredSize(new Dimension(200,200));
 		centerBottomPanel.add(jScrollPane1);
 		searchResultsTable = new JTable();
 		searchResultsTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -223,12 +224,12 @@ public class GUI extends JFrame implements ActionListener{
 		searchResultsTable.setCellSelectionEnabled(false);
 		searchResultsTable.setColumnSelectionAllowed(false);
 		searchResultsTable.setRowSelectionAllowed(true);
-		searchResultsTable.setSize(150, 50);
+		searchResultsTable.setPreferredSize(new Dimension(100,100));
 		searchResultsTable.setGridColor(Color.gray);
 		jScrollPane1.setViewportView(searchResultsTable);
 
 		centerPanel.add(BorderLayout.NORTH, centerTopPanel);
-		centerPanel.add(BorderLayout.SOUTH, centerBottomPanel);
+		centerPanel.add(BorderLayout.CENTER, centerBottomPanel);
 
 		
 		//Bottom Panel Components
@@ -451,4 +452,6 @@ public class GUI extends JFrame implements ActionListener{
 	
 	
 }
+
+
 
