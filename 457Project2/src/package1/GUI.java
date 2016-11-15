@@ -208,7 +208,7 @@ public class GUI extends JFrame implements ActionListener{
 		centerTopPanel.add(quitButton);
 		
 		jScrollPane1 = new javax.swing.JScrollPane();
-		//jScrollPane1.setSize(150,50);
+		jScrollPane1.setSize(200,200);
 		centerBottomPanel.setPreferredSize(new Dimension(200,200));
 		centerBottomPanel.add(jScrollPane1);
 		searchResultsTable = new JTable();
@@ -224,7 +224,7 @@ public class GUI extends JFrame implements ActionListener{
 		searchResultsTable.setCellSelectionEnabled(false);
 		searchResultsTable.setColumnSelectionAllowed(false);
 		searchResultsTable.setRowSelectionAllowed(true);
-		searchResultsTable.setPreferredSize(new Dimension(100,100));
+		searchResultsTable.setPreferredSize(new Dimension(200,200));
 		searchResultsTable.setGridColor(Color.gray);
 		jScrollPane1.setViewportView(searchResultsTable);
 
