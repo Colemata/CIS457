@@ -12,12 +12,9 @@ public class TicTacToeGame {
 
     public TicTacToeGame(Player player1, Player player2){
 
+        randomizeFirstTurn();
         this.player1 = player1;
         this.player2 = player2;
-        playersTurn = 1;
-
-        //fix who starts first by selecting random
-        double rand = Math.random();
 
         for(int i = 0; i < 3; i++){
             for(int k = 0; k < 3; k++){
@@ -60,7 +57,6 @@ public class TicTacToeGame {
 
     boolean checkIfWinner(int player){
 
-        System.out.println("Player: " + player);
         for(int i = 0; i < 3; i++){
             for(int k = 0; k < 3; k++){
                 if((gameBoard[i][0] == player && gameBoard[i][1] == player && gameBoard[i][2] == player) ||
@@ -68,9 +64,38 @@ public class TicTacToeGame {
                     System.out.println("true");
                     return true;
                 }
+
             }
         }
+        if((gameBoard[0][0] == player && gameBoard[1][1] == player && gameBoard[2][2] == player) ||
+           (gameBoard[2][0] == player && gameBoard[1][1] == player && gameBoard[0][2] == player))
+                return true;
         return false;
+    }
+
+    void resetGame(){
+
+        for(int i = 0; i < 3; i++){
+            for(int k = 0; k < 3; k++){
+                gameBoard[i][k] = -1;
+            }
+        }
+    }
+
+    void randomizeFirstTurn(){
+
+        playersTurn = 1 + (int) (Math.random() * 2);
+    }
+
+    boolean gameBoardFull(){
+
+        for(int i = 0; i < 3; i++){
+            for(int k = 0; k < 3; k++){
+                if(gameBoard[i][k] < 0)
+                    return false;
+            }
+        }
+        return true;
     }
 
 
