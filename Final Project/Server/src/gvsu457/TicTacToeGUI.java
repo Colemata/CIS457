@@ -61,6 +61,9 @@ public class TicTacToeGUI extends JFrame implements ActionListener {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         pack();
         setVisible(true);
+
+        JOptionPane.showMessageDialog(this, "Player " + ticTacToe.getPlayersTurn() + " will go first.");
+
         setTitle("Tic Tac Toe");
 
     }
@@ -73,6 +76,15 @@ public class TicTacToeGUI extends JFrame implements ActionListener {
             return oImg;
     }
 
+    private void resetGame(){
+
+        for(int i = 0; i < 3; i++){
+            for(int k = 0; k < 3; k++){
+                gameBoard[i][k].setIcon(null);
+            }
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent event){
 
@@ -81,18 +93,31 @@ public class TicTacToeGUI extends JFrame implements ActionListener {
         for(int i = 0; i < 3; i++){
             for(int k = 0; k < 3; k++){
                 if(e == gameBoard[i][k]) {
-                    System.out.println(i + ":" + k);
                     if(ticTacToe.spaceTaken(i, k))
                         JOptionPane.showMessageDialog(this, "Space Taken");
                     else{
                         ticTacToe.updateGameBoard(i, k);
                         gameBoard[i][k].setIcon(new ImageIcon(getImage()));
-                        if(ticTacToe.checkIfWinner(ticTacToe.getPlayersTurn()))
-                            JOptionPane.showMessageDialog(this, "Winner!");
-                        ticTacToe.changePlayer();
-                        playersTurnLabel.setText("Players Turn: " + ticTacToe.getPlayersTurn());
+                        if(ticTacToe.gameBoardFull()){
+                            JOptionPane.showMessageDialog(this, "Tie Game!");
+                            resetGame();
+                            ticTacToe.resetGame();
+                            ticTacToe.randomizeFirstTurn();
+                            JOptionPane.showMessageDialog(this, "Player " + ticTacToe.getPlayersTurn() + " will go first.");
 
-                        System.out.println("getPlayersTurn: " + ticTacToe.getPlayersTurn());
+                        }
+                        if(ticTacToe.checkIfWinner(ticTacToe.getPlayersTurn())) {
+                            JOptionPane.showMessageDialog(this, "Player " + ticTacToe.getPlayersTurn() + " Wins!");
+                            resetGame();
+                            ticTacToe.resetGame();
+                            ticTacToe.randomizeFirstTurn();
+                            JOptionPane.showMessageDialog(this, "Player " + ticTacToe.getPlayersTurn() + " will go first.");
+                            playersTurnLabel.setText("Players Turn: " + ticTacToe.getPlayersTurn());
+                        }
+                        else {
+                            ticTacToe.changePlayer();
+                            playersTurnLabel.setText("Players Turn: " + ticTacToe.getPlayersTurn());
+                        }
 
 
                     }
