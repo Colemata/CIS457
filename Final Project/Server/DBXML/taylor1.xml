@@ -2,4 +2,5 @@
 <userdetails>
     <username>taylor1</username>
     <hostname>/127.0.0.1</hostname>
+    <port>6729</port>
 </userdetails>

@@ -4,6 +4,8 @@ import java.io.*;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class CommandLineClient {
 
@@ -31,8 +33,16 @@ public class CommandLineClient {
     /*The data output stream to the server.*/
     public static DataOutputStream out_server;
 
+    /**
+     * A new Thread Pool
+     */
+    private static ExecutorService executorService = Executors.newCachedThreadPool();
+
     /*End of transmission for a stream.*/
     public static final String EOT = "end_of_transmission";
+
+    /*The listening port for incoming connections from other clients*/
+    private static int LISTENING_PORT = 6729;
 
     /**
      * CommandLineClient method where all of our command line operations will happen.
@@ -92,7 +102,22 @@ public class CommandLineClient {
                                 InvalidParametersEntered(userInputSplit[0]);
                                 break;
                             }
-                            ConnectToTheServer(userInputSplit[1], userInputSplit[2]);
+
+                            System.out.println("Would you like to use port: " + LISTENING_PORT + " as your port to listen for other players?");
+                            System.out.println("Enter y/n");
+
+                            String choice = cmd.nextLine().trim();
+                            if (choice.equalsIgnoreCase("n")) {
+                                System.out.println("Please enter a port number to be used for connecting to other clients.");
+                                LISTENING_PORT = Integer.parseInt(cmd.nextLine());
+                            }
+
+                            ConnectToTheServer(userInputSplit[1], userInputSplit[2], LISTENING_PORT);
+                            //Once we are connected to the server we need to listen for client to client connections.
+                            ClientConnectionThreadPool serverClientThreadPool = new ClientConnectionThreadPool();
+                            serverClientThreadPool.setListeningPortNumber(LISTENING_PORT);
+                            executorService.submit(serverClientThreadPool);
+                            System.out.println("Listening for matches on port: " + LISTENING_PORT);
                             break;
                         case "games":
                             GetGameListFromServer();
@@ -103,12 +128,61 @@ public class CommandLineClient {
                                 break;
                             }
                             PlayAGameFromTheServer(userInputSplit[0], userInputSplit[1]);
+                            GetAMatchForAGame();
+                            break;
+                        case "remove":
+                            if (userInputSplit.length != 2) {
+                                InvalidParametersEntered(userInputSplit[0]);
+                                break;
+                            }
+                            RemoveMyselfFromTheQueueOnTheServer(userInputSplit[0], userInputSplit[1]);
                             break;
                         default:
                             System.out.println("Invalid command, enter command (h) if you need help!");
                     }
                 }
             }
+        }
+    }
+
+    private static void GetAMatchForAGame() {
+        String OtherPlayerName = null;
+        String OtherPlayerIP = null;
+        int OtherPlayerPort = 0;
+        System.out.println("You have entered the queue... Please wait for match...");
+        try {
+            while (true) {
+                if (in_server.available() > 0) {
+                    OtherPlayerName = in_server.readUTF();
+                    OtherPlayerIP = in_server.readUTF();
+                    OtherPlayerPort = in_server.readInt();
+                    break;
+                }else{
+                    System.out.println("Still waiting....");
+
+                    //replace this with something better...
+                    Thread.sleep(10000);
+
+                }
+            }
+
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void RemoveMyselfFromTheQueueOnTheServer(String command, String gameNumber) {
+        try {
+            out_server = new DataOutputStream(new BufferedOutputStream(server.getOutputStream()));
+            out_server.writeUTF(command);
+            out_server.writeInt(Integer.parseInt(gameNumber));
+            out_server.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -153,7 +227,7 @@ public class CommandLineClient {
         }
     }
 
-    private static boolean ConnectToTheServer(String ip, String port) {
+    private static boolean ConnectToTheServer(String ip, String port, int listeningPort) {
         try {
             server = new Socket(ip, Integer.parseInt(port));
             if (server.isConnected()) {
@@ -165,6 +239,7 @@ public class CommandLineClient {
                 System.out.println("Connection established to game server!");
 
                 out_server.writeUTF(getUsername());
+                out_server.writeInt(listeningPort);
                 out_server.flush();
                 return true;
             }
@@ -189,6 +264,7 @@ public class CommandLineClient {
         CommandParameterHashMap.put("quit", "");
         CommandParameterHashMap.put("games", "");
         CommandParameterHashMap.put("play", "<game number>");
+        CommandParameterHashMap.put("remove", "<game number>");
 
         CommandExplinationHashMap = new HashMap<String, String>();
 
@@ -199,6 +275,7 @@ public class CommandLineClient {
         CommandExplinationHashMap.put("quit", "Quits the server session currently connected too.");
         CommandExplinationHashMap.put("games", "Lists the games from the server.");
         CommandExplinationHashMap.put("play", "Parameters: <game number> | Allows the user to play a game of the specified number.");
+        CommandExplinationHashMap.put("remove", "Parameters: <game number> | Allows the user to remove themselves from the game queue for the specified game number.");
     }
 
     /**
@@ -224,5 +301,13 @@ public class CommandLineClient {
 
     public static String getUsername() {
         return username;
+    }
+
+    public int getLISTENING_PORT() {
+        return LISTENING_PORT;
+    }
+
+    public void setLISTENING_PORT(int LISTENING_PORT) {
+        LISTENING_PORT = LISTENING_PORT;
     }
 }
