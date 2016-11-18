@@ -2,6 +2,7 @@ package gvsu457;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -341,6 +342,16 @@ public class ServerThread implements Runnable {
             String opponentName = CheckQueueForOtherPlayers();
             if (!opponentName.isEmpty()) {
                 System.out.println("User: " + username + " has been paired against " + opponentName + " for a game of + " + game + ".");
+
+                //if a match has been made, we need to determine who is going to connect to who to start the game.
+                //I vote we just do whoever is alphabetically first.
+
+                if(username.compareToIgnoreCase(opponentName) == -1){
+                    //this means username is less than opponent name.
+                    //username will connect to opponentName
+                    GetConnectionInfoForClientToClientConnection(opponentName);
+                }
+
             } else {
                 System.out.println("User: " + username + " is waiting for an opponent for " + game + "...");
             }
@@ -357,63 +368,196 @@ public class ServerThread implements Runnable {
         }
     }
 
-    private String CheckQueueForOtherPlayers() {
+    private void GetConnectionInfoForClientToClientConnection(String opponentName) {
+
+        //TODO: parse xml for connection info for opponentName and sent back to clients.
+        //TODO: on client side, if it's your own name just ignore it and wait for the connection.
+        //TODO: on client side, if it's not your own name, connect to the other client and start the game.
+
+        //methods merged from project2: getPortForUserName, getHostNameForUserName, getSpeedForUserName (can use for something else).
+    }
+
+    /**
+     * Returns the speed for the username.
+     *
+     * @param String username
+     * @return String
+     */
+    private String getSpeedForUserName(String userName) {
+        String speedd = "";
         try {
-            //for each game we are going to remove, this username.
-            for (String game : GameList) {
+            File curDir = new File(DBXML_DIR_SHORTCUT);
+            File[] FileList = curDir.listFiles();
 
-                File queueFile = new File(DBXML_DIR_SHORTCUT + File.separator + game + ".queue");
+            for (File file : FileList) {
+                if (file.getName().equalsIgnoreCase(userName + ".xml")) {
+                    Document dom;
+                    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                    DocumentBuilder db = dbf.newDocumentBuilder();
+                    dom = db.parse(file);
+                    Element doc = dom.getDocumentElement();
+                    NodeList thisNodeList = doc.getElementsByTagName("userdetails");
 
-                //Build the dom.
-                Document dom;
-                Element ele = null;
-                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-                DocumentBuilder db = null;
-                db = dbf.newDocumentBuilder();
-                dom = db.parse(queueFile);
+                    speedd = doc.getElementsByTagName("speed").item(0).getTextContent();
 
-                // <person>
-                NodeList nodes = dom.getElementsByTagName("player");
+                    for (int temp = 0; temp < thisNodeList.getLength(); temp++) {
+                        Node nNode = thisNodeList.item(temp);
+                        if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                            Element eElement = (Element) nNode;
 
-                String player1 = null;
-                boolean OneSet = false;
-                String player2 = null;
-                //we know there is a match if len is 2 or more.
-                if (nodes.getLength() >= 2) {
-                    //pick any two (if we had more time we should first in first out this).
-                    for (int i = 0; i < nodes.getLength(); i++) {
-
-                        Element player = (Element) nodes.item(i);
-                        // <name>
-                        Element name = (Element) player.getElementsByTagName("name").item(0);
-                        String pName = name.getTextContent();
-                        if (player1 == null) {
-                            player1 = pName;
-                        } else {
-                            player2 = pName;
-                        }
-
-                        if(player1 != null && player2 != null) {
+                            speedd = eElement.getElementsByTagName("speed").item(0).getTextContent();
                             break;
                         }
                     }
                 }
-
-                //TODO: This is where I left off, just run this method over and over again until a match is found
-                //we aren't going to provide multiqueuing for this project.
-
-                
-                //MatchedPlayers = new MatchedPlayers(game, player1, player2);
-
             }
-        } catch (SAXException e) {
-            e.printStackTrace();
         } catch (ParserConfigurationException e) {
-            e.printStackTrace();
+            System.out.println(e.getStackTrace());
+        } catch (SAXException e) {
+            System.out.println(e.getStackTrace());
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getStackTrace());
         }
-        return "";
+        return speedd;
+    }
+
+    /**
+     * Returns the hostname for the username.
+     *
+     * @param String username
+     * @return String
+     */
+    private String getHostNameForUserName(String userName) {
+        String hostnamee = "";
+        try {
+
+            File curDir = new File(DBXML_DIR_SHORTCUT);
+            File[] FileList = curDir.listFiles();
+
+            for (File file : FileList) {
+                if (file.getName().equalsIgnoreCase(userName + ".xml")) {
+                    Document dom;
+                    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                    DocumentBuilder db = dbf.newDocumentBuilder();
+                    dom = db.parse(file);
+                    Element doc = dom.getDocumentElement();
+                    //NodeList thisNodeList = doc.getElementsByTagName("userdetails");
+                    hostnamee = doc.getElementsByTagName("hostname").item(0).getTextContent();
+                }
+            }
+        } catch (ParserConfigurationException e) {
+            System.out.println(e.getStackTrace());
+        } catch (SAXException e) {
+            System.out.println(e.getStackTrace());
+        } catch (IOException e) {
+            System.out.println(e.getStackTrace());
+        }
+        return hostnamee;
+    }
+
+    /**
+     * Get the port for the provided username using the xml data.
+     * @param userName the provided username to get the port for.
+     * @return the port number.
+     */
+    private int getPortForUserName(String userName) {
+        int portNum = 0;
+        try {
+
+            File curDir = new File(DBXML_DIR_SHORTCUT);
+            File[] FileList = curDir.listFiles();
+
+            //For each file
+            for (File file : FileList) {
+                //If the file is the users xml file.
+                if (file.getName().equalsIgnoreCase(userName + ".xml")) {
+
+                    //build the dom and get the port number.
+                    Document dom;
+                    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                    DocumentBuilder db = dbf.newDocumentBuilder();
+                    dom = db.parse(file);
+                    Element doc = dom.getDocumentElement();
+                    portNum = Integer.parseInt(doc.getElementsByTagName("port").item(0).getTextContent());
+                }
+            }
+        } catch (ParserConfigurationException e) {
+            System.out.println(e.getStackTrace());
+        } catch (SAXException e) {
+            System.out.println(e.getStackTrace());
+        } catch (IOException e) {
+            System.out.println(e.getStackTrace());
+        }
+        return portNum;
+    }
+
+    private String CheckQueueForOtherPlayers() {
+        boolean matchFound = false;
+        while(true) {
+            try {
+                //for each game we are going to remove, this username.
+                for (String game : GameList) {
+
+                    File queueFile = new File(DBXML_DIR_SHORTCUT + File.separator + game + ".queue");
+
+                    //Build the dom.
+                    Document dom;
+                    Element ele = null;
+                    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                    DocumentBuilder db = null;
+                    db = dbf.newDocumentBuilder();
+                    dom = db.parse(queueFile);
+
+                    NodeList nodes = dom.getElementsByTagName("player");
+
+                    String player1 = null;
+                    boolean OneSet = false;
+                    String player2 = null;
+                    //we know there is a match if len is 2 or more.
+                    if (nodes.getLength() >= 2) {
+                        //pick any two (if we had more time we should first in first out this).
+                        for (int i = 0; i < nodes.getLength(); i++) {
+
+                            Element player = (Element) nodes.item(i);
+                            Element name = (Element) player.getElementsByTagName("name").item(0);
+                            String pName = name.getTextContent();
+                            if (player1 == null) {
+                                player1 = pName;
+                            } else {
+                                player2 = pName;
+                            }
+
+                            if (player1 != null && player2 != null) {
+                                matchFound = true;
+                                break;
+                            }
+                        }
+                    }
+
+
+                    if(matchFound == true){
+                        if(!player1.equalsIgnoreCase(username)){
+                            return player1;
+                        }else{
+                            return player2;
+                        }
+                    }
+
+
+                    //MatchedPlayers = new MatchedPlayers(game, player1, player2);
+
+                }
+                Thread.sleep(10000);
+            } catch (SAXException e) {
+                e.printStackTrace();
+            } catch (ParserConfigurationException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void ListGamesForClient() {

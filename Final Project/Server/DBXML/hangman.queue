@@ -1,20 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <data>
 	<players>
-    <player>
-            <name>taylor</name>
-            <ip>/127.0.0.1</ip>
-            <port>6729</port>
-        </player>
-    <player>
-            <name>qweqweqwe</name>
-            <ip>/127.0.0.1</ip>
-            <port>5678</port>
-        </player>
-    <player>
-            <name>taylor1</name>
-            <ip>/127.0.0.1</ip>
-            <port>6729</port>
-        </player>
+    
+    
     </players>
 </data>
