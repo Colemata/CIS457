@@ -1,5 +1,8 @@
 package gvsu457;
 
+import com.sun.deploy.util.SessionState;
+
+import javax.print.attribute.standard.MediaSize;
 import java.io.*;
 import java.net.Socket;
 import java.util.HashMap;
@@ -147,15 +150,22 @@ public class CommandLineClient {
 
     private static void GetAMatchForAGame() {
         String OtherPlayerName = null;
+        String USERNAME = null;
         String OtherPlayerIP = null;
         int OtherPlayerPort = 0;
+        String game = null;
         System.out.println("You have entered the queue... Please wait for match...");
         try {
             while (true) {
                 if (in_server.available() > 0) {
                     OtherPlayerName = in_server.readUTF();
+                    if(OtherPlayerName.equalsIgnoreCase("skip")){
+                        break;
+                    }
+                    USERNAME = in_server.readUTF();
                     OtherPlayerIP = in_server.readUTF();
                     OtherPlayerPort = in_server.readInt();
+                    game = in_server.readUTF();
                     break;
                 }else{
                     System.out.println("Still waiting....");
@@ -164,6 +174,25 @@ public class CommandLineClient {
                     Thread.sleep(10000);
 
                 }
+            }
+
+            if(OtherPlayerName.equalsIgnoreCase("skip")){
+                return;
+            }
+
+            if(OtherPlayerName.equalsIgnoreCase(username)){
+                //we are the listener, don't do anything?
+                return;
+            }else{
+                //we need to connect to the other client and start the specified game.
+                IssueClientConnectionForGameMatch ClientConnectionForGameMatch = new IssueClientConnectionForGameMatch();
+                ClientConnectionForGameMatch.setUsername(username);
+                ClientConnectionForGameMatch.setOpponentName(OtherPlayerName);
+                ClientConnectionForGameMatch.setConnectingPortNumber(OtherPlayerPort);
+                ClientConnectionForGameMatch.setConnectingHostName(OtherPlayerIP);
+                ClientConnectionForGameMatch.setGameTypeToPlay(game);
+                executorService.submit(ClientConnectionForGameMatch);
+                return;
             }
 
 

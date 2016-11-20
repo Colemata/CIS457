@@ -12,12 +12,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.awt.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 
 /**
@@ -122,8 +119,19 @@ public class ServerThread implements Runnable {
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 } finally {
+
+                    //Delete this users files if they lost connection.
+                    File curDir = new File(DBXML_DIR_SHORTCUT);
+                    File[] FileList = curDir.listFiles();
+                    for (File f : FileList) {
+                        if (f.getName().contains(".xml")) {
+                            if (f.getName().contains(username)) {
+                                f.delete();
+                            }
+                        }
+                    }
                     //kill the thread.
-                    RemovePlayerFromAllQueues();
+                    RemovePlayerFromAllQueues(username);
                     Thread.currentThread().interrupt();
                     return;
                 }
@@ -243,7 +251,7 @@ public class ServerThread implements Runnable {
 
     }
 
-    private void RemovePlayerFromAllQueues() {
+    private void RemovePlayerFromAllQueues(String playerToRemove) {
         try {
 
             //for each game we are going to remove, this username.
@@ -268,7 +276,7 @@ public class ServerThread implements Runnable {
                     // <name>
                     Element name = (Element) player.getElementsByTagName("name").item(0);
                     String pName = name.getTextContent();
-                    if (pName.equals(username)) {
+                    if (pName.equals(playerToRemove)) {
                         player.getParentNode().removeChild(player);
                     }
                 }
@@ -346,10 +354,17 @@ public class ServerThread implements Runnable {
                 //if a match has been made, we need to determine who is going to connect to who to start the game.
                 //I vote we just do whoever is alphabetically first.
 
-                if(username.compareToIgnoreCase(opponentName) == -1){
+                if (username.compareToIgnoreCase(opponentName) < -1) {
                     //this means username is less than opponent name.
                     //username will connect to opponentName
-                    GetConnectionInfoForClientToClientConnection(opponentName);
+                    RemovePlayerFromAllQueues(username);
+                    RemovePlayerFromAllQueues(opponentName);
+                    GetConnectionInfoForClientToClientConnection(opponentName, game);
+                }else{
+                    out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+                    out.writeUTF("skip");
+                    out.flush();
+                    //GetConnectionInfoForClientToClientConnection(username, game);
                 }
 
             } else {
@@ -368,13 +383,27 @@ public class ServerThread implements Runnable {
         }
     }
 
-    private void GetConnectionInfoForClientToClientConnection(String opponentName) {
+    private void GetConnectionInfoForClientToClientConnection(String opponentName, String game) {
 
-        //TODO: parse xml for connection info for opponentName and sent back to clients.
-        //TODO: on client side, if it's your own name just ignore it and wait for the connection.
-        //TODO: on client side, if it's not your own name, connect to the other client and start the game.
+        String opponentAddress;
+        int opponentPort;
 
         //methods merged from project2: getPortForUserName, getHostNameForUserName, getSpeedForUserName (can use for something else).
+        try {
+            out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+            opponentPort = getPortForUserName(opponentName);
+            opponentAddress = getHostNameForUserName(opponentName);
+            out.writeUTF(opponentName);
+            out.writeUTF(username);
+            out.writeUTF(opponentAddress);
+            out.writeInt(opponentPort);
+            out.writeUTF(game);
+            out.flush();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -457,6 +486,7 @@ public class ServerThread implements Runnable {
 
     /**
      * Get the port for the provided username using the xml data.
+     *
      * @param userName the provided username to get the port for.
      * @return the port number.
      */
@@ -493,7 +523,7 @@ public class ServerThread implements Runnable {
 
     private String CheckQueueForOtherPlayers() {
         boolean matchFound = false;
-        while(true) {
+        while (true) {
             try {
                 //for each game we are going to remove, this username.
                 for (String game : GameList) {
@@ -535,16 +565,13 @@ public class ServerThread implements Runnable {
                     }
 
 
-                    if(matchFound == true){
-                        if(!player1.equalsIgnoreCase(username)){
+                    if (matchFound == true) {
+                        if (!player1.equalsIgnoreCase(username)) {
                             return player1;
-                        }else{
+                        } else {
                             return player2;
                         }
                     }
-
-
-                    //MatchedPlayers = new MatchedPlayers(game, player1, player2);
 
                 }
                 Thread.sleep(10000);
