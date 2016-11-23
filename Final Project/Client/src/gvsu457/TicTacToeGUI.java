@@ -1,12 +1,17 @@
 package gvsu457;
 
+import com.sun.corba.se.spi.activation.Server;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by fletcher on 11/17/16.
@@ -24,14 +29,27 @@ public class TicTacToeGUI extends JFrame implements ActionListener {
 
     public Socket connection;
 
+    public Socket server;
+
     public String ourName;
 
     public DataInputStream in;
 
     public DataOutputStream out;
 
+    public boolean isServer;
 
-    public TicTacToeGUI(Player p1, Player p2, Socket socket, String ourname) {
+    /**
+     * A new Thread Pool
+     */
+    private static ExecutorService executorService = Executors.newCachedThreadPool();
+
+    public TicTacToeGUI(Player p1, Player p2, Socket socket, String ourname, boolean isServer) {
+
+        TicTacToeCommThread commThread = new TicTacToeCommThread(socket);
+        executorService.submit(commThread);
+
+        this.isServer = isServer;
 
         this.ourName = ourname;
         this.connection = socket;
@@ -88,6 +106,7 @@ public class TicTacToeGUI extends JFrame implements ActionListener {
             e.printStackTrace();
         }
     }
+
 
     private void playGame() {
         try {

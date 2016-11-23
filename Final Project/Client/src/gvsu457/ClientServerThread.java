@@ -88,7 +88,7 @@ public class ClientServerThread implements Runnable {
                     case "tictactoe":
                         Player me = new Player(ourName, 1);
                         Player them = new Player(opponentName, 2);
-                        TicTacToeGUI ticTacToeGame = new TicTacToeGUI(me, them, socket, ourName);
+                        TicTacToeGUI ticTacToeGame = new TicTacToeGUI(me, them, socket, ourName, true);
                         break;
                     case "hangman":
                         System.out.println("GAME STARTEDDDDDD " + game);

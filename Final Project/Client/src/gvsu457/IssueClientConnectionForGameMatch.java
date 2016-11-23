@@ -36,6 +36,9 @@ public class IssueClientConnectionForGameMatch implements Runnable {
 
     public String gameTypeToPlay;
 
+    /** Thread Pool Object */
+    private ExecutorService executorService = Executors.newCachedThreadPool();
+
 
     @Override
     /**
@@ -62,7 +65,8 @@ public class IssueClientConnectionForGameMatch implements Runnable {
 
             Player them = new Player(opponentName, 1);
             Player me = new Player(username, 2);
-            TicTacToeGUI ticTacToeGame = new TicTacToeGUI(them, me, OtherClient, username);
+            TicTacToeGUI ticTacToeGame = new TicTacToeGUI(them, me, OtherClient, username, false);
+            //executorService.submit(ticTacToeGame);
 
 
         } catch (IOException e) {
