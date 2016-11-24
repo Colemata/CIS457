@@ -3,6 +3,10 @@ package gvsu457.Hangman.Client;
 import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Administrator on 11/23/2016.
@@ -21,8 +25,14 @@ public class HangmanClientLogic {
     /*The GUI*/
     public static HangmanGUI hangman;
 
+    /** Shortcut for image directory */
+    public static String IMAGE_DIR = System.getProperty("user.dir") + File.separator + ".." + File.separator + "images";
+
     /*The word the user must guess*/
     public static String word;
+
+    public ArrayList<String> charGuessList = new ArrayList<String>();
+
 
     public HangmanClientLogic(){
         try {
@@ -40,6 +50,34 @@ public class HangmanClientLogic {
             //Tell the user to send the word to the client!
             setHangManImage(7);
 
+            final ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+            service.scheduleWithFixedDelay(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    try {
+                        if(in_server.available() > 0){
+                            String guess = in_server.readUTF();
+                            charGuessList.add(guess);
+                            hangman.listModel.addElement(guess);
+                            setDisplayForWordAndGuessList();
+                            int numToShow = in_server.readInt();
+                            if(numToShow == 9){
+                                numToShow++;
+                            }
+                            if(numToShow == 6){
+                                numToShow = 9;
+                            }
+                            setHangManImage(numToShow);
+
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, 0, 1, TimeUnit.SECONDS);
+
 
 
         } catch (IOException e) {
@@ -47,14 +85,32 @@ public class HangmanClientLogic {
         }
     }
 
+    public void setDisplayForWordAndGuessList() {
+        String display = "";
+
+        for(int i = 0; i < word.length(); i++){
+            boolean found = false;
+            for(String guessChar: charGuessList){
+                if(word.charAt(i) == guessChar.charAt(0)){
+                    display += word.charAt(i) + " ";
+                    found = true;
+                }
+            }
+            if(!found) {
+                display += "_ ";
+            }
+        }
+        hangman.setWordDisplay(display);
+    }
+
     public void sendWordToServer(String word){
 
         //The client will be the one to set the word for the server to guess
         this.word = word;
         try {
-            out_server.writeUTF(word);
-            out_server.flush();
-            setHangManImage(0);
+                out_server.writeUTF(word);
+                out_server.flush();
+                setHangManImage(0);
 
             //after we send the word there is nothing else to do but watch...
 
@@ -67,31 +123,39 @@ public class HangmanClientLogic {
 
         switch (numWrong) {
             case 0:
-                hangman.setImagePanel(new ImageIcon("C:\\CIS457\\Final Project\\Client\\src\\gvsu457\\Hangman\\0.png"));
+                hangman.setImagePanel(new ImageIcon(IMAGE_DIR + File.separator + "0.png"));
                 break;
             case 1:
-                hangman.setImagePanel(new ImageIcon("C:\\CIS457\\Final Project\\Client\\src\\gvsu457\\Hangman\\1.png"));
+                hangman.setImagePanel(new ImageIcon(IMAGE_DIR + File.separator + "1.png"));
                 break;
             case 2:
-                hangman.setImagePanel(new ImageIcon("C:\\CIS457\\Final Project\\Client\\src\\gvsu457\\Hangman\\2.png"));
+                hangman.setImagePanel(new ImageIcon(IMAGE_DIR + File.separator + "2.png"));
                 break;
             case 3:
-                hangman.setImagePanel(new ImageIcon("C:\\CIS457\\Final Project\\Client\\src\\gvsu457\\Hangman\\3.png"));
+                hangman.setImagePanel(new ImageIcon(IMAGE_DIR + File.separator + "3.png"));
                 break;
             case 4:
-                hangman.setImagePanel(new ImageIcon("C:\\CIS457\\Final Project\\Client\\src\\gvsu457\\Hangman\\4.png"));
+                hangman.setImagePanel(new ImageIcon(IMAGE_DIR + File.separator + "4.png"));
                 break;
             case 5:
-                hangman.setImagePanel(new ImageIcon("C:\\CIS457\\Final Project\\Client\\src\\gvsu457\\Hangman\\5.png"));
+                hangman.setImagePanel(new ImageIcon(IMAGE_DIR + File.separator + "5.png"));
                 break;
             case 6:
-                hangman.setImagePanel(new ImageIcon("C:\\CIS457\\Final Project\\Client\\src\\gvsu457\\Hangman\\6.png"));
+                hangman.setImagePanel(new ImageIcon(IMAGE_DIR + File.separator + "6.png"));
                 break;
             case 7:
-                hangman.setImagePanel(new ImageIcon("C:\\CIS457\\Final Project\\Client\\src\\gvsu457\\Hangman\\set.png"));
+                hangman.setImagePanel(new ImageIcon(IMAGE_DIR + File.separator + "set.png"));
                 break;
             case 8:
-                hangman.setImagePanel(new ImageIcon("C:\\CIS457\\Final Project\\Client\\src\\gvsu457\\Hangman\\guess.png"));
+                hangman.setImagePanel(new ImageIcon(IMAGE_DIR + File.separator + "guess.png"));
+                break;
+            case 9:
+                hangman.setImagePanel(new ImageIcon(IMAGE_DIR + File.separator + "win.png"));
+                hangman.setAllFieldsEnabled(false);
+                break;
+            case 10:
+                hangman.setImagePanel(new ImageIcon(IMAGE_DIR + File.separator + "lose.png"));
+                hangman.setAllFieldsEnabled(false);
                 break;
         }
     }
