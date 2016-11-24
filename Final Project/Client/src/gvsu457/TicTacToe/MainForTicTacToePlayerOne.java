@@ -1,4 +1,4 @@
-package gvsu457;
+package gvsu457.TicTacToe;
 
 import java.io.IOException;
 import java.net.ServerSocket;

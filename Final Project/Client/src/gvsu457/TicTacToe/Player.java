@@ -1,4 +1,4 @@
-package gvsu457;
+package gvsu457.TicTacToe;
 
 /**
  * Created by fletcher on 11/17/16.

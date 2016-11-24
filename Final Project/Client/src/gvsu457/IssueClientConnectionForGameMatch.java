@@ -1,7 +1,6 @@
 package gvsu457;
 
 import java.io.*;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -61,12 +60,16 @@ public class IssueClientConnectionForGameMatch implements Runnable {
             out.writeUTF(username);
             out.flush();
 
-            //At this point, we are connected to the other client and can start a game and send data back and fourth.
-
-            Player them = new Player(opponentName, 1);
-            Player me = new Player(username, 2);
-            TicTacToeGUI ticTacToeGame = new TicTacToeGUI(them, me, OtherClient, username, false);
-            //executorService.submit(ticTacToeGame);
+            if(gameTypeToPlay.equalsIgnoreCase("tictactoe")) {
+                //At this point, we are connected to the other client and can start a game and send data back and fourth.
+//                Player them = new Player(opponentName, 1);
+//                Player me = new Player(username, 2);
+//                TicTacToeGUI ticTacToeGame = new TicTacToeGUI(them, me, OtherClient, username, false);
+                //executorService.submit(ticTacToeGame);
+            }else if(gameTypeToPlay.equalsIgnoreCase(("hangman"))){
+//                HangmanServerGUI hangman = new HangmanServerGUI(OtherClient, false);
+//                hangman.waitForInputFromOtherClient();
+            }
 
 
         } catch (IOException e) {

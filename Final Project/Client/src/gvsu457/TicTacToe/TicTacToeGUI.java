@@ -1,6 +1,6 @@
-package gvsu457;
+package gvsu457.TicTacToe;
 
-import com.sun.corba.se.spi.activation.Server;
+import gvsu457.TicTacToeCommThread;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -59,7 +59,7 @@ public class TicTacToeGUI extends JFrame implements ActionListener {
             in = new DataInputStream(new BufferedInputStream(connection.getInputStream()));
             out = new DataOutputStream(new BufferedOutputStream(connection.getOutputStream()));
 
-            ticTacToe = new TicTacToeGame(p1, p2, connection, ourName);
+            //ticTacToe = new TicTacToeGame(p1, p2, connection, ourName);
 
             try {
                 xImg = ImageIO.read(getClass().getResource("x.png"));
@@ -70,7 +70,7 @@ public class TicTacToeGUI extends JFrame implements ActionListener {
                 System.out.println("IOException");
             }
 
-            playersTurnLabel = new JLabel("Players Turn: " + ticTacToe.getPlayersTurn());
+            //playersTurnLabel = new JLabel("Players Turn: " + ticTacToe.getPlayersTurn());
             mainPanel = new JPanel(new BorderLayout());
             bottomPanel = new JPanel(new GridLayout(3, 3));
             topPanel = new JPanel();
