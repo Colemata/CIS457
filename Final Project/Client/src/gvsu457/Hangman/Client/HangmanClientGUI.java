@@ -11,7 +11,7 @@ import java.net.Socket;
 /**
  * Created by Administrator on 11/23/2016.
  */
-public class HangmanGUI extends JFrame implements ActionListener {
+public class HangmanClientGUI extends JFrame implements ActionListener {
     public DefaultListModel listModel = new DefaultListModel();
     public Socket socket;
     private JButton defineWordButton;
@@ -29,12 +29,12 @@ public class HangmanGUI extends JFrame implements ActionListener {
     public static HangmanClientLogic hangmanClientLogic;
 
 
-    public HangmanGUI(String username, HangmanClientLogic hangmanClientLogic) {
+    public HangmanClientGUI(String username, HangmanClientLogic hangmanClientLogic) {
 
         super(username);
         this.hangmanClientLogic = hangmanClientLogic;
         setContentPane(mainPanel);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         letterList.setModel(listModel);
         setVisible(true);
         pack();

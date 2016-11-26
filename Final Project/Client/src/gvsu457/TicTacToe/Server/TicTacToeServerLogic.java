@@ -10,9 +10,11 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * The tic tac toe main operations performed by the user.
+ *
  * Created by taylor.coleman on 11/24/2016.
  */
-public class TicTacToeServerLogic {
+public class TicTacToeServerLogic implements Runnable {
 
     /*The data input stream from the server*/
     public static DataInputStream in_client;
@@ -35,11 +37,11 @@ public class TicTacToeServerLogic {
     /*Shortcut for image directory*/
     public static String IMAGE_DIR = System.getProperty("user.dir") + File.separator + ".." + File.separator + "images";
 
-    public TicTacToeServerLogic() {
+    public TicTacToeServerLogic(int port, String username) {
 
         //set up the connection to the client...
         try {
-            client_connection = new ServerSocket(8989);
+            client_connection = new ServerSocket(port);
             Socket socket = client_connection.accept();
 
             //set up the streams using the global socket.
@@ -51,7 +53,7 @@ public class TicTacToeServerLogic {
         }
 
         //Bring up the ui.
-        ticTacToeServerGUI = new TicTacToeServerGUI("Server Game");
+        ticTacToeServerGUI = new TicTacToeServerGUI("Welcome " + username, this);
 
         //init the gameboard to all -1.
         for (int i = 0; i < 3; i++) {
@@ -184,5 +186,10 @@ public class TicTacToeServerLogic {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void run() {
+
     }
 }

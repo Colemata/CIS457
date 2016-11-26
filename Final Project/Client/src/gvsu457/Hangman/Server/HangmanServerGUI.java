@@ -32,7 +32,7 @@ public class HangmanServerGUI extends JFrame implements ActionListener {
         super(username);
         this.hangmanServerLogic = hangmanServerLogic;
         setContentPane(mainPanel);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         letterList.setModel(listModel);
         setVisible(true);
         pack();

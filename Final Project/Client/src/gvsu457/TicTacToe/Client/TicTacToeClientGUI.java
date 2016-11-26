@@ -32,11 +32,12 @@ public class TicTacToeClientGUI extends JFrame implements ActionListener {
 
     public static TicTacToeClientLogic ticTacToeClientLogic;
 
-    public TicTacToeClientGUI(String username) {
+    public TicTacToeClientGUI(String username, TicTacToeClientLogic ticTacToeClientLogic) {
 
 
         super(username);
 
+        this.ticTacToeClientLogic = ticTacToeClientLogic;
         try {
             xImg = ImageIO.read(getClass().getResource("o.png"));
             xImg = xImg.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
@@ -47,7 +48,7 @@ public class TicTacToeClientGUI extends JFrame implements ActionListener {
         }
 
         setContentPane(panel1);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         button1.addActionListener(this);
         button2.addActionListener(this);
@@ -62,10 +63,6 @@ public class TicTacToeClientGUI extends JFrame implements ActionListener {
         setVisible(true);
         pack();
 
-    }
-
-    public static void main(String[] args) {
-        ticTacToeClientLogic = new TicTacToeClientLogic();
     }
 
     @Override

@@ -23,7 +23,7 @@ public class HangmanClientLogic implements Runnable {
     public static Socket server;
 
     /*The GUI*/
-    public static HangmanGUI hangman;
+    public static HangmanClientGUI hangman;
 
     /*Shortcut for image directory*/
     public static String IMAGE_DIR = System.getProperty("user.dir") + File.separator + ".." + File.separator + "images";
@@ -46,7 +46,7 @@ public class HangmanClientLogic implements Runnable {
             out_server = new DataOutputStream(new BufferedOutputStream(server.getOutputStream()));
 
             //Get the GUI up...
-            hangman = new HangmanGUI("welcome " + username, this);
+            hangman = new HangmanClientGUI("welcome " + username, this);
 
             //Tell the user to send the word to the client!
             setHangManImage(7);

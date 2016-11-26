@@ -2,6 +2,8 @@ package gvsu457;
 
 import gvsu457.Hangman.Client.HangmanClientLogic;
 import gvsu457.Hangman.Server.HangmanServerLogic;
+import gvsu457.TicTacToe.Client.TicTacToeClientLogic;
+import gvsu457.TicTacToe.Server.TicTacToeServerLogic;
 
 import java.io.*;
 import java.net.Socket;
@@ -229,6 +231,8 @@ public class CommandLineClient {
     private static void StartClientVersionOfGame(String game, int otherPlayerPort, String otherPlayerIP) {
         switch (game) {
             case "tictactoe":
+                TicTacToeClientLogic ticTacToeClientLogic = new TicTacToeClientLogic(username, otherPlayerIP, otherPlayerPort);
+                executorService.submit(ticTacToeClientLogic);
                 break;
             case "hangman":
                 HangmanClientLogic hangmanClientLogic = new HangmanClientLogic(username, otherPlayerIP, otherPlayerPort);
@@ -250,6 +254,8 @@ public class CommandLineClient {
     private static void StartServerVersionOfGame(String game) {
         switch (game) {
             case "tictactoe":
+                TicTacToeServerLogic ticTacToeServerLogic = new TicTacToeServerLogic(LISTENING_PORT, username);
+                executorService.submit(ticTacToeServerLogic);
                 break;
             case "hangman":
                 HangmanServerLogic hangmanServerLogic = new HangmanServerLogic(LISTENING_PORT, username);

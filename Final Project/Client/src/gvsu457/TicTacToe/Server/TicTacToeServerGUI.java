@@ -1,7 +1,5 @@
 package gvsu457.TicTacToe.Server;
 
-import gvsu457.Tic2.Client.TicTacToeClientLogic;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -11,7 +9,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Created by Administrator on 11/24/2016.
+ * Created by taylor.coleman on 11/24/2016.
  */
 public class TicTacToeServerGUI extends JFrame implements ActionListener {
     public JButton button1;
@@ -34,10 +32,10 @@ public class TicTacToeServerGUI extends JFrame implements ActionListener {
 
     public static TicTacToeServerLogic ticTacToeServerLogic;
 
-    public TicTacToeServerGUI(String username) {
+    public TicTacToeServerGUI(String username, TicTacToeServerLogic ticTacToeServerLogic) {
 
         super(username);
-
+        this.ticTacToeServerLogic = ticTacToeServerLogic;
         try {
             xImg = ImageIO.read(getClass().getResource("o.png"));
             xImg = xImg.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
@@ -48,7 +46,7 @@ public class TicTacToeServerGUI extends JFrame implements ActionListener {
         }
 
         setContentPane(panel1);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         button1.addActionListener(this);
         button2.addActionListener(this);
@@ -64,10 +62,6 @@ public class TicTacToeServerGUI extends JFrame implements ActionListener {
         pack();
 
         setButtonsEnabled(false);
-    }
-
-    public static void main(String[] args) {
-        ticTacToeServerLogic = new TicTacToeServerLogic();
     }
 
     @Override

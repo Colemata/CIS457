@@ -359,8 +359,6 @@ public class ServerThread implements Runnable {
                 if (username.compareToIgnoreCase(opponentName) < -1) {
                     //this means username is less than opponent name.
                     //username will connect to opponentName
-//                    RemovePlayerFromAllQueues(username);
-//                    RemovePlayerFromAllQueues(opponentName);
                     GetConnectionInfoForClientToClientConnection(opponentName, game);
                 } else {
                     out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));

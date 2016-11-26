@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by taylor.coleman on 11/24/2016.
  */
-public class TicTacToeClientLogic {
+public class TicTacToeClientLogic implements Runnable {
 
     /*The data input stream from the server*/
     public static DataInputStream in_server;
@@ -33,18 +33,18 @@ public class TicTacToeClientLogic {
     /** Shortcut for image directory */
     public static String IMAGE_DIR = System.getProperty("user.dir") + File.separator + ".." + File.separator + "images";
 
-    public TicTacToeClientLogic() {
+    public TicTacToeClientLogic(String username, String hostname, int port) {
 
         try {
             //First thing we want to do is connect to the server.
-            server = new Socket("localhost", 8989);
+            server = new Socket(hostname, port);
 
             //set up the streams using the global socket.
             in_server = new DataInputStream(new BufferedInputStream(server.getInputStream()));
             out_server = new DataOutputStream(new BufferedOutputStream(server.getOutputStream()));
 
             //Bring up the ui.
-            ticTacToeClientGUI = new TicTacToeClientGUI("Client Game");
+            ticTacToeClientGUI = new TicTacToeClientGUI("Welcome " + username, this);
 
             //init the gameboard with all -1.
             for(int i = 0; i < 3; i++){
@@ -181,5 +181,10 @@ public class TicTacToeClientLogic {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void run() {
+
     }
 }
