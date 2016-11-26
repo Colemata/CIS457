@@ -2,57 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6f710c21-2cce-4d28-b71f-96f2436cda76" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/ClientConnectionThreadPool.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/ClientServerThread.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Hangman/Client/HangmanGUI.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/IssueClientConnectionForGameMatch.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Tic2/Client/TicTacToeClientGUI.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Tic2/Client/TicTacToeClientLogic$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Tic2/Client/TicTacToeClientLogic.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Tic2/Client/o.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Tic2/Client/x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Tic2/Server/TicTacToeServerGUI.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Tic2/Server/TicTacToeServerLogic$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Tic2/Server/TicTacToeServerLogic.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Tic2/Server/o.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Tic2/Server/x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Tic2/images/0.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Tic2/images/1.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Tic2/images/2.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Tic2/images/3.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Tic2/images/4.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Tic2/images/5.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Tic2/images/6.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Tic2/images/guess.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Tic2/images/lose.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Tic2/images/o.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Tic2/images/set.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Tic2/images/win.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Tic2/images/x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/TicTacToe/o.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/TicTacToe/x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Server/DBXML/coleman123123.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Server/DBXML/colemanasdasdasd.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Server/DBXML/helloworld123123.xml" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/gvsu457/Hangman/Client/HangmanGUI.form" afterPath="$PROJECT_DIR$/src/gvsu457/Hangman/Client/HangmanClientGUI.form" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/gvsu457/Hangman/Client/HangmanGUI.java" afterPath="$PROJECT_DIR$/src/gvsu457/Hangman/Client/HangmanClientGUI.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/CommandLineClient.class" afterPath="$PROJECT_DIR$/out/production/Client/gvsu457/CommandLineClient.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Hangman/Client/HangmanClientLogic$1.class" afterPath="$PROJECT_DIR$/out/production/Client/gvsu457/Hangman/Client/HangmanClientLogic$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Hangman/Client/HangmanClientLogic.class" afterPath="$PROJECT_DIR$/out/production/Client/gvsu457/Hangman/Client/HangmanClientLogic.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Hangman/Server/HangmanServerGUI.class" afterPath="$PROJECT_DIR$/out/production/Client/gvsu457/Hangman/Server/HangmanServerGUI.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Hangman/Server/HangmanServerLogic.class" afterPath="$PROJECT_DIR$/out/production/Client/gvsu457/Hangman/Server/HangmanServerLogic.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/gvsu457/CommandLineClient.java" afterPath="$PROJECT_DIR$/src/gvsu457/CommandLineClient.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/gvsu457/Hangman/Client/HangmanClientLogic.java" afterPath="$PROJECT_DIR$/src/gvsu457/Hangman/Client/HangmanClientLogic.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/gvsu457/Hangman/Server/HangmanServerGUI.java" afterPath="$PROJECT_DIR$/src/gvsu457/Hangman/Server/HangmanServerGUI.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/gvsu457/TicTacToe/Client/TicTacToeClientGUI.java" afterPath="$PROJECT_DIR$/src/gvsu457/TicTacToe/Client/TicTacToeClientGUI.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/gvsu457/TicTacToe/Client/TicTacToeClientLogic.java" afterPath="$PROJECT_DIR$/src/gvsu457/TicTacToe/Client/TicTacToeClientLogic.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/gvsu457/TicTacToe/Server/TicTacToeServerGUI.java" afterPath="$PROJECT_DIR$/src/gvsu457/TicTacToe/Server/TicTacToeServerGUI.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/gvsu457/TicTacToe/Server/TicTacToeServerLogic.java" afterPath="$PROJECT_DIR$/src/gvsu457/TicTacToe/Server/TicTacToeServerLogic.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Server/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../Server/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Server/DBXML/hangman.queue" afterPath="$PROJECT_DIR$/../Server/DBXML/hangman.queue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Server/DBXML/tictactoe.queue" afterPath="$PROJECT_DIR$/../Server/DBXML/tictactoe.queue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Server/src/gvsu457/ServerThread.java" afterPath="$PROJECT_DIR$/../Server/src/gvsu457/ServerThread.java" />
     </list>
     <ignored path="Client.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -995,12 +945,12 @@
       <workItem from="1480107323787" duration="778000" />
       <workItem from="1480108614614" duration="644000" />
       <workItem from="1480110054159" duration="4065000" />
-      <workItem from="1480115216915" duration="9798000" />
+      <workItem from="1480115216915" duration="10381000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="85257000" />
+    <option name="totallyTimeSpent" value="85840000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="458" y="0" width="1462" height="1036" extended-state="0" />
@@ -1015,7 +965,7 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3217012" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3217012" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
