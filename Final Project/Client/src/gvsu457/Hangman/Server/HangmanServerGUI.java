@@ -27,9 +27,10 @@ public class HangmanServerGUI extends JFrame implements ActionListener {
     public static HangmanServerLogic hangmanServerLogic;
 
 
-    public HangmanServerGUI(String username) {
+    public HangmanServerGUI(String username, HangmanServerLogic hangmanServerLogic) {
 
         super(username);
+        this.hangmanServerLogic = hangmanServerLogic;
         setContentPane(mainPanel);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         letterList.setModel(listModel);
@@ -40,9 +41,9 @@ public class HangmanServerGUI extends JFrame implements ActionListener {
         guessLetterButton.addActionListener(this);
     }
 
-    public static void main(String[] args) {
-        hangmanServerLogic = new HangmanServerLogic();
-    }
+//    public static void main(String[] args) {
+//        hangmanServerLogic = new HangmanServerLogic();
+//    }
 
     public void actionPerformed(ActionEvent e) {
 

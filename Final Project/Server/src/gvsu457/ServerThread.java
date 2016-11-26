@@ -2,7 +2,6 @@ package gvsu457;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -106,6 +105,9 @@ public class ServerThread implements Runnable {
                         case "remove":
                             gameNumber = in.readInt();
                             RemoveFromGameQueueForGameNumber(gameNumber);
+                            break;
+                        case "kill":
+                            RemovePlayerFromAllQueues(username);
                             break;
                     }
 
@@ -349,7 +351,7 @@ public class ServerThread implements Runnable {
 
             String opponentName = CheckQueueForOtherPlayers();
             if (!opponentName.isEmpty()) {
-                System.out.println("User: " + username + " has been paired against " + opponentName + " for a game of + " + game + ".");
+                System.out.println("User: " + username + " has been paired against " + opponentName + " for a game of " + game + ".");
 
                 //if a match has been made, we need to determine who is going to connect to who to start the game.
                 //I vote we just do whoever is alphabetically first.
@@ -357,12 +359,13 @@ public class ServerThread implements Runnable {
                 if (username.compareToIgnoreCase(opponentName) < -1) {
                     //this means username is less than opponent name.
                     //username will connect to opponentName
-                    RemovePlayerFromAllQueues(username);
-                    RemovePlayerFromAllQueues(opponentName);
+//                    RemovePlayerFromAllQueues(username);
+//                    RemovePlayerFromAllQueues(opponentName);
                     GetConnectionInfoForClientToClientConnection(opponentName, game);
-                }else{
+                } else {
                     out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
                     out.writeUTF("skip");
+                    out.writeUTF(game);
                     out.flush();
                     //GetConnectionInfoForClientToClientConnection(username, game);
                 }
@@ -407,53 +410,9 @@ public class ServerThread implements Runnable {
     }
 
     /**
-     * Returns the speed for the username.
-     *
-     * @param String username
-     * @return String
-     */
-    private String getSpeedForUserName(String userName) {
-        String speedd = "";
-        try {
-            File curDir = new File(DBXML_DIR_SHORTCUT);
-            File[] FileList = curDir.listFiles();
-
-            for (File file : FileList) {
-                if (file.getName().equalsIgnoreCase(userName + ".xml")) {
-                    Document dom;
-                    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-                    DocumentBuilder db = dbf.newDocumentBuilder();
-                    dom = db.parse(file);
-                    Element doc = dom.getDocumentElement();
-                    NodeList thisNodeList = doc.getElementsByTagName("userdetails");
-
-                    speedd = doc.getElementsByTagName("speed").item(0).getTextContent();
-
-                    for (int temp = 0; temp < thisNodeList.getLength(); temp++) {
-                        Node nNode = thisNodeList.item(temp);
-                        if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-                            Element eElement = (Element) nNode;
-
-                            speedd = eElement.getElementsByTagName("speed").item(0).getTextContent();
-                            break;
-                        }
-                    }
-                }
-            }
-        } catch (ParserConfigurationException e) {
-            System.out.println(e.getStackTrace());
-        } catch (SAXException e) {
-            System.out.println(e.getStackTrace());
-        } catch (IOException e) {
-            System.out.println(e.getStackTrace());
-        }
-        return speedd;
-    }
-
-    /**
      * Returns the hostname for the username.
      *
-     * @param String username
+     * @param userName
      * @return String
      */
     private String getHostNameForUserName(String userName) {
@@ -574,7 +533,7 @@ public class ServerThread implements Runnable {
                     }
 
                 }
-                Thread.sleep(10000);
+                Thread.sleep(1000);
             } catch (SAXException e) {
                 e.printStackTrace();
             } catch (ParserConfigurationException e) {

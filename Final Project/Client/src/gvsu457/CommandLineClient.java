@@ -1,8 +1,8 @@
 package gvsu457;
 
-import com.sun.deploy.util.SessionState;
+import gvsu457.Hangman.Client.HangmanClientLogic;
+import gvsu457.Hangman.Server.HangmanServerLogic;
 
-import javax.print.attribute.standard.MediaSize;
 import java.io.*;
 import java.net.Socket;
 import java.util.HashMap;
@@ -106,7 +106,7 @@ public class CommandLineClient {
                                 break;
                             }
 
-                            System.out.println("Would you like to use port: " + LISTENING_PORT + " as your port to listen for other players?");
+                            System.out.println("Would you like to use: " + LISTENING_PORT + " as your port for p2p games?!");
                             System.out.println("Enter y/n");
 
                             String choice = cmd.nextLine().trim();
@@ -117,10 +117,10 @@ public class CommandLineClient {
 
                             ConnectToTheServer(userInputSplit[1], userInputSplit[2], LISTENING_PORT);
                             //Once we are connected to the server we need to listen for client to client connections.
-                            ClientConnectionThreadPool serverClientThreadPool = new ClientConnectionThreadPool();
-                            serverClientThreadPool.setListeningPortNumber(LISTENING_PORT);
-                            executorService.submit(serverClientThreadPool);
-                            System.out.println("Listening for matches on port: " + LISTENING_PORT);
+//                            ClientConnectionThreadPool serverClientThreadPool = new ClientConnectionThreadPool();
+//                            serverClientThreadPool.setListeningPortNumber(LISTENING_PORT);
+//                            executorService.submit(serverClientThreadPool);
+//                            System.out.println("Listening for matches on port: " + LISTENING_PORT);
                             break;
                         case "games":
                             GetGameListFromServer();
@@ -132,6 +132,12 @@ public class CommandLineClient {
                             }
                             PlayAGameFromTheServer(userInputSplit[0], userInputSplit[1]);
                             GetAMatchForAGame();
+                            try {
+                                out_server.writeUTF("kill");
+                                out_server.flush();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                             break;
                         case "remove":
                             if (userInputSplit.length != 2) {
@@ -159,48 +165,91 @@ public class CommandLineClient {
             while (true) {
                 if (in_server.available() > 0) {
                     OtherPlayerName = in_server.readUTF();
-                    if(OtherPlayerName.equalsIgnoreCase("skip")){
+                    if (OtherPlayerName.equalsIgnoreCase("skip")) {
+                        game = in_server.readUTF();
                         break;
                     }
                     USERNAME = in_server.readUTF();
                     OtherPlayerIP = in_server.readUTF();
                     OtherPlayerPort = in_server.readInt();
+
+                    if (OtherPlayerIP.contains("/")) {
+                        OtherPlayerIP = OtherPlayerIP.substring(1);
+                    }
+
                     game = in_server.readUTF();
                     break;
-                }else{
+                } else {
                     System.out.println("Still waiting....");
 
                     //replace this with something better...
-                    Thread.sleep(10000);
+                    Thread.sleep(5000);
 
                 }
             }
 
-            if(OtherPlayerName.equalsIgnoreCase("skip")){
-                return;
-            }
+            if (OtherPlayerName.equalsIgnoreCase("skip")) {
+                //you are the server, start the server up for the specified game.
 
-            if(OtherPlayerName.equalsIgnoreCase(username)){
-                //we are the listener, don't do anything?
+                StartServerVersionOfGame(game);
+
                 return;
-            }else{
+            } else {
                 //we need to connect to the other client and start the specified game.
-                IssueClientConnectionForGameMatch ClientConnectionForGameMatch = new IssueClientConnectionForGameMatch();
-                ClientConnectionForGameMatch.setUsername(username);
-                ClientConnectionForGameMatch.setOpponentName(OtherPlayerName);
-                ClientConnectionForGameMatch.setConnectingPortNumber(OtherPlayerPort);
-                ClientConnectionForGameMatch.setConnectingHostName(OtherPlayerIP);
-                ClientConnectionForGameMatch.setGameTypeToPlay(game);
-                executorService.submit(ClientConnectionForGameMatch);
+//                IssueClientConnectionForGameMatch ClientConnectionForGameMatch = new IssueClientConnectionForGameMatch();
+//                ClientConnectionForGameMatch.setUsername(username);
+//                ClientConnectionForGameMatch.setOpponentName(OtherPlayerName);
+//                ClientConnectionForGameMatch.setConnectingPortNumber(OtherPlayerPort);
+//                ClientConnectionForGameMatch.setConnectingHostName(OtherPlayerIP);
+//                ClientConnectionForGameMatch.setGameTypeToPlay(game);
+//                executorService.submit(ClientConnectionForGameMatch);
+
+                //use the information we have gathered to connect to the other client.
+                Thread.sleep(5000);
+                StartClientVersionOfGame(game, OtherPlayerName, OtherPlayerPort, OtherPlayerIP);
                 return;
             }
-
 
 
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }
+    }
+
+    private static void StartClientVersionOfGame(String game, String otherPlayerName, int otherPlayerPort, String otherPlayerIP) {
+        switch (game) {
+            case "tictactoe":
+                break;
+            case "hangman":
+                HangmanClientLogic hangmanClientLogic = new HangmanClientLogic(username, otherPlayerIP, otherPlayerPort);
+                executorService.submit(hangmanClientLogic);
+                break;
+            case "battleship":
+                break;
+            case "minesweeper":
+                break;
+            case "placeholder":
+                break;
+        }
+    }
+
+    private static void StartServerVersionOfGame(String game) {
+
+        switch (game) {
+            case "tictactoe":
+                break;
+            case "hangman":
+                HangmanServerLogic hangmanServerLogic = new HangmanServerLogic(LISTENING_PORT, username);
+                executorService.submit(hangmanServerLogic);
+                break;
+            case "battleship":
+                break;
+            case "minesweeper":
+                break;
+            case "placeholder":
+                break;
         }
     }
 

@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by Administrator on 11/23/2016.
  */
-public class HangmanClientLogic {
+public class HangmanClientLogic implements Runnable {
 
     /*The data input stream from the server*/
     public static DataInputStream in_server;
@@ -25,7 +25,9 @@ public class HangmanClientLogic {
     /*The GUI*/
     public static HangmanGUI hangman;
 
-    /** Shortcut for image directory */
+    /**
+     * Shortcut for image directory
+     */
     public static String IMAGE_DIR = System.getProperty("user.dir") + File.separator + ".." + File.separator + "images";
 
     /*The word the user must guess*/
@@ -34,39 +36,37 @@ public class HangmanClientLogic {
     public ArrayList<String> charGuessList = new ArrayList<String>();
 
 
-    public HangmanClientLogic(){
+    public HangmanClientLogic(String username, String hostname, int port) {
         try {
 
             //First thing we want to do is connect to the server.
-            server = new Socket("localhost", 8989);
+            server = new Socket(hostname, port);
 
             //set up the streams using the global socket.
             in_server = new DataInputStream(new BufferedInputStream(server.getInputStream()));
             out_server = new DataOutputStream(new BufferedOutputStream(server.getOutputStream()));
 
             //Get the GUI up...
-            hangman = new HangmanGUI("username Client");
+            hangman = new HangmanGUI("welcome " + username, this);
 
             //Tell the user to send the word to the client!
             setHangManImage(7);
 
             final ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
-            service.scheduleWithFixedDelay(new Runnable()
-            {
+            service.scheduleWithFixedDelay(new Runnable() {
                 @Override
-                public void run()
-                {
+                public void run() {
                     try {
-                        if(in_server.available() > 0){
+                        if (in_server.available() > 0) {
                             String guess = in_server.readUTF();
                             charGuessList.add(guess);
                             hangman.listModel.addElement(guess);
                             setDisplayForWordAndGuessList();
                             int numToShow = in_server.readInt();
-                            if(numToShow == 9){
+                            if (numToShow == 9) {
                                 numToShow++;
                             }
-                            if(numToShow == 6){
+                            if (numToShow == 6) {
                                 numToShow = 9;
                             }
                             setHangManImage(numToShow);
@@ -79,38 +79,47 @@ public class HangmanClientLogic {
             }, 0, 1, TimeUnit.SECONDS);
 
 
-
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    @Override
+    public void run() {
+        //Tell the user to send the word to the client!
+        setHangManImage(7);
+    }
+
     public void setDisplayForWordAndGuessList() {
         String display = "";
 
-        for(int i = 0; i < word.length(); i++){
+        for (int i = 0; i < word.length(); i++) {
             boolean found = false;
-            for(String guessChar: charGuessList){
-                if(word.charAt(i) == guessChar.charAt(0)){
+            for (String guessChar : charGuessList) {
+                if (word.charAt(i) == guessChar.charAt(0)) {
                     display += word.charAt(i) + " ";
                     found = true;
                 }
             }
-            if(!found) {
+            if (!found) {
                 display += "_ ";
             }
         }
         hangman.setWordDisplay(display);
     }
 
-    public void sendWordToServer(String word){
+    public void sendWordToServer(String word) {
 
         //The client will be the one to set the word for the server to guess
         this.word = word;
         try {
-                out_server.writeUTF(word);
-                out_server.flush();
-                setHangManImage(0);
+            //set up the streams using the global socket.
+            in_server = new DataInputStream(new BufferedInputStream(server.getInputStream()));
+            out_server = new DataOutputStream(new BufferedOutputStream(server.getOutputStream()));
+
+            out_server.writeUTF(word);
+            out_server.flush();
+            setHangManImage(0);
 
             //after we send the word there is nothing else to do but watch...
 
@@ -159,4 +168,5 @@ public class HangmanClientLogic {
                 break;
         }
     }
+
 }

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 /**
  * Created by Administrator on 11/23/2016.
  */
-public class HangmanServerLogic {
+public class HangmanServerLogic implements Runnable {
 
     /*The data input stream from the server*/
     public static DataInputStream in_client;
@@ -39,31 +39,52 @@ public class HangmanServerLogic {
 
     public int foundLetterCount = 0;
 
-    HangmanServerLogic() {
+    public Socket socket;
+
+    @Override
+    public void run() {
+        //Listen for the word from the client to start the game...
+        try {
+            word = in_client.readUTF();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        wordLength = word.length();
+
+        setDisplayForWordAndGuessList();
+
+        hangman.setAllFieldsEnabled(true);
+
+        //Let the user know to start guessing...
+        setHangManImage(0);
+    }
+
+    public HangmanServerLogic(int port, String username) {
         try {
 
             //set up the connection to the client...
-            client_connection = new ServerSocket(8989);
-            Socket socket = client_connection.accept();
+            client_connection = new ServerSocket(port);
+            socket = client_connection.accept();
 
             //set up the streams using the global socket.
             in_client = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
             out_client = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
 
             //Get the GUI up..
-            hangman = new HangmanServerGUI("username SERVER");
+            hangman = new HangmanServerGUI("Welcome " + username, this);
 
-            //Listen for the word from the client to start the game...
-            word = in_client.readUTF();
-
-            wordLength = word.length();
-
-            setDisplayForWordAndGuessList();
-
-            hangman.setAllFieldsEnabled(true);
-
-            //Let the user know to start guessing...
-            setHangManImage(0);
+//            //Listen for the word from the client to start the game...
+//            word = in_client.readUTF();
+//
+//            wordLength = word.length();
+//
+//            setDisplayForWordAndGuessList();
+//
+//            hangman.setAllFieldsEnabled(true);
+//
+//            //Let the user know to start guessing...
+//            setHangManImage(0);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -139,6 +160,10 @@ public class HangmanServerLogic {
         boolean retVal = true;
 
         try {
+            //set up the streams using the global socket.
+            in_client = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+            out_client = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+
             if (!charGuessList.contains(text)) {
 
                 if (word.contains(text)) {
@@ -167,4 +192,5 @@ public class HangmanServerLogic {
         setDisplayForWordAndGuessList();
         return retVal;
     }
+
 }
