@@ -1,27 +1,29 @@
-package gvsu457.Tic2.Client;
+package gvsu457.TicTacToe.Server;
+
+import gvsu457.Tic2.Client.TicTacToeClientLogic;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
 /**
  * Created by Administrator on 11/24/2016.
  */
-public class TicTacToeClientGUI extends JFrame implements ActionListener {
-    public JButton button7;
-    public JPanel panel1;
-    public JButton button4;
+public class TicTacToeServerGUI extends JFrame implements ActionListener {
     public JButton button1;
     public JButton button2;
     public JButton button3;
+    public JButton button4;
     public JButton button5;
     public JButton button6;
+    public JButton button7;
     public JButton button8;
     public JButton button9;
+    public JPanel panel1;
     private Image xImg;
     private Image oImg;
 
@@ -30,10 +32,9 @@ public class TicTacToeClientGUI extends JFrame implements ActionListener {
      */
     public static String IMAGE_DIR = System.getProperty("user.dir") + File.separator + ".." + File.separator + "images";
 
-    public static TicTacToeClientLogic ticTacToeClientLogic;
+    public static TicTacToeServerLogic ticTacToeServerLogic;
 
-    public TicTacToeClientGUI(String username) {
-
+    public TicTacToeServerGUI(String username) {
 
         super(username);
 
@@ -62,10 +63,11 @@ public class TicTacToeClientGUI extends JFrame implements ActionListener {
         setVisible(true);
         pack();
 
+        setButtonsEnabled(false);
     }
 
     public static void main(String[] args) {
-        ticTacToeClientLogic = new TicTacToeClientLogic();
+        ticTacToeServerLogic = new TicTacToeServerLogic();
     }
 
     @Override
@@ -74,72 +76,72 @@ public class TicTacToeClientGUI extends JFrame implements ActionListener {
         JComponent event = (JComponent) e.getSource();
 
         if (event == button1) {
-            ticTacToeClientLogic.setSpotForUser(0, 0);
-            button1.setIcon(new ImageIcon(xImg));
-            ticTacToeClientLogic.sendDataToOtherPlayer(1);
+            ticTacToeServerLogic.setSpotForUser(0, 0);
+            ticTacToeServerLogic.sendDataToOtherPlayer(1);
+            button1.setIcon(new ImageIcon(oImg));
         } else if (event == button2) {
-            ticTacToeClientLogic.setSpotForUser(0, 1);
-            ticTacToeClientLogic.sendDataToOtherPlayer(2);
-            button2.setIcon(new ImageIcon(xImg));
+            ticTacToeServerLogic.setSpotForUser(0, 1);
+            ticTacToeServerLogic.sendDataToOtherPlayer(2);
+            button2.setIcon(new ImageIcon(oImg));
         } else if (event == button3) {
-            ticTacToeClientLogic.setSpotForUser(0, 2);
-            ticTacToeClientLogic.sendDataToOtherPlayer(3);
-            button3.setIcon(new ImageIcon(xImg));
+            ticTacToeServerLogic.setSpotForUser(0, 2);
+            ticTacToeServerLogic.sendDataToOtherPlayer(3);
+            button3.setIcon(new ImageIcon(oImg));
         } else if (event == button4) {
-            ticTacToeClientLogic.setSpotForUser(1, 0);
-            ticTacToeClientLogic.sendDataToOtherPlayer(4);
-            button4.setIcon(new ImageIcon(xImg));
+            ticTacToeServerLogic.setSpotForUser(1, 0);
+            ticTacToeServerLogic.sendDataToOtherPlayer(4);
+            button4.setIcon(new ImageIcon(oImg));
         } else if (event == button5) {
-            ticTacToeClientLogic.setSpotForUser(1, 1);
-            ticTacToeClientLogic.sendDataToOtherPlayer(5);
-            button5.setIcon(new ImageIcon(xImg));
+            ticTacToeServerLogic.setSpotForUser(1, 1);
+            ticTacToeServerLogic.sendDataToOtherPlayer(5);
+            button5.setIcon(new ImageIcon(oImg));
         } else if (event == button6) {
-            ticTacToeClientLogic.setSpotForUser(1, 2);
-            ticTacToeClientLogic.sendDataToOtherPlayer(6);
-            button6.setIcon(new ImageIcon(xImg));
+            ticTacToeServerLogic.setSpotForUser(1, 2);
+            ticTacToeServerLogic.sendDataToOtherPlayer(6);
+            button6.setIcon(new ImageIcon(oImg));
         } else if (event == button7) {
-            ticTacToeClientLogic.setSpotForUser(2, 0);
-            ticTacToeClientLogic.sendDataToOtherPlayer(7);
-            button7.setIcon(new ImageIcon(xImg));
+            ticTacToeServerLogic.setSpotForUser(2, 0);
+            ticTacToeServerLogic.sendDataToOtherPlayer(7);
+            button7.setIcon(new ImageIcon(oImg));
         } else if (event == button8) {
-            ticTacToeClientLogic.setSpotForUser(2, 1);
-            ticTacToeClientLogic.sendDataToOtherPlayer(8);
-            button8.setIcon(new ImageIcon(xImg));
+            ticTacToeServerLogic.setSpotForUser(2, 1);
+            ticTacToeServerLogic.sendDataToOtherPlayer(8);
+            button8.setIcon(new ImageIcon(oImg));
         } else if (event == button9) {
-            ticTacToeClientLogic.setSpotForUser(2, 2);
-            ticTacToeClientLogic.sendDataToOtherPlayer(9);
-            button9.setIcon(new ImageIcon(xImg));
+            ticTacToeServerLogic.setSpotForUser(2, 2);
+            ticTacToeServerLogic.sendDataToOtherPlayer(9);
+            button9.setIcon(new ImageIcon(oImg));
         }
     }
 
     public void setButtonImageForOtherPlayer(int buttonNum) {
         switch (buttonNum) {
             case 1:
-                button1.setIcon(new ImageIcon(oImg));
+                button1.setIcon(new ImageIcon(xImg));
                 break;
             case 2:
-                button2.setIcon(new ImageIcon(oImg));
+                button2.setIcon(new ImageIcon(xImg));
                 break;
             case 3:
-                button3.setIcon(new ImageIcon(oImg));
+                button3.setIcon(new ImageIcon(xImg));
                 break;
             case 4:
-                button4.setIcon(new ImageIcon(oImg));
+                button4.setIcon(new ImageIcon(xImg));
                 break;
             case 5:
-                button5.setIcon(new ImageIcon(oImg));
+                button5.setIcon(new ImageIcon(xImg));
                 break;
             case 6:
-                button6.setIcon(new ImageIcon(oImg));
+                button6.setIcon(new ImageIcon(xImg));
                 break;
             case 7:
-                button7.setIcon(new ImageIcon(oImg));
+                button7.setIcon(new ImageIcon(xImg));
                 break;
             case 8:
-                button8.setIcon(new ImageIcon(oImg));
+                button8.setIcon(new ImageIcon(xImg));
                 break;
             case 9:
-                button9.setIcon(new ImageIcon(oImg));
+                button9.setIcon(new ImageIcon(xImg));
                 break;
         }
     }
@@ -172,16 +174,9 @@ public class TicTacToeClientGUI extends JFrame implements ActionListener {
      */
     private void $$$setupUI$$$() {
         panel1 = new JPanel();
-        panel1.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(3, 3, new Insets(0, 0, 0, 0), -1, -1, true, true));
+        panel1.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(3, 3, new Insets(0, 0, 0, 0), -1, -1));
         panel1.setBackground(new Color(-16777216));
-        panel1.setMinimumSize(new Dimension(350, 350));
         panel1.setPreferredSize(new Dimension(350, 350));
-        button7 = new JButton();
-        button7.setText("");
-        panel1.add(button7, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, new Dimension(100, 100), new Dimension(100, 100), new Dimension(100, 100), 0, false));
-        button4 = new JButton();
-        button4.setText("");
-        panel1.add(button4, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, new Dimension(100, 100), new Dimension(100, 100), new Dimension(100, 100), 0, false));
         button1 = new JButton();
         button1.setText("");
         panel1.add(button1, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, new Dimension(100, 100), new Dimension(100, 100), new Dimension(100, 100), 0, false));
@@ -197,12 +192,18 @@ public class TicTacToeClientGUI extends JFrame implements ActionListener {
         button6 = new JButton();
         button6.setText("");
         panel1.add(button6, new com.intellij.uiDesigner.core.GridConstraints(1, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, new Dimension(100, 100), new Dimension(100, 100), new Dimension(100, 100), 0, false));
+        button7 = new JButton();
+        button7.setText("");
+        panel1.add(button7, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, new Dimension(100, 100), new Dimension(100, 100), new Dimension(100, 100), 0, false));
         button8 = new JButton();
         button8.setText("");
         panel1.add(button8, new com.intellij.uiDesigner.core.GridConstraints(2, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, new Dimension(100, 100), new Dimension(100, 100), new Dimension(100, 100), 0, false));
         button9 = new JButton();
         button9.setText("");
         panel1.add(button9, new com.intellij.uiDesigner.core.GridConstraints(2, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, new Dimension(100, 100), new Dimension(100, 100), new Dimension(100, 100), 0, false));
+        button4 = new JButton();
+        button4.setText("");
+        panel1.add(button4, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, new Dimension(100, 100), new Dimension(100, 100), new Dimension(100, 100), 0, false));
     }
 
     /**

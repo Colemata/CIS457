@@ -1,4 +1,4 @@
-package gvsu457;
+package gvsu457.NotInUseClasses;
 
 import java.io.*;
 import java.net.Socket;

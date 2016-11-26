@@ -10,6 +10,11 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * This is the command line client that will connect to the server and send commands that are entered by
+ * the user. Through the command line client you can play games with other users that are connected to the other
+ * end of the server. The games are all p2p and the connection information is sent from the server to each client.
+ */
 public class CommandLineClient {
 
     /*The user input for system.in*/
@@ -36,9 +41,7 @@ public class CommandLineClient {
     /*The data output stream to the server.*/
     public static DataOutputStream out_server;
 
-    /**
-     * A new Thread Pool
-     */
+    /*This will be used to spawn other threads.*/
     private static ExecutorService executorService = Executors.newCachedThreadPool();
 
     /*End of transmission for a stream.*/
@@ -68,7 +71,7 @@ public class CommandLineClient {
             Scanner cmd = new Scanner(System.in);
             username = cmd.nextLine();
 
-            System.out.println("You have set your username as: " + getUsername());
+            System.out.println("You have set your username as: " + username);
             System.out.println("\n\nPlease enter a command (h for help)!");
 
             while (true) {
@@ -114,13 +117,7 @@ public class CommandLineClient {
                                 System.out.println("Please enter a port number to be used for connecting to other clients.");
                                 LISTENING_PORT = Integer.parseInt(cmd.nextLine());
                             }
-
                             ConnectToTheServer(userInputSplit[1], userInputSplit[2], LISTENING_PORT);
-                            //Once we are connected to the server we need to listen for client to client connections.
-//                            ClientConnectionThreadPool serverClientThreadPool = new ClientConnectionThreadPool();
-//                            serverClientThreadPool.setListeningPortNumber(LISTENING_PORT);
-//                            executorService.submit(serverClientThreadPool);
-//                            System.out.println("Listening for matches on port: " + LISTENING_PORT);
                             break;
                         case "games":
                             GetGameListFromServer();
@@ -154,29 +151,40 @@ public class CommandLineClient {
         }
     }
 
+    /**
+     * This method will wait for a match for the game queues. The matches are issued from the server.
+     */
     private static void GetAMatchForAGame() {
         String OtherPlayerName = null;
-        String USERNAME = null;
+        String Username = null;
         String OtherPlayerIP = null;
         int OtherPlayerPort = 0;
         String game = null;
         System.out.println("You have entered the queue... Please wait for match...");
         try {
+
+            //loop until there is a transmission from the server.
             while (true) {
                 if (in_server.available() > 0) {
                     OtherPlayerName = in_server.readUTF();
+
+                    //If we get "skip" sent from the server, we are going to act as the server in the game connection.
                     if (OtherPlayerName.equalsIgnoreCase("skip")) {
                         game = in_server.readUTF();
                         break;
                     }
-                    USERNAME = in_server.readUTF();
+
+                    //grab the important information from the server.
+                    Username = in_server.readUTF();
                     OtherPlayerIP = in_server.readUTF();
                     OtherPlayerPort = in_server.readInt();
 
+                    //remove the stupid / from the ip address.
                     if (OtherPlayerIP.contains("/")) {
                         OtherPlayerIP = OtherPlayerIP.substring(1);
                     }
 
+                    //get the game we are going to be playing.
                     game = in_server.readUTF();
                     break;
                 } else {
@@ -188,29 +196,23 @@ public class CommandLineClient {
                 }
             }
 
+            //Yet again, this means we are the server for our game we are going to play.
             if (OtherPlayerName.equalsIgnoreCase("skip")) {
-                //you are the server, start the server up for the specified game.
 
+                //you are the server, start the server up for the specified game.
                 StartServerVersionOfGame(game);
 
                 return;
             } else {
-                //we need to connect to the other client and start the specified game.
-//                IssueClientConnectionForGameMatch ClientConnectionForGameMatch = new IssueClientConnectionForGameMatch();
-//                ClientConnectionForGameMatch.setUsername(username);
-//                ClientConnectionForGameMatch.setOpponentName(OtherPlayerName);
-//                ClientConnectionForGameMatch.setConnectingPortNumber(OtherPlayerPort);
-//                ClientConnectionForGameMatch.setConnectingHostName(OtherPlayerIP);
-//                ClientConnectionForGameMatch.setGameTypeToPlay(game);
-//                executorService.submit(ClientConnectionForGameMatch);
 
                 //use the information we have gathered to connect to the other client.
                 Thread.sleep(5000);
-                StartClientVersionOfGame(game, OtherPlayerName, OtherPlayerPort, OtherPlayerIP);
+
+                //Start the client version of the game.
+                StartClientVersionOfGame(game, OtherPlayerPort, OtherPlayerIP);
+
                 return;
             }
-
-
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -218,7 +220,13 @@ public class CommandLineClient {
         }
     }
 
-    private static void StartClientVersionOfGame(String game, String otherPlayerName, int otherPlayerPort, String otherPlayerIP) {
+    /**
+     * This will start the client version of the game specified.
+     * @param game the game type being played.
+     * @param otherPlayerPort the other players port to connect to.
+     * @param otherPlayerIP the other players IP to connect to.
+     */
+    private static void StartClientVersionOfGame(String game, int otherPlayerPort, String otherPlayerIP) {
         switch (game) {
             case "tictactoe":
                 break;
@@ -235,8 +243,11 @@ public class CommandLineClient {
         }
     }
 
+    /**
+     * This will start the server version of the game to be played.
+     * @param game the game to be played.
+     */
     private static void StartServerVersionOfGame(String game) {
-
         switch (game) {
             case "tictactoe":
                 break;
@@ -253,6 +264,11 @@ public class CommandLineClient {
         }
     }
 
+    /**
+     * This will remove the user from a queue on the server.
+     * @param command the command issued to the server.
+     * @param gameNumber the game number to remove for the user.
+     */
     private static void RemoveMyselfFromTheQueueOnTheServer(String command, String gameNumber) {
         try {
             out_server = new DataOutputStream(new BufferedOutputStream(server.getOutputStream()));
@@ -264,6 +280,11 @@ public class CommandLineClient {
         }
     }
 
+    /**
+     * This will enter the user into a queue on the server in order to play a game.
+     * @param command the command issued to the server.
+     * @param gameNumber the game number of the game to be played.
+     */
     private static void PlayAGameFromTheServer(String command, String gameNumber) {
 
         try {
@@ -276,12 +297,18 @@ public class CommandLineClient {
         }
     }
 
+    /**
+     * This will display all the commands the user can use, and the explination of all the commands.
+     */
     private static void DisplayCommandsForTheUser() {
         for (String key : CommandExplinationHashMap.keySet()) {
             System.out.println("\t<" + key + "> | " + CommandExplinationHashMap.get(key));
         }
     }
 
+    /**
+     * This will query the server for a game list and then display it for the user.
+     */
     private static void GetGameListFromServer() {
         String gamename;
         int index = 0;
@@ -305,6 +332,13 @@ public class CommandLineClient {
         }
     }
 
+    /**
+     * Used to connect to the server.
+     * @param ip the ip of the server.
+     * @param port the port of the server.
+     * @param listeningPort the port we are going to use for client to client connections.
+     * @return the status of the connection.
+     */
     private static boolean ConnectToTheServer(String ip, String port, int listeningPort) {
         try {
             server = new Socket(ip, Integer.parseInt(port));
@@ -316,7 +350,7 @@ public class CommandLineClient {
 
                 System.out.println("Connection established to game server!");
 
-                out_server.writeUTF(getUsername());
+                out_server.writeUTF(username);
                 out_server.writeInt(listeningPort);
                 out_server.flush();
                 return true;
@@ -375,17 +409,5 @@ public class CommandLineClient {
      */
     private static String GetParametersForCommand(String command) {
         return CommandParameterHashMap.get(command);
-    }
-
-    public static String getUsername() {
-        return username;
-    }
-
-    public int getLISTENING_PORT() {
-        return LISTENING_PORT;
-    }
-
-    public void setLISTENING_PORT(int LISTENING_PORT) {
-        LISTENING_PORT = LISTENING_PORT;
     }
 }

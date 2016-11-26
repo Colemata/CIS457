@@ -31,14 +31,19 @@ public class HangmanServerLogic implements Runnable {
     /*The GUI*/
     public static HangmanServerGUI hangman;
 
+    /*The list of characters that have been guessed thus far*/
     public static ArrayList<String> charGuessList = new ArrayList<String>();
 
+    /*This miss count*/
     public int missCount = 0;
 
+    /*The word length*/
     public int wordLength = 0;
 
+    /*The count of the number of letters guessed correctly*/
     public int foundLetterCount = 0;
 
+    /*The socket which will maintain a connection*/
     public Socket socket;
 
     @Override
@@ -52,8 +57,10 @@ public class HangmanServerLogic implements Runnable {
 
         wordLength = word.length();
 
+        //Set the display for the word we got from the other client.
         setDisplayForWordAndGuessList();
 
+        //Allow for stuff to happen.
         hangman.setAllFieldsEnabled(true);
 
         //Let the user know to start guessing...
@@ -74,23 +81,14 @@ public class HangmanServerLogic implements Runnable {
             //Get the GUI up..
             hangman = new HangmanServerGUI("Welcome " + username, this);
 
-//            //Listen for the word from the client to start the game...
-//            word = in_client.readUTF();
-//
-//            wordLength = word.length();
-//
-//            setDisplayForWordAndGuessList();
-//
-//            hangman.setAllFieldsEnabled(true);
-//
-//            //Let the user know to start guessing...
-//            setHangManImage(0);
-
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Set the display for the word from the server.
+     */
     private void setDisplayForWordAndGuessList() {
         String display = "";
         foundLetterCount = 0;
@@ -115,6 +113,10 @@ public class HangmanServerLogic implements Runnable {
         }
     }
 
+    /**
+     * Set the image displayed to the user based upon which number is sent.
+     * @param numWrong the number of guesses that have been wrong.
+     */
     public static void setHangManImage(int numWrong) {
 
         switch (numWrong) {
@@ -155,6 +157,12 @@ public class HangmanServerLogic implements Runnable {
         }
     }
 
+    /**
+     * Used when the the user guesses a letter, this will also send the hit or miss to the other client to update their
+     * interface with the appropriate image.
+     * @param text the guessed letter.
+     * @return status of the guess.
+     */
     public boolean guessLetter(String text) {
 
         boolean retVal = true;

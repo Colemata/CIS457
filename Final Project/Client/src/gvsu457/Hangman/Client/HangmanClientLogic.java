@@ -25,20 +25,19 @@ public class HangmanClientLogic implements Runnable {
     /*The GUI*/
     public static HangmanGUI hangman;
 
-    /**
-     * Shortcut for image directory
-     */
+    /*Shortcut for image directory*/
     public static String IMAGE_DIR = System.getProperty("user.dir") + File.separator + ".." + File.separator + "images";
 
     /*The word the user must guess*/
     public static String word;
 
+    /*The list of characters that have been guessed thus far*/
     public ArrayList<String> charGuessList = new ArrayList<String>();
 
 
     public HangmanClientLogic(String username, String hostname, int port) {
-        try {
 
+        try {
             //First thing we want to do is connect to the server.
             server = new Socket(hostname, port);
 
@@ -52,11 +51,14 @@ public class HangmanClientLogic implements Runnable {
             //Tell the user to send the word to the client!
             setHangManImage(7);
 
+            //This is a timer that will run every one second on a seperate thread.
             final ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
             service.scheduleWithFixedDelay(new Runnable() {
                 @Override
                 public void run() {
                     try {
+
+                        //Check if there has been any input from the server every 1 second.
                         if (in_server.available() > 0) {
                             String guess = in_server.readUTF();
                             charGuessList.add(guess);
@@ -77,8 +79,6 @@ public class HangmanClientLogic implements Runnable {
                     }
                 }
             }, 0, 1, TimeUnit.SECONDS);
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -90,6 +90,9 @@ public class HangmanClientLogic implements Runnable {
         setHangManImage(7);
     }
 
+    /**
+     * This will set the display for the word and guess list.
+     */
     public void setDisplayForWordAndGuessList() {
         String display = "";
 
@@ -108,6 +111,11 @@ public class HangmanClientLogic implements Runnable {
         hangman.setWordDisplay(display);
     }
 
+    /**
+     * This is going to send the word we have chosen to the server in order to determine if there
+     * are hits and misses on the word.
+     * @param word the word the user has chosen.
+     */
     public void sendWordToServer(String word) {
 
         //The client will be the one to set the word for the server to guess
@@ -117,6 +125,7 @@ public class HangmanClientLogic implements Runnable {
             in_server = new DataInputStream(new BufferedInputStream(server.getInputStream()));
             out_server = new DataOutputStream(new BufferedOutputStream(server.getOutputStream()));
 
+            //write the word to the server and init our image.
             out_server.writeUTF(word);
             out_server.flush();
             setHangManImage(0);
@@ -128,6 +137,10 @@ public class HangmanClientLogic implements Runnable {
         }
     }
 
+    /**
+     * Used to change the image displayed.
+     * @param numWrong the number of which image to select.
+     */
     public static void setHangManImage(int numWrong) {
 
         switch (numWrong) {

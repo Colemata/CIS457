@@ -1,4 +1,4 @@
-package gvsu457.Tic2.Server;
+package gvsu457.TicTacToe.Server;
 
 
 import javax.swing.*;
@@ -10,7 +10,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by Administrator on 11/24/2016.
+ * Created by taylor.coleman on 11/24/2016.
  */
 public class TicTacToeServerLogic {
 
@@ -23,15 +23,16 @@ public class TicTacToeServerLogic {
     /*The server socket to maintain a connect*/
     public static ServerSocket client_connection;
 
+    /*The player number used to determine moves*/
     public int playerNumber = 2;
 
+    /*The gameboard used to keep score and check for wins*/
     private int[][] gameBoard;
 
+    /*The user interface*/
     public TicTacToeServerGUI ticTacToeServerGUI;
 
-    /**
-     * Shortcut for image directory
-     */
+    /*Shortcut for image directory*/
     public static String IMAGE_DIR = System.getProperty("user.dir") + File.separator + ".." + File.separator + "images";
 
     public TicTacToeServerLogic() {
@@ -49,8 +50,10 @@ public class TicTacToeServerLogic {
             e.printStackTrace();
         }
 
+        //Bring up the ui.
         ticTacToeServerGUI = new TicTacToeServerGUI("Server Game");
 
+        //init the gameboard to all -1.
         for (int i = 0; i < 3; i++) {
             for (int k = 0; k < 3; k++) {
                 gameBoard = new int[3][3];
@@ -58,6 +61,7 @@ public class TicTacToeServerLogic {
             }
         }
 
+        //A thread that will check for new data from the server every 1 second.
         final ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
         service.scheduleWithFixedDelay(new Runnable() {
             @Override
@@ -85,14 +89,28 @@ public class TicTacToeServerLogic {
         }, 0, 1, TimeUnit.SECONDS);
     }
 
+    /**
+     * Set the spot for this user on the gameboard.
+     * @param x the x coordinate of the button.
+     * @param y the y coordinate of the button.
+     */
     public void setSpotForUser(int x, int y) {
         gameBoard[x][y] = playerNumber;
     }
 
+    /**
+     * Set the spot on the gameboard that the other player has taken.
+     * @param x the x coordinate of the button.
+     * @param y the y coordinate of the button.
+     */
     public void setSpotForOtherPlayer(int x, int y) {
         gameBoard[x][y] = 1;
     }
 
+    /**
+     * Perform a move once it has been issued from the other client.
+     * @param buttonNum the button number pressed.
+     */
     private void performMoveForOtherPlayer(int buttonNum) {
         switch (buttonNum) {
             case 1:
@@ -125,6 +143,11 @@ public class TicTacToeServerLogic {
         }
     }
 
+    /**
+     * Check if there is a winner for the player passed.
+     * @param player the player to check for a win.
+     * @return true if there is a win for this player.
+     */
     boolean checkIfWinner(int player) {
 
         for (int i = 0; i < 3; i++) {
@@ -142,6 +165,10 @@ public class TicTacToeServerLogic {
         return false;
     }
 
+    /**
+     * Send data to the other player.
+     * @param buttonNumber the button number to send to the other user.
+     */
     public void sendDataToOtherPlayer(int buttonNumber) {
         try {
             out_client.writeInt(buttonNumber);
