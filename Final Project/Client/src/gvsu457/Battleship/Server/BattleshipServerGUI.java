@@ -1,6 +1,10 @@
 package gvsu457.Battleship.Server;
 
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.plaf.basic.BasicOptionPaneUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,10 +14,34 @@ import java.util.ArrayList;
  * Created by Administrator on 11/27/2016.
  */
 public class BattleshipServerGUI extends JFrame implements ActionListener {
+
+    public JPanel topLevelPanel;
+    public JPanel shipPanel;
+    public JPanel guessPanel;
+    public JPanel checkBoxPanel1;
+    public JPanel checkBoxPanel2;
     public JPanel mainPanel;
-    public JPanel buttonPanel;
+    public JPanel topLeftPanel;
+    public JPanel topRightPanel;
     public JButton[][] selectionButtons = new JButton[10][10];
+    public JButton[][] guessButtons = new JButton[10][10];
     public int[][] gameBoard = new int[10][10];
+
+    private JCheckBox box1;
+    private JCheckBox box2;
+    private JCheckBox box3;
+    private JCheckBox box4;
+    private JCheckBox box5;
+
+    private JCheckBox theirBox1;
+    private JCheckBox theirBox2;
+    private JCheckBox theirBox3;
+    private JCheckBox theirBox4;
+    private JCheckBox theirBox5;
+
+
+    private JLabel yourShipsLabel;
+    private JLabel theirShipsLabel;
 
     public Battleship ship1 = new Battleship(2, false, 0, false);
     public Battleship ship2 = new Battleship(3, false, 0, false);
@@ -64,22 +92,93 @@ public class BattleshipServerGUI extends JFrame implements ActionListener {
 
         super("hello world");
 
+        topLevelPanel = new JPanel(new FlowLayout());
+        shipPanel = new JPanel(new GridLayout(10, 10));
+        shipPanel.setBorder(new TitledBorder(new LineBorder(Color.BLUE, 5), "Ship Board"));
+        guessPanel = new JPanel(new GridLayout(10, 10));
+        guessPanel.setBorder(new TitledBorder(new LineBorder(Color.YELLOW, 5), "Guess Board"));
+        checkBoxPanel1 = new JPanel();
+        checkBoxPanel1.setLayout(new BoxLayout(checkBoxPanel1, BoxLayout.PAGE_AXIS));
+        checkBoxPanel2 = new JPanel();
+        checkBoxPanel2.setLayout(new BoxLayout(checkBoxPanel2, BoxLayout.PAGE_AXIS));
+        topLeftPanel = new JPanel();
+        topRightPanel = new JPanel();
+
+        box1 = new JCheckBox("Cruiser    (2)");
+        box1.setEnabled(false);
+        box2 = new JCheckBox("Submarine  (3)");
+        box2.setEnabled(false);
+        box3 = new JCheckBox("Cruiser    (3)");
+        box3.setEnabled(false);
+        box4 = new JCheckBox("Battleship (4)");
+        box4.setEnabled(false);
+        box5 = new JCheckBox("Carrier    (5)");
+        box5.setEnabled(false);
+
+        theirBox1 = new JCheckBox("Cruiser    (2)");
+        theirBox1.setEnabled(false);
+        theirBox2 = new JCheckBox("Submarine  (3)");
+        theirBox2.setEnabled(false);
+        theirBox3 = new JCheckBox("Cruiser    (3)");
+        theirBox3.setEnabled(false);
+        theirBox4 = new JCheckBox("Battleship (4)");
+        theirBox4.setEnabled(false);
+        theirBox5 = new JCheckBox("Carrier    (5)");
+        theirBox5.setEnabled(false);
+
+        yourShipsLabel = new JLabel("Your Ships Remaining");
+        theirShipsLabel = new JLabel("Their Ships Remaining");
+
+        checkBoxPanel1.add(yourShipsLabel);
+        checkBoxPanel1.add(box1);
+        checkBoxPanel1.add(box2);
+        checkBoxPanel1.add(box3);
+        checkBoxPanel1.add(box4);
+        checkBoxPanel1.add(box5);
+
+        checkBoxPanel2.add(theirShipsLabel);
+        checkBoxPanel2.add(theirBox1);
+        checkBoxPanel2.add(theirBox2);
+        checkBoxPanel2.add(theirBox3);
+        checkBoxPanel2.add(theirBox4);
+        checkBoxPanel2.add(theirBox5);
+
         battleshipsArray.add(ship1);
         battleshipsArray.add(ship2);
         battleshipsArray.add(ship3);
         battleshipsArray.add(ship4);
         battleshipsArray.add(ship5);
 
-        setLayout(new GridLayout(10, 10));
+        //setLayout(new GridLayout(10, 10));
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 selectionButtons[i][j] = new JButton();
                 selectionButtons[i][j].addActionListener(this);
                 selectionButtons[i][j].setPreferredSize(new Dimension(50, 50));
-                add(selectionButtons[i][j]);
+                shipPanel.add(selectionButtons[i][j]);
                 gameBoard[i][j] = -1;
             }
         }
+
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                guessButtons[i][j] = new JButton();
+                guessButtons[i][j].addActionListener(this);
+                guessButtons[i][j].setPreferredSize(new Dimension(50, 50));
+                guessPanel.add(guessButtons[i][j]);
+            }
+        }
+        //topLevelPanel.add(BorderLayout.WEST, checkBoxPanel);
+        //topLeftPanel.add(checkBoxPanel);
+        topLevelPanel.add(checkBoxPanel1);
+        //topRightPanel.add(checkBoxPanel);
+
+        topLevelPanel.add(shipPanel);
+        topLevelPanel.add(checkBoxPanel2);
+
+        topLevelPanel.add(guessPanel);
+        add(topLevelPanel);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
         pack();
 
@@ -247,3 +346,4 @@ public class BattleshipServerGUI extends JFrame implements ActionListener {
     }
 
 }
+
