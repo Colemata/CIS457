@@ -1,10 +1,8 @@
 package gvsu457.Battleship.Server;
 
 import javax.swing.*;
-import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.plaf.basic.BasicOptionPaneUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,11 +41,11 @@ public class BattleshipServerGUI extends JFrame implements ActionListener {
     private JLabel yourShipsLabel;
     private JLabel theirShipsLabel;
 
-    public Battleship ship1 = new Battleship(2, false, 0, false);
-    public Battleship ship2 = new Battleship(3, false, 0, false);
-    public Battleship ship3 = new Battleship(3, false, 0, false);
-    public Battleship ship4 = new Battleship(4, false, 0, false);
-    public Battleship ship5 = new Battleship(5, false, 0, false);
+    public Battleship ship1 = new Battleship(2, false, 0, false, 1);
+    public Battleship ship2 = new Battleship(3, false, 0, false, 2);
+    public Battleship ship3 = new Battleship(3, false, 0, false, 3);
+    public Battleship ship4 = new Battleship(4, false, 0, false, 4);
+    public Battleship ship5 = new Battleship(5, false, 0, false, 5);
 
     public ArrayList<Battleship> battleshipsArray = new ArrayList<Battleship>();
 
@@ -81,11 +79,13 @@ public class BattleshipServerGUI extends JFrame implements ActionListener {
 
     public enum gameStatus {
         initialSetup,
-        placing4one,
-        placing4two,
-        placing4three,
-        placing4four,
-        placing3;
+        placingShipOnePieceOne,
+        placingShipOneFinalPiece,
+        placingShipTwoPieceOne,
+        placingShipThreePieceOne,
+        placingShipTwoFinalPiece,
+        placingShipThreeFinalPiece,
+        placingShipFourPieceOne, placingShipFourFinalPiece, placingShipFiveFinalPiece, placingShipFivePieceOne, donePlacingPieces;
     }
 
     public BattleshipServerGUI() {
@@ -168,11 +168,7 @@ public class BattleshipServerGUI extends JFrame implements ActionListener {
                 guessPanel.add(guessButtons[i][j]);
             }
         }
-        //topLevelPanel.add(BorderLayout.WEST, checkBoxPanel);
-        //topLeftPanel.add(checkBoxPanel);
         topLevelPanel.add(checkBoxPanel1);
-        //topRightPanel.add(checkBoxPanel);
-
         topLevelPanel.add(shipPanel);
         topLevelPanel.add(checkBoxPanel2);
 
@@ -183,17 +179,10 @@ public class BattleshipServerGUI extends JFrame implements ActionListener {
         pack();
 
         //at this point the game is all set up, so we can move on to placing 4 status.
-        theGameStatus = gameStatus.placing4one;
+        theGameStatus = gameStatus.placingShipOnePieceOne;
 
-        placeSizeFourShip();
+        JOptionPane.showMessageDialog(this, "Place size 5 ship please!");
 
-        //at this point the game can move on to placing 3 status on so on until all ships are placed...
-        //theGameStatus = gameStatus.placing3;
-
-    }
-
-    private void placeSizeFourShip() {
-        JOptionPane.showMessageDialog(this, "Place size 4 ship please!");
     }
 
     @Override
@@ -201,52 +190,165 @@ public class BattleshipServerGUI extends JFrame implements ActionListener {
 
         JComponent e = (JComponent) event.getSource();
 
-        if (theGameStatus == gameStatus.placing4one) {
+        if (theGameStatus == gameStatus.placingShipOnePieceOne) {
+
             for (int i = 0; i < 10; i++) {
                 for (int j = 0; j < 10; j++) {
                     if (e == selectionButtons[i][j]) {
-                        setNonRowColButtonsEnabled(i, j, false);
-                        selectionButtons[i][j].setText("" + 4);
-                        gameBoard[i][j] = 4;
+                        setAllButtonsEnabled(i, j, false);
+                        setButtonsAroundSelectionEnabled(i, j, true, ship5.getSize());
+                        selectionButtons[i][j].setText("" + ship5.getSize());
+                        gameBoard[i][j] = ship5.getSize();
                     }
                 }
             }
-            //after a spot was claimed figure out the next status.
-            int nextStatus = 4 - getHowPiecesHaveBeenLayedForShipSize(4);
+            setNextStatus();
+        } else if (theGameStatus == gameStatus.placingShipOneFinalPiece) {
 
-            if (nextStatus == 1) {
-                theGameStatus = gameStatus.placing4four;
-            } else if (nextStatus == 2) {
-                theGameStatus = gameStatus.placing4three;
-            } else if (nextStatus == 3) {
-                theGameStatus = gameStatus.placing4two;
-            } else if (nextStatus == 0) {
-                theGameStatus = gameStatus.placing3;
-            }
-
-        } else if (theGameStatus == gameStatus.placing4two) {
-            //set the piece and fill the gaps!
             for (int i = 0; i < 10; i++) {
                 for (int j = 0; j < 10; j++) {
                     if (e == selectionButtons[i][j]) {
-                        //setNonRowColButtonsEnabled(i, j, false);
-                        selectionButtons[i][j].setText("" + 4);
-                        gameBoard[i][j] = 4;
+                        selectionButtons[i][j].setText("" + ship5.getSize());
+                        gameBoard[i][j] = ship5.getSize();
                     }
                 }
             }
 
-            fillGapsBetweenButtonsForShipSize(4);
+            fillGapsBetweenButtonsForShipSize(ship5.getSize());
+            setNextStatus();
+        } else if (theGameStatus == gameStatus.placingShipTwoPieceOne) {
 
-        } else if (theGameStatus == gameStatus.placing4three) {
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < 10; j++) {
+                    if (e == selectionButtons[i][j]) {
+                        setAllButtonsEnabled(i, j, false);
+                        setButtonsAroundSelectionEnabled(i, j, true, ship4.getSize());
+                        selectionButtons[i][j].setText("" + ship4.getSize());
+                        gameBoard[i][j] = ship4.getSize();
+                    }
+                }
+            }
+            setNextStatus();
+        } else if (theGameStatus == gameStatus.placingShipTwoFinalPiece) {
 
-        } else if (theGameStatus == gameStatus.placing4four) {
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < 10; j++) {
+                    if (e == selectionButtons[i][j]) {
+                        selectionButtons[i][j].setText("" + ship4.getSize());
+                        gameBoard[i][j] = ship4.getSize();
+                    }
+                }
+            }
+
+            fillGapsBetweenButtonsForShipSize(ship4.getSize());
+            setNextStatus();
+        } else if (theGameStatus == gameStatus.placingShipThreePieceOne) {
+
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < 10; j++) {
+                    if (e == selectionButtons[i][j]) {
+                        setAllButtonsEnabled(i, j, false);
+                        setButtonsAroundSelectionEnabled(i, j, true, ship3.getSize());
+                        selectionButtons[i][j].setText("" + ship3.getSize());
+                        gameBoard[i][j] = ship3.getSize();
+                    }
+                }
+            }
+            setNextStatus();
+        } else if (theGameStatus == gameStatus.placingShipThreeFinalPiece) {
+
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < 10; j++) {
+                    if (e == selectionButtons[i][j]) {
+                        selectionButtons[i][j].setText("" + ship3.getSize());
+                        gameBoard[i][j] = ship3.getSize();
+                    }
+                }
+            }
+
+            fillGapsBetweenButtonsForShipSize(ship3.getSize());
+            setNextStatus();
+        } else if (theGameStatus == gameStatus.placingShipFourPieceOne) {
+
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < 10; j++) {
+                    if (e == selectionButtons[i][j]) {
+                        setAllButtonsEnabled(i, j, false);
+                        setButtonsAroundSelectionEnabled(i, j, true, ship2.getSize());
+                        selectionButtons[i][j].setText("" + ship2.getSize());
+                        gameBoard[i][j] = ship2.getSize();
+                    }
+                }
+            }
+            setNextStatus();
+        } else if (theGameStatus == gameStatus.placingShipFourFinalPiece) {
+
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < 10; j++) {
+                    if (e == selectionButtons[i][j]) {
+                        selectionButtons[i][j].setText("" + ship2.getSize());
+                        gameBoard[i][j] = ship2.getSize();
+                    }
+                }
+            }
+
+            fillGapsBetweenButtonsForShipSize(ship2.getSize());
+            setNextStatus();
+        } else if (theGameStatus == gameStatus.placingShipFivePieceOne) {
+
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < 10; j++) {
+                    if (e == selectionButtons[i][j]) {
+                        setAllButtonsEnabled(i, j, false);
+                        setButtonsAroundSelectionEnabled(i, j, true, ship1.getSize());
+                        selectionButtons[i][j].setText("" + ship1.getSize());
+                        gameBoard[i][j] = ship1.getSize();
+                    }
+                }
+            }
+            setNextStatus();
+        } else if (theGameStatus == gameStatus.placingShipFiveFinalPiece) {
+
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < 10; j++) {
+                    if (e == selectionButtons[i][j]) {
+                        selectionButtons[i][j].setText("" + ship1.getSize());
+                        gameBoard[i][j] = ship1.getSize();
+                    }
+                }
+            }
+
+            fillGapsBetweenButtonsForShipSize(ship1.getSize());
+            setNextStatus();
+        }
+        printGameBoard();
+    }
+
+    private void setButtonsAroundSelectionEnabled(int row, int col, boolean enabled, int shipSize) {
+        try {
+            selectionButtons[row + shipSize - 1][col].setEnabled(enabled);
+        } catch (IndexOutOfBoundsException indexOOB) {
 
         }
+        try {
+            selectionButtons[row - shipSize + 1][col].setEnabled(enabled);
+        } catch (IndexOutOfBoundsException indexOOB) {
 
+        }
+        try {
+            selectionButtons[row][col + shipSize - 1].setEnabled(enabled);
+        } catch (IndexOutOfBoundsException indexOOB) {
+
+        }
+        try {
+            selectionButtons[row][col - shipSize + 1].setEnabled(enabled);
+        } catch (IndexOutOfBoundsException indexOOB) {
+
+        }
     }
 
     private void fillGapsBetweenButtonsForShipSize(int shipSize) {
+        boolean wasRow = false;
         int elementCountPerRow = 0;
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
@@ -256,21 +358,48 @@ public class BattleshipServerGUI extends JFrame implements ActionListener {
             }
             if (elementCountPerRow >= 2) {
                 fillGapsForRow(i, shipSize, elementCountPerRow);
+                wasRow = true;
+            }
+            elementCountPerRow = 0;
+        }
+
+        if (!wasRow) {
+            int elementCountPerCol = 0;
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < 10; j++) {
+                    if (gameBoard[j][i] == shipSize) {
+                        elementCountPerCol++;
+                    }
+                }
+                if (elementCountPerCol >= 2) {
+                    fillGapsForCol(i, shipSize, elementCountPerRow);
+                }
+                elementCountPerRow = 0;
             }
         }
     }
 
-    private boolean checkIfShipPlacementCompleteForCurrentStatus() {
-        if (theGameStatus == gameStatus.placing4one || theGameStatus == gameStatus.placing4two
-                || theGameStatus == gameStatus.placing4three || theGameStatus == gameStatus.placing4four) {
-            int count = getHowPiecesHaveBeenLayedForShipSize(4);
-            if (count == 4) {
-                return true;
-            } else {
-                return false;
+    private void fillGapsForCol(int i, int shipSize, int currentCount) {
+        int remainingPiecesToPlace = shipSize - currentCount;
+        boolean wasFirstElementSeen = false;
+        for (int j = 0; j < 10; j++) {
+            if (remainingPiecesToPlace > 0) {
+                if (wasFirstElementSeen && gameBoard[j][i] != shipSize) {
+                    gameBoard[j][i] = shipSize;
+                    selectionButtons[j][i].setText("" + shipSize);
+                    remainingPiecesToPlace--;
+
+                } else if (wasFirstElementSeen && gameBoard[j][i] == shipSize) {
+                    //we are done.
+                    return;
+                } else {
+                    if (gameBoard[j][i] == shipSize) {
+                        wasFirstElementSeen = true;
+                    }
+                }
             }
         }
-        return false;
+
     }
 
     private void fillGapsForRow(int i, int shipSize, int currentCount) {
@@ -294,19 +423,47 @@ public class BattleshipServerGUI extends JFrame implements ActionListener {
             }
         }
 
-        if (checkIfShipPlacementCompleteForCurrentStatus()) {
-            //go to next status...
-            setNextStatus();
-        }
+//        if (checkIfShipPlacementCompleteForCurrentStatus()) {
+//            //go to next status...
+//            setNextStatus();
+//        }
     }
 
     //if the status changes we should renable buttons that aren't placed pieces too
     private void setNextStatus() {
-        if (theGameStatus == gameStatus.placing4one || theGameStatus == gameStatus.placing4two
-                || theGameStatus == gameStatus.placing4three || theGameStatus == gameStatus.placing4four) {
-            theGameStatus = gameStatus.placing3;
+        if (theGameStatus == gameStatus.placingShipOnePieceOne) {
+            theGameStatus = gameStatus.placingShipOneFinalPiece;
+        } else if (theGameStatus == gameStatus.placingShipOneFinalPiece) {
             setAllButtonsWithoutPlacementEnabled();
+            JOptionPane.showMessageDialog(this, "Now pick the 4 piece ship!");
+            theGameStatus = gameStatus.placingShipTwoPieceOne;
+        } else if (theGameStatus == gameStatus.placingShipTwoPieceOne) {
+            theGameStatus = gameStatus.placingShipTwoFinalPiece;
+        } else if (theGameStatus == gameStatus.placingShipTwoFinalPiece) {
+            setAllButtonsWithoutPlacementEnabled();
+            JOptionPane.showMessageDialog(this, "Now pick the 3 piece ship!");
+            theGameStatus = gameStatus.placingShipThreePieceOne;
+        } else if (theGameStatus == gameStatus.placingShipThreePieceOne) {
+            theGameStatus = gameStatus.placingShipThreeFinalPiece;
+        } else if (theGameStatus == gameStatus.placingShipThreeFinalPiece) {
+            setAllButtonsWithoutPlacementEnabled();
+            JOptionPane.showMessageDialog(this, "Now pick the 3 piece ship!");
+            theGameStatus = gameStatus.placingShipFourPieceOne;
+        } else if (theGameStatus == gameStatus.placingShipFourPieceOne) {
+            theGameStatus = gameStatus.placingShipFourFinalPiece;
+        } else if (theGameStatus == gameStatus.placingShipFourFinalPiece) {
+            setAllButtonsWithoutPlacementEnabled();
+            JOptionPane.showMessageDialog(this, "Now pick the 2 piece ship!");
+            theGameStatus = gameStatus.placingShipFivePieceOne;
+        } else if (theGameStatus == gameStatus.placingShipFivePieceOne) {
+            theGameStatus = gameStatus.placingShipFiveFinalPiece;
+        } else if (theGameStatus == gameStatus.placingShipFiveFinalPiece) {
+            setAllButtonsWithoutPlacementEnabled();
+            JOptionPane.showMessageDialog(this, "You are finished placing pieces!");
+            theGameStatus = gameStatus.donePlacingPieces;
         }
+
+        //setAllButtonsWithoutPlacementEnabled();
     }
 
     private void setAllButtonsWithoutPlacementEnabled() {
@@ -325,7 +482,7 @@ public class BattleshipServerGUI extends JFrame implements ActionListener {
         int retVal = 0;
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
-                if (gameBoard[i][j] == 4) {
+                if (gameBoard[i][j] == shipSize) {
                     retVal++;
                 }
             }
@@ -333,16 +490,27 @@ public class BattleshipServerGUI extends JFrame implements ActionListener {
         return retVal;
     }
 
-    private void setNonRowColButtonsEnabled(int row, int col, boolean enabled) {
+    private void setAllButtonsEnabled(int row, int col, boolean enabled) {
 
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
-                if (i != row && j != col) {
-                    selectionButtons[i][j].setEnabled(enabled);
-                }
+                // if (i != row && j != col) {
+                selectionButtons[i][j].setEnabled(enabled);
+                // }
             }
         }
+    }
 
+    private void printGameBoard() {
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                // if (i != row && j != col) {
+                System.out.print(gameBoard[i][j] + " ");
+                // }
+            }
+            System.out.print("\n");
+        }
+        System.out.print("\n");
     }
 
 }

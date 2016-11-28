@@ -9,12 +9,14 @@ public class Battleship {
     private boolean sunk;
     private int hitCount;
     private boolean placed;
+    private int shipID;
 
-    public Battleship(int size, boolean sunk, int hitCount, boolean placed){
+    public Battleship(int size, boolean sunk, int hitCount, boolean placed, int shipID) {
         this.setSize(size);
         this.setSunk(sunk);
         this.setHitCount(hitCount);
         this.setPlaced(placed);
+        this.setShipID(shipID);
     }
 
     public int getSize() {
@@ -48,4 +50,8 @@ public class Battleship {
     public void setPlaced(boolean placed) {
         this.placed = placed;
     }
+
+    public int getShipID() { return shipID; }
+
+    public void setShipID(int shipID) { this.shipID = shipID; }
 }
