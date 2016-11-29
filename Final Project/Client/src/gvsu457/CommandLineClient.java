@@ -363,6 +363,10 @@ public class CommandLineClient {
             }
         } catch (IOException e) {
             System.out.println("Unable to connect to: " + ip + ":" + port);
+        } catch (NumberFormatException e){
+            System.out.println("Port must be a number, connection failed.");
+        } catch (IllegalArgumentException e){
+            System.out.println("Port out of range, connection failed.");
         }
         return false;
     }
