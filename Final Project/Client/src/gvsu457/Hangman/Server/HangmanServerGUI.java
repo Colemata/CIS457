@@ -54,6 +54,7 @@ public class HangmanServerGUI extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "One character only please!");
             } else {
                 boolean addToList = hangmanServerLogic.guessLetter(guessLetterField.getText());
+                guessLetterField.setText("");
                 if (addToList) {
                     listModel.addElement(guessLetterField.getText());
                 }
@@ -128,3 +129,4 @@ public class HangmanServerGUI extends JFrame implements ActionListener {
         return mainPanel;
     }
 }
+
