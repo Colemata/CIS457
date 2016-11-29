@@ -1,4 +1,4 @@
-Have a display screen that says waiting for user to enter word in tic tac toe.
+Have a display screen that says 'waiting for user to enter word' in tic tac toe.
 
 Add letters to missed letters field in tic tac toe.
 
