@@ -1,0 +1,5 @@
+Have a display screen that says waiting for user to enter word in tic tac toe.
+
+Add letters to missed letters field in tic tac toe.
+
+While waiting for another user to enter a queue, user should be able to quit the queue.
