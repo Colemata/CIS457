@@ -1,5 +1,6 @@
 package gvsu457;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.concurrent.ExecutorService;
@@ -32,12 +33,15 @@ public class ServerClientThreadOperations extends Thread {
      */
     private ExecutorService executorService = Executors.newCachedThreadPool();
 
+    public static String DBXML_DIR_SHORTCUT = (new File(".").getAbsolutePath()) + File.separator + "DBXML";
+
     /**
      * Main method
      */
     public static void main(String[] args) {
         ServerClientThreadOperations serverClientThreadPool = new ServerClientThreadOperations();
         serverClientThreadPool.startServer();
+
     }
 
     /**
@@ -56,6 +60,17 @@ public class ServerClientThreadOperations extends Thread {
      * Starts the server.
      */
     public void startServer() {
+
+        //Delete all old xml data on startup.
+        File curDir = new File(DBXML_DIR_SHORTCUT);
+        File[] FileList = curDir.listFiles();
+        for (File f : FileList) {
+            if (f.getName().contains(".xml")) {
+                f.delete();
+                System.out.println("Removing old file: " + f.getName() + " from the DB directory");
+            }
+        }
+
         for (int i = 0; i < MAX_CONNECTIONS; i++) {
             try {
                 System.out.println("Waiting for a connection...");

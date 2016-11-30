@@ -163,12 +163,18 @@ public class CommandLineClient {
         int OtherPlayerPort = 0;
         String game = null;
         System.out.println("You have entered the queue... Please wait for match...");
+        System.out.println("If no match is found in 60 seconds you will be removed from the queue...");
         try {
 
             //loop until there is a transmission from the server.
             while (true) {
                 if (in_server.available() > 0) {
                     OtherPlayerName = in_server.readUTF();
+
+                    if(OtherPlayerName.equalsIgnoreCase("no_match_found")){
+                        System.out.println("Queue timer expired, no other players, please try again...");
+                        return;
+                    }
 
                     //If we get "skip" sent from the server, we are going to act as the server in the game connection.
                     if (OtherPlayerName.equalsIgnoreCase("skip")) {
@@ -194,7 +200,6 @@ public class CommandLineClient {
 
                     //replace this with something better...
                     Thread.sleep(5000);
-
                 }
             }
 
@@ -273,13 +278,13 @@ public class CommandLineClient {
     /**
      * This will remove the user from a queue on the server.
      * @param command the command issued to the server.
-     * @param gameNumber the game number to remove for the user.
+     * @param username the username to remove from the queue.
      */
-    private static void RemoveMyselfFromTheQueueOnTheServer(String command, String gameNumber) {
+    private static void RemoveMyselfFromTheQueueOnTheServer(String command, String username) {
         try {
             out_server = new DataOutputStream(new BufferedOutputStream(server.getOutputStream()));
             out_server.writeUTF(command);
-            out_server.writeInt(Integer.parseInt(gameNumber));
+            out_server.writeUTF(username);
             out_server.flush();
         } catch (IOException e) {
             e.printStackTrace();

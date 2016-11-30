@@ -93,7 +93,6 @@ public class ServerThread implements Runnable {
                         case "games":
                             ListGamesForClient();
                             break;
-
                         case "quit":
                             socket.close();
                             Thread.currentThread().interrupt();
@@ -103,8 +102,8 @@ public class ServerThread implements Runnable {
                             PlayAGameWithSomeone(gameNumber);
                             break;
                         case "remove":
-                            gameNumber = in.readInt();
-                            RemoveFromGameQueueForGameNumber(gameNumber);
+                            String user = in.readUTF();
+                            RemovePlayerFromAllQueues(user);
                             break;
                         case "kill":
                             RemovePlayerFromAllQueues(username);
@@ -368,8 +367,10 @@ public class ServerThread implements Runnable {
                     //GetConnectionInfoForClientToClientConnection(username, game);
                 }
 
-            } else {
-                System.out.println("User: " + username + " is waiting for an opponent for " + game + "...");
+            }else{
+                RemovePlayerFromAllQueues(username);
+                out.writeUTF("no_match_found");
+                out.flush();
             }
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
@@ -480,6 +481,7 @@ public class ServerThread implements Runnable {
 
     private String CheckQueueForOtherPlayers() {
         boolean matchFound = false;
+        int maxWaitTime = 0;
         while (true) {
             try {
                 //for each game we are going to remove, this username.
@@ -532,6 +534,11 @@ public class ServerThread implements Runnable {
 
                 }
                 Thread.sleep(1000);
+                maxWaitTime++;
+                if(maxWaitTime == 60){
+                    System.out.println("No matches found for user: " + username + " within the alloted time...");
+                    return "";
+                }
             } catch (SAXException e) {
                 e.printStackTrace();
             } catch (ParserConfigurationException e) {
