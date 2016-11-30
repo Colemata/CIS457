@@ -23,36 +23,28 @@ import java.util.ArrayList;
  */
 public class ServerThread implements Runnable {
 
-    /**
-     * A DataInputStream object
-     */
+    /*A DataInputStream object*/
     private DataInputStream in;
 
-    /**
-     * A DataOutputStream object
-     */
+    /*A DataOutputStream object*/
     private DataOutputStream out;
 
-    /**
-     * A socket for the connection
-     */
+    /*A socket for the connection*/
     private Socket socket;
 
-    /**
-     * The users username
-     */
+    /*The users username*/
     public String username;
 
-    /**
-     * Shortcut for DBXML
-     */
+    /*Shortcut for DBXML*/
     public static String DBXML_DIR_SHORTCUT = (new File(".").getAbsolutePath()) + File.separator + "DBXML";
 
+    /*The list of games that the user can play*/
     public ArrayList<String> GameList;
 
     /*End of transmission for a stream.*/
     public final String EOT = "end_of_transmission";
 
+    /*The port number that the client want's to connect to peers on.*/
     public int port;
 
     /**
@@ -168,88 +160,6 @@ public class ServerThread implements Runnable {
             case 5:
                 break;
         }
-    }
-
-    private void RemoveFromGameQueueForGameNumber(int gameNumber) {
-
-        System.out.println("User: " + username + " being removed from game #" + gameNumber + ".");
-
-        switch (gameNumber) {
-            case 0:
-                //tictactoe
-                RemovePlayerFromGameQueue("tictactoe");
-                break;
-            case 1:
-                //hangman
-                RemovePlayerFromGameQueue("hangman");
-                break;
-            case 2:
-                //battleship
-                RemovePlayerFromGameQueue("battleship");
-                break;
-            case 3:
-                //minesweeper
-                RemovePlayerFromGameQueue("minesweeper");
-
-                break;
-            case 4:
-                //placeholder
-                RemovePlayerFromGameQueue("placeholder");
-                break;
-            case 5:
-                break;
-        }
-    }
-
-    private void RemovePlayerFromGameQueue(String game) {
-        try {
-
-            //for each game we are going to remove, this username.
-
-            File queueFile = new File(DBXML_DIR_SHORTCUT + File.separator + game + ".queue");
-
-            //Build the dom.
-            Document dom;
-            Element ele = null;
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = null;
-            db = dbf.newDocumentBuilder();
-            dom = db.parse(queueFile);
-
-            // <person>
-            NodeList nodes = dom.getElementsByTagName("player");
-
-            for (int i = 0; i < nodes.getLength(); i++) {
-
-                Element player = (Element) nodes.item(i);
-                // <name>
-                Element name = (Element) player.getElementsByTagName("name").item(0);
-                String pName = name.getTextContent();
-                if (pName.equals(username)) {
-                    player.getParentNode().removeChild(player);
-                }
-            }
-
-            //save the file.
-            Transformer tr = TransformerFactory.newInstance().newTransformer();
-            tr.setOutputProperty(OutputKeys.INDENT, "yes");
-            tr.setOutputProperty(OutputKeys.METHOD, "xml");
-            tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-            tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-            tr.transform(new DOMSource(dom), new StreamResult(new FileOutputStream(queueFile.getPath())));
-
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (TransformerConfigurationException e) {
-            e.printStackTrace();
-        } catch (TransformerException e) {
-            e.printStackTrace();
-        }
-
     }
 
     private void RemovePlayerFromAllQueues(String playerToRemove) {

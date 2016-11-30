@@ -1,20 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6f710c21-2cce-4d28-b71f-96f2436cda76" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Server/DBXML/askjlhsdfhkaj.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Server/DBXML/taylor.xml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Hangman/Client/HangmanClientGUI.class" afterPath="$PROJECT_DIR$/out/production/Client/gvsu457/Hangman/Client/HangmanClientGUI.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Hangman/Client/HangmanClientLogic$1.class" afterPath="$PROJECT_DIR$/out/production/Client/gvsu457/Hangman/Client/HangmanClientLogic$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Hangman/Server/HangmanServerGUI.class" afterPath="$PROJECT_DIR$/out/production/Client/gvsu457/Hangman/Server/HangmanServerGUI.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/gvsu457/Hangman/Client/HangmanClientGUI.form" afterPath="$PROJECT_DIR$/src/gvsu457/Hangman/Client/HangmanClientGUI.form" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/gvsu457/Hangman/Client/HangmanClientGUI.java" afterPath="$PROJECT_DIR$/src/gvsu457/Hangman/Client/HangmanClientGUI.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/gvsu457/Hangman/Client/HangmanClientLogic.java" afterPath="$PROJECT_DIR$/src/gvsu457/Hangman/Client/HangmanClientLogic.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/gvsu457/Hangman/Server/HangmanServerGUI.java" afterPath="$PROJECT_DIR$/src/gvsu457/Hangman/Server/HangmanServerGUI.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Server/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../Server/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Server/DBXML/hangman.queue" afterPath="$PROJECT_DIR$/../Server/DBXML/hangman.queue" />
-    </list>
+    <list default="true" id="6f710c21-2cce-4d28-b71f-96f2436cda76" name="Default" comment="" />
     <ignored path="Client.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/out/" />
@@ -35,76 +22,24 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="HangmanServerLogic.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/gvsu457/Hangman/Server/HangmanServerLogic.java">
+      <file leaf-file-name="BattleshipServerLogic.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/gvsu457/Battleship/Server/BattleshipServerLogic.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1025">
-              <caret line="27" column="0" lean-forward="true" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
+            <state relative-caret-position="85">
+              <caret line="5" column="13" lean-forward="false" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="HangmanClientGUI.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/gvsu457/Hangman/Client/HangmanClientGUI.java">
+      <file leaf-file-name="BattleshipServerGUI.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/gvsu457/Battleship/Server/BattleshipServerGUI.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="203">
-              <caret line="67" column="0" lean-forward="false" selection-start-line="67" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
+            <state relative-caret-position="17">
+              <caret line="296" column="73" lean-forward="true" selection-start-line="296" selection-start-column="73" selection-end-line="296" selection-end-column="73" />
               <folding>
-                <element signature="e#2102#2103#0" expanded="true" />
-                <element signature="e#2626#2627#0" expanded="true" />
-                <element signature="e#2669#2670#0" expanded="true" />
-                <element signature="initializer##0;class#HangmanClientGUI#0" expanded="true" />
-                <element signature="initializer##0;class#HangmanClientGUI#0" expanded="true" />
-                <element signature="e#6777#6778#0" expanded="true" />
-                <element signature="e#6809#6810#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="HangmanServerGUI.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/gvsu457/Hangman/Server/HangmanServerGUI.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="54" column="45" lean-forward="true" selection-start-line="54" selection-start-column="45" selection-end-line="54" selection-end-column="45" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="HangmanClientLogic.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/gvsu457/Hangman/Client/HangmanClientLogic.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="458">
-              <caret line="82" column="32" lean-forward="true" selection-start-line="82" selection-start-column="32" selection-end-line="82" selection-end-column="32" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Battleship.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/gvsu457/Battleship/Server/Battleship.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="595">
-              <caret line="51" column="5" lean-forward="false" selection-start-line="51" selection-start-column="5" selection-end-line="51" selection-end-column="5" />
-              <folding>
-                <element signature="e#519#520#0" expanded="false" />
-                <element signature="e#546#547#0" expanded="false" />
-                <element signature="e#583#584#0" expanded="false" />
-                <element signature="e#615#616#0" expanded="false" />
-                <element signature="e#646#647#0" expanded="false" />
-                <element signature="e#673#674#0" expanded="false" />
-                <element signature="e#714#715#0" expanded="false" />
-                <element signature="e#746#747#0" expanded="false" />
-                <element signature="e#778#779#0" expanded="false" />
-                <element signature="e#809#810#0" expanded="false" />
-                <element signature="e#854#855#0" expanded="false" />
-                <element signature="e#894#895#0" expanded="false" />
-                <element signature="e#927#928#0" expanded="false" />
-                <element signature="e#956#957#0" expanded="false" />
-                <element signature="e#1001#1002#0" expanded="false" />
-                <element signature="e#1037#1038#0" expanded="false" />
+                <element signature="docComment;method#$$$setupUI$$$#0;class#BattleshipServerGUI#0" expanded="false" />
+                <element signature="method#$$$setupUI$$$#0;class#BattleshipServerGUI#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -269,7 +204,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Hangman" />
+              <option name="myItemId" value="Battleship" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -277,7 +212,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="HangmanServerGUI" />
+              <option name="myItemId" value="BattleshipServerGUI" />
               <option name="myItemType" value="com.intellij.uiDesigner.projectView.FormNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -299,7 +234,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Hangman" />
+              <option name="myItemId" value="Battleship" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -325,59 +260,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Hangman" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Client" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Client" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="gvsu457" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Hangman" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Client" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="HangmanClientGUI" />
-              <option name="myItemType" value="com.intellij.uiDesigner.projectView.FormNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Client" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Client" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="gvsu457" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Hangman" />
+              <option name="myItemId" value="Battleship" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -939,16 +822,16 @@
       <workItem from="1480268108756" duration="8610000" />
       <workItem from="1480287525617" duration="8076000" />
       <workItem from="1480341193200" duration="2982000" />
-      <workItem from="1480461436671" duration="6217000" />
+      <workItem from="1480461436671" duration="7379000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="111725000" />
+    <option name="totallyTimeSpent" value="112887000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1866" height="1036" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -959,7 +842,7 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31842965" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31842965" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -1207,53 +1090,6 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/gvsu457/Battleship/Server/Battleship.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="595">
-          <caret line="51" column="5" lean-forward="false" selection-start-line="51" selection-start-column="5" selection-end-line="51" selection-end-column="5" />
-          <folding>
-            <element signature="e#519#520#0" expanded="false" />
-            <element signature="e#546#547#0" expanded="false" />
-            <element signature="e#583#584#0" expanded="false" />
-            <element signature="e#615#616#0" expanded="false" />
-            <element signature="e#646#647#0" expanded="false" />
-            <element signature="e#673#674#0" expanded="false" />
-            <element signature="e#714#715#0" expanded="false" />
-            <element signature="e#746#747#0" expanded="false" />
-            <element signature="e#778#779#0" expanded="false" />
-            <element signature="e#809#810#0" expanded="false" />
-            <element signature="e#854#855#0" expanded="false" />
-            <element signature="e#894#895#0" expanded="false" />
-            <element signature="e#927#928#0" expanded="false" />
-            <element signature="e#956#957#0" expanded="false" />
-            <element signature="e#1001#1002#0" expanded="false" />
-            <element signature="e#1037#1038#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/gvsu457/Battleship/Server/BattleshipServerLogic.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="12" column="0" lean-forward="false" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-          <folding>
-            <element signature="e#167#168#0" expanded="false" />
-            <element signature="e#237#238#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/gvsu457/Battleship/Server/BattleshipServerGUI.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-101">
-          <caret line="296" column="73" lean-forward="true" selection-start-line="296" selection-start-column="73" selection-end-line="296" selection-end-column="73" />
-          <folding>
-            <element signature="docComment;method#$$$setupUI$$$#0;class#BattleshipServerGUI#0" expanded="false" />
-            <element signature="method#$$$setupUI$$$#0;class#BattleshipServerGUI#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/gvsu457/CommandLineClient.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="462">
@@ -1306,6 +1142,14 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/gvsu457/Hangman/Server/HangmanServerGUI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="36" column="5" lean-forward="true" selection-start-line="36" selection-start-column="5" selection-end-line="36" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/gvsu457/Hangman/Client/HangmanClientLogic.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="458">
@@ -1314,10 +1158,32 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/gvsu457/Hangman/Server/HangmanServerGUI.java">
+    <entry file="file://$PROJECT_DIR$/src/gvsu457/Battleship/Server/Battleship.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="54" column="45" lean-forward="true" selection-start-line="54" selection-start-column="45" selection-end-line="54" selection-end-column="45" />
+        <state relative-caret-position="573">
+          <caret line="51" column="5" lean-forward="false" selection-start-line="51" selection-start-column="5" selection-end-line="51" selection-end-column="5" />
+          <folding>
+            <element signature="e#1001#1002#0" expanded="true" />
+            <element signature="e#1037#1038#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/gvsu457/Battleship/Server/BattleshipServerGUI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="296" column="73" lean-forward="true" selection-start-line="296" selection-start-column="73" selection-end-line="296" selection-end-column="73" />
+          <folding>
+            <element signature="docComment;method#$$$setupUI$$$#0;class#BattleshipServerGUI#0" expanded="false" />
+            <element signature="method#$$$setupUI$$$#0;class#BattleshipServerGUI#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/gvsu457/Battleship/Server/BattleshipServerLogic.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="13" lean-forward="false" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
           <folding />
         </state>
       </provider>
