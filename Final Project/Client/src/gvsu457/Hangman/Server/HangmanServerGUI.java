@@ -32,7 +32,8 @@ public class HangmanServerGUI extends JFrame implements ActionListener {
         setVisible(true);
         pack();
         setAllFieldsEnabled(false);
-
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         guessLetterButton.addActionListener(this);
     }
 
@@ -124,4 +125,6 @@ public class HangmanServerGUI extends JFrame implements ActionListener {
         return mainPanel;
     }
 }
+
+
 
