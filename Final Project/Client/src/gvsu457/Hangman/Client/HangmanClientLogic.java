@@ -62,7 +62,7 @@ public class HangmanClientLogic implements Runnable {
                         if (in_server.available() > 0) {
                             String guess = in_server.readUTF();
                             charGuessList.add(guess);
-                            hangman.listModel.addElement(guess);
+                            hangman.addElementToListModel(guess);
                             setDisplayForWordAndGuessList();
                             int numToShow = in_server.readInt();
                             if (numToShow == 9) {
