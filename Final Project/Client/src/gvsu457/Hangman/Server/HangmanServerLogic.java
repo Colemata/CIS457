@@ -20,9 +20,7 @@ public class HangmanServerLogic implements Runnable {
     /*The server socket to maintain a connect*/
     public static ServerSocket client_connection;
 
-    /**
-     * Shortcut for image directory
-     */
+    /*Shortcut for image directory*/
     public static String IMAGE_DIR = System.getProperty("user.dir") + File.separator + ".." + File.separator + "images";
 
     /*The word the server needs to guess*/
@@ -48,6 +46,9 @@ public class HangmanServerLogic implements Runnable {
 
     @Override
     public void run() {
+
+        setHangManImage(10);
+
         //Listen for the word from the client to start the game...
         try {
             word = in_client.readUTF();
@@ -153,6 +154,9 @@ public class HangmanServerLogic implements Runnable {
                 break;
             case 9:
                 hangman.setImagePanel(new ImageIcon(IMAGE_DIR + File.separator + "win.png"));
+                break;
+            case 10:
+                hangman.setImagePanel(new ImageIcon(IMAGE_DIR + File.separator + "wait.png"));
                 break;
         }
     }

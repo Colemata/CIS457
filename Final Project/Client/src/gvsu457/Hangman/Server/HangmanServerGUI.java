@@ -13,17 +13,12 @@ import java.net.Socket;
 public class HangmanServerGUI extends JFrame implements ActionListener {
     public DefaultListModel listModel = new DefaultListModel();
     public Socket socket;
-    private JButton defineWordButton;
-    private JTextField defineWordField;
     private JButton guessLetterButton;
     private JTextField guessLetterField;
     private JTextPane imagePanel;
     private JPanel mainPanel;
     private JList letterList;
     public JLabel WordDisplay;
-    public DataInputStream in;
-    public DataOutputStream out;
-    public String theWord;
     public static HangmanServerLogic hangmanServerLogic;
 
 
