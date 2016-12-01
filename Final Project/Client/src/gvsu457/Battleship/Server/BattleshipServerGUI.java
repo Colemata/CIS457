@@ -174,7 +174,7 @@ public class BattleshipServerGUI extends JFrame implements ActionListener {
 
         topLevelPanel.add(guessPanel);
         add(topLevelPanel);
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setVisible(true);
         pack();
 

@@ -34,7 +34,7 @@ public class HangmanClientGUI extends JFrame implements ActionListener {
         super(username);
         this.hangmanClientLogic = hangmanClientLogic;
         setContentPane(mainPanel);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         letterList.setModel(listModel);
         setVisible(true);
         pack();
