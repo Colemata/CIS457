@@ -5,6 +5,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 
@@ -47,8 +49,17 @@ public class TicTacToeClientGUI extends JFrame implements ActionListener {
             System.out.println("IOException");
         }
 
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent event) {
+                ticTacToeClientLogic.closeSockets();
+                dispose();
+            }
+        });
+
         setContentPane(panel1);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         button1.addActionListener(this);
         button2.addActionListener(this);

@@ -1,5 +1,7 @@
 package gvsu457;
 
+import gvsu457.Battleship.Client.BattleshipClientLogic;
+import gvsu457.Battleship.Server.BattleshipServerLogic;
 import gvsu457.Hangman.Client.HangmanClientLogic;
 import gvsu457.Hangman.Server.HangmanServerLogic;
 import gvsu457.TicTacToe.Client.TicTacToeClientLogic;
@@ -244,6 +246,8 @@ public class CommandLineClient {
                 executorService.submit(hangmanClientLogic);
                 break;
             case "battleship":
+                BattleshipClientLogic battleshipClientLogic = new BattleshipClientLogic(username, otherPlayerIP, otherPlayerPort);
+                executorService.submit(battleshipClientLogic);
                 break;
             case "minesweeper":
                 break;
@@ -267,6 +271,8 @@ public class CommandLineClient {
                 executorService.submit(hangmanServerLogic);
                 break;
             case "battleship":
+                BattleshipServerLogic battleshipServerLogic = new BattleshipServerLogic(LISTENING_PORT, username);
+                executorService.submit(battleshipServerLogic);
                 break;
             case "minesweeper":
                 break;

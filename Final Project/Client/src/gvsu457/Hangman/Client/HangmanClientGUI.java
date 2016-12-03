@@ -2,9 +2,7 @@ package gvsu457.Hangman.Client;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.io.*;
 import java.net.Socket;
 
@@ -34,10 +32,19 @@ public class HangmanClientGUI extends JFrame implements ActionListener {
         super(username);
         this.hangmanClientLogic = hangmanClientLogic;
         setContentPane(mainPanel);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         letterList.setModel(listModel);
         setVisible(true);
         pack();
+
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent event) {
+                hangmanClientLogic.closeSockets();
+                dispose();
+            }
+        });
 
         defineWordButton.addActionListener(this);
     }

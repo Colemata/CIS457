@@ -34,6 +34,7 @@ public class HangmanClientLogic implements Runnable {
     /*The list of characters that have been guessed thus far*/
     public ArrayList<String> charGuessList = new ArrayList<String>();
 
+    public boolean isShutdown = false;
 
     public HangmanClientLogic(String username, String hostname, int port) {
 
@@ -46,7 +47,7 @@ public class HangmanClientLogic implements Runnable {
             out_server = new DataOutputStream(new BufferedOutputStream(server.getOutputStream()));
 
             //Get the GUI up...
-            hangman = new HangmanClientGUI("welcome " + username, this);
+            hangman = new HangmanClientGUI("Welcome " + username, this);
 
             //Tell the user to send the word to the client!
             setHangManImage(7);
@@ -75,7 +76,9 @@ public class HangmanClientLogic implements Runnable {
 
                         }
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        if(isShutdown){
+                            Thread.currentThread().interrupt();
+                        }
                     }
                 }
             }, 0, 1, TimeUnit.SECONDS);
@@ -179,6 +182,15 @@ public class HangmanClientLogic implements Runnable {
                 hangman.setImagePanel(new ImageIcon(IMAGE_DIR + File.separator + "lose.png"));
                 hangman.setAllFieldsEnabled(false);
                 break;
+        }
+    }
+
+    public void closeSockets() {
+        try {
+            isShutdown = true;
+            server.close();
+        } catch (IOException e) {
+
         }
     }
 

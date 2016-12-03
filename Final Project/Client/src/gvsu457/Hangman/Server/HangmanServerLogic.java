@@ -44,6 +44,8 @@ public class HangmanServerLogic implements Runnable {
     /*The socket which will maintain a connection*/
     public Socket socket;
 
+    public boolean isShutdown = false;
+
     @Override
     public void run() {
 
@@ -73,6 +75,7 @@ public class HangmanServerLogic implements Runnable {
 
             //set up the connection to the client...
             client_connection = new ServerSocket(port);
+            client_connection.setReuseAddress(true);
             socket = client_connection.accept();
 
             //set up the streams using the global socket.
@@ -203,6 +206,15 @@ public class HangmanServerLogic implements Runnable {
         }
         setDisplayForWordAndGuessList();
         return retVal;
+    }
+
+    public void closeSockets() {
+        try {
+            isShutdown = true;
+            socket.close();
+        } catch (IOException e) {
+
+        }
     }
 
 }

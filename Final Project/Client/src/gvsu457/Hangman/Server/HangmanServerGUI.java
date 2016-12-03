@@ -27,13 +27,21 @@ public class HangmanServerGUI extends JFrame implements ActionListener {
         super(username);
         this.hangmanServerLogic = hangmanServerLogic;
         setContentPane(mainPanel);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         letterList.setModel(listModel);
         setVisible(true);
         pack();
         setAllFieldsEnabled(false);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent event) {
+                hangmanServerLogic.closeSockets();
+                dispose();
+            }
+        });
         guessLetterButton.addActionListener(this);
     }
 

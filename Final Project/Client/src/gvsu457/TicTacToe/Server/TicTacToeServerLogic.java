@@ -34,6 +34,8 @@ public class TicTacToeServerLogic implements Runnable {
     /*The user interface*/
     public TicTacToeServerGUI ticTacToeServerGUI;
 
+    public boolean isShutdown = false;
+
     /*Shortcut for image directory*/
     public static String IMAGE_DIR = System.getProperty("user.dir") + File.separator + ".." + File.separator + "images";
 
@@ -42,6 +44,7 @@ public class TicTacToeServerLogic implements Runnable {
         //set up the connection to the client...
         try {
             client_connection = new ServerSocket(port);
+            client_connection.setReuseAddress(true);
             Socket socket = client_connection.accept();
 
             //set up the streams using the global socket.
@@ -84,7 +87,9 @@ public class TicTacToeServerLogic implements Runnable {
                         }
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    if(isShutdown){
+                        Thread.currentThread().interrupt();
+                    }
                 }
 
             }
@@ -192,4 +197,14 @@ public class TicTacToeServerLogic implements Runnable {
     public void run() {
 
     }
+
+    public void closeSockets() {
+        try {
+            isShutdown = true;
+            client_connection.close();
+        } catch (IOException e) {
+
+        }
+    }
+
 }

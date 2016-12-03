@@ -30,6 +30,8 @@ public class TicTacToeClientLogic implements Runnable {
     /*The actual game board used for determining if there is a winner*/
     private int[][] gameBoard;
 
+    public boolean isShutdown = false;
+
     /** Shortcut for image directory */
     public static String IMAGE_DIR = System.getProperty("user.dir") + File.separator + ".." + File.separator + "images";
 
@@ -75,9 +77,10 @@ public class TicTacToeClientLogic implements Runnable {
                             }
                         }
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        if(isShutdown){
+                            Thread.currentThread().interrupt();
+                        }
                     }
-
                 }
             }, 0, 1, TimeUnit.SECONDS);
 
@@ -187,4 +190,14 @@ public class TicTacToeClientLogic implements Runnable {
     public void run() {
 
     }
+
+    public void closeSockets() {
+        try {
+            isShutdown = true;
+            server.close();
+        } catch (IOException e) {
+
+        }
+    }
+
 }
