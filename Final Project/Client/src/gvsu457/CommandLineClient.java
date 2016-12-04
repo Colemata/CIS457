@@ -252,9 +252,9 @@ public class CommandLineClient {
                 BattleshipClientLogic battleshipClientLogic = new BattleshipClientLogic(username, otherPlayerIP, otherPlayerPort + PORT_OFFSET);
                 executorService.submit(battleshipClientLogic);
                 break;
-            case "minesweeper":
+            case "placeholder1":
                 break;
-            case "placeholder":
+            case "placeholder2":
                 break;
         }
     }
@@ -278,9 +278,9 @@ public class CommandLineClient {
                 BattleshipServerLogic battleshipServerLogic = new BattleshipServerLogic(LISTENING_PORT + PORT_OFFSET, username);
                 executorService.submit(battleshipServerLogic);
                 break;
-            case "minesweeper":
+            case "placeholder1":
                 break;
-            case "placeholder":
+            case "placeholder2":
                 break;
         }
     }
@@ -398,7 +398,7 @@ public class CommandLineClient {
         CommandParameterHashMap.put("h", "");
         CommandParameterHashMap.put("u", "");
         CommandParameterHashMap.put("connect", "<ip> <port>");
-        CommandParameterHashMap.put("quit", "");
+//        CommandParameterHashMap.put("quit", "");
         CommandParameterHashMap.put("games", "");
         CommandParameterHashMap.put("play", "<game number>");
         CommandParameterHashMap.put("remove", "<game number>");
@@ -409,7 +409,7 @@ public class CommandLineClient {
         CommandExplinationHashMap.put("h", "This is the command that will display the other commands.");
         CommandExplinationHashMap.put("u", "Allows the user to set their username once again.");
         CommandExplinationHashMap.put("connect", "Parameters: <ip> <port> | Allows the user to connect to a main game server.");
-        CommandExplinationHashMap.put("quit", "Quits the server session currently connected too.");
+//        CommandExplinationHashMap.put("quit", "Quits the server session currently connected too.");
         CommandExplinationHashMap.put("games", "Lists the games from the server.");
         CommandExplinationHashMap.put("play", "Parameters: <game number> | Allows the user to play a game of the specified number.");
         CommandExplinationHashMap.put("remove", "Parameters: <game number> | Allows the user to remove themselves from the game queue for the specified game number.");

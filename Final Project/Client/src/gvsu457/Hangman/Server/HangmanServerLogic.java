@@ -55,7 +55,11 @@ public class HangmanServerLogic implements Runnable {
         try {
             word = in_client.readUTF();
         } catch (IOException e) {
-            e.printStackTrace();
+            isShutdown = true;
+        }finally {
+            if(isShutdown){
+                Thread.currentThread().interrupt();
+            }
         }
 
         wordLength = word.length();

@@ -151,11 +151,11 @@ public class ServerThread implements Runnable {
                 break;
             case 3:
                 //minesweeper
-                AddUserToQueueForGame("minesweeper", username);
+                AddUserToQueueForGame("placeholder1", username);
                 break;
             case 4:
                 //placeholder
-                AddUserToQueueForGame("placeholder", username);
+                AddUserToQueueForGame("placeholder2", username);
                 break;
             case 5:
                 break;
@@ -480,8 +480,8 @@ public class ServerThread implements Runnable {
         GameList.add("tictactoe");
         GameList.add("hangman");
         GameList.add("battleship");
-        GameList.add("minesweeper");
-        GameList.add("placeholder");
+        GameList.add("placeholder1");
+        GameList.add("placeholder2");
 
 
     }

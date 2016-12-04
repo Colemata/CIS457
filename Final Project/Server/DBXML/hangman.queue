@@ -39,5 +39,14 @@
     
     
     
+    
+    
+    
+    
+    <player>
+            <name>coleman</name>
+            <ip>/127.0.0.1</ip>
+            <port>6729</port>
+        </player>
     </players>
 </data>

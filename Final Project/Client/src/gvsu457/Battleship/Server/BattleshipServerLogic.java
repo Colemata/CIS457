@@ -138,7 +138,11 @@ public class BattleshipServerLogic implements Runnable{
             bssgui.setOpponentGameArray(array);
             doneWithGettingBoard = true;
         } catch (IOException e) {
-            e.printStackTrace();
+            isShutdown = true;
+        }finally {
+            if(isShutdown){
+                Thread.currentThread().interrupt();
+            }
         }
     }
 
