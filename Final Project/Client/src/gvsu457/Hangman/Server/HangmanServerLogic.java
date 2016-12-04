@@ -145,6 +145,7 @@ public class HangmanServerLogic implements Runnable {
             case 6:
                 hangman.setImagePanel(new ImageIcon(IMAGE_DIR + File.separator + "6.png"));
 
+                sendWinOrLoss(false);
                 //The user has lost here, lock controls...
                 hangman.setAllFieldsEnabled(false);
 
@@ -157,10 +158,29 @@ public class HangmanServerLogic implements Runnable {
                 break;
             case 9:
                 hangman.setImagePanel(new ImageIcon(IMAGE_DIR + File.separator + "win.png"));
+                sendWinOrLoss(true);
+                hangman.setAllFieldsEnabled(false);
                 break;
             case 10:
                 hangman.setImagePanel(new ImageIcon(IMAGE_DIR + File.separator + "wait.png"));
+                hangman.setAllFieldsEnabled(false);
                 break;
+        }
+    }
+
+    private static void sendWinOrLoss(boolean wasWin) {
+        try {
+            if (wasWin) {
+                out_client.writeUTF("skip");
+                out_client.writeInt(9);
+                out_client.flush();
+            } else {
+                out_client.writeUTF("skip");
+                out_client.writeInt(6);
+                out_client.flush();
+            }
+        }catch (IOException e){
+
         }
     }
 
@@ -214,6 +234,12 @@ public class HangmanServerLogic implements Runnable {
             socket.close();
         } catch (IOException e) {
 
+        }finally {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

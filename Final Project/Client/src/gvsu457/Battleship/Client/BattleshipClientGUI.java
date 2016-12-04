@@ -452,7 +452,7 @@ public class BattleshipClientGUI extends JFrame implements ActionListener {
                 }
             }
         }
-        printGameBoard();
+        //printGameBoard();
     }
 
     private void CheckIfWeHaveSunkAnyOpponentShip() {

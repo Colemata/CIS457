@@ -56,6 +56,8 @@ public class HangmanServerGUI extends JFrame implements ActionListener {
         if (event == guessLetterButton) {
             if (guessLetterField.getText().length() > 1) {
                 JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "One character only please!");
+            } else if (guessLetterField.getText().length() == 0) {
+
             } else {
                 boolean addToList = hangmanServerLogic.guessLetter(guessLetterField.getText());
                 if (addToList) {
@@ -73,10 +75,6 @@ public class HangmanServerGUI extends JFrame implements ActionListener {
         guessLetterField.setEnabled(bool);
     }
 
-    public void setGuessingFieldsEnabled(boolean bool) {
-        guessLetterButton.setEnabled(bool);
-        guessLetterField.setEnabled(bool);
-    }
 
     public void setImagePanel(ImageIcon image) {
         imagePanel.setText("");

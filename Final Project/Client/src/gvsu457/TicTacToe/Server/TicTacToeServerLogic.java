@@ -58,11 +58,12 @@ public class TicTacToeServerLogic implements Runnable {
         //Bring up the ui.
         ticTacToeServerGUI = new TicTacToeServerGUI("Welcome " + username, this);
 
+        gameBoard = new int[3][3];
+
         //init the gameboard to all -1.
         for (int i = 0; i < 3; i++) {
             for (int k = 0; k < 3; k++) {
-                gameBoard = new int[3][3];
-                gameBoard[i][k] = -1;
+                gameBoard[i][k] = 0;
             }
         }
 
@@ -90,6 +91,10 @@ public class TicTacToeServerLogic implements Runnable {
                     if(isShutdown){
                         Thread.currentThread().interrupt();
                     }
+                }finally {
+                    if(isShutdown){
+                        Thread.currentThread().interrupt();
+                    }
                 }
 
             }
@@ -112,6 +117,10 @@ public class TicTacToeServerLogic implements Runnable {
      */
     public void setSpotForOtherPlayer(int x, int y) {
         gameBoard[x][y] = 1;
+    }
+
+    public int getValueForSpot(int row, int col){
+        return gameBoard[row][col];
     }
 
     /**

@@ -79,11 +79,6 @@ public class HangmanClientGUI extends JFrame implements ActionListener {
         defineWordField.setEnabled(bool);
     }
 
-    public void setGuessingFieldsEnabled(boolean bool) {
-        guessLetterButton.setEnabled(bool);
-        guessLetterField.setEnabled(bool);
-    }
-
     public void setImagePanel(ImageIcon image) {
         imagePanel.setText("");
         imagePanel.insertIcon(image);

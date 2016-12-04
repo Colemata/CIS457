@@ -54,6 +54,8 @@ public class CommandLineClient {
     /*The listening port for incoming connections from other clients*/
     private static int LISTENING_PORT = 6729;
 
+    private static int PORT_OFFSET = -1;
+
     /**
      * CommandLineClient method where all of our command line operations will happen.
      *
@@ -236,17 +238,18 @@ public class CommandLineClient {
      * @param otherPlayerIP the other players IP to connect to.
      */
     private static void StartClientVersionOfGame(String game, int otherPlayerPort, String otherPlayerIP) {
+        PORT_OFFSET++;
         switch (game) {
             case "tictactoe":
-                TicTacToeClientLogic ticTacToeClientLogic = new TicTacToeClientLogic(username, otherPlayerIP, otherPlayerPort);
+                TicTacToeClientLogic ticTacToeClientLogic = new TicTacToeClientLogic(username, otherPlayerIP, otherPlayerPort + PORT_OFFSET);
                 executorService.submit(ticTacToeClientLogic);
                 break;
             case "hangman":
-                HangmanClientLogic hangmanClientLogic = new HangmanClientLogic(username, otherPlayerIP, otherPlayerPort);
+                HangmanClientLogic hangmanClientLogic = new HangmanClientLogic(username, otherPlayerIP, otherPlayerPort + PORT_OFFSET);
                 executorService.submit(hangmanClientLogic);
                 break;
             case "battleship":
-                BattleshipClientLogic battleshipClientLogic = new BattleshipClientLogic(username, otherPlayerIP, otherPlayerPort);
+                BattleshipClientLogic battleshipClientLogic = new BattleshipClientLogic(username, otherPlayerIP, otherPlayerPort + PORT_OFFSET);
                 executorService.submit(battleshipClientLogic);
                 break;
             case "minesweeper":
@@ -261,17 +264,18 @@ public class CommandLineClient {
      * @param game the game to be played.
      */
     private static void StartServerVersionOfGame(String game) {
+        PORT_OFFSET++;
         switch (game) {
             case "tictactoe":
-                TicTacToeServerLogic ticTacToeServerLogic = new TicTacToeServerLogic(LISTENING_PORT, username);
+                TicTacToeServerLogic ticTacToeServerLogic = new TicTacToeServerLogic(LISTENING_PORT + PORT_OFFSET, username);
                 executorService.submit(ticTacToeServerLogic);
                 break;
             case "hangman":
-                HangmanServerLogic hangmanServerLogic = new HangmanServerLogic(LISTENING_PORT, username);
+                HangmanServerLogic hangmanServerLogic = new HangmanServerLogic(LISTENING_PORT + PORT_OFFSET, username);
                 executorService.submit(hangmanServerLogic);
                 break;
             case "battleship":
-                BattleshipServerLogic battleshipServerLogic = new BattleshipServerLogic(LISTENING_PORT, username);
+                BattleshipServerLogic battleshipServerLogic = new BattleshipServerLogic(LISTENING_PORT + PORT_OFFSET, username);
                 executorService.submit(battleshipServerLogic);
                 break;
             case "minesweeper":

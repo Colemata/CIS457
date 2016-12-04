@@ -78,6 +78,10 @@ public class BattleshipClientLogic implements Runnable {
                     if(isShutdown){
                         Thread.currentThread().interrupt();
                     }
+                }finally {
+                    if(isShutdown){
+                        Thread.currentThread().interrupt();
+                    }
                 }
 
             }

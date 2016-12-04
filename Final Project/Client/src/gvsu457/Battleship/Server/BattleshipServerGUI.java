@@ -454,7 +454,7 @@ public class BattleshipServerGUI extends JFrame implements ActionListener {
                 }
             }
         }
-        printGameBoard();
+        //printGameBoard();
 
     }
 

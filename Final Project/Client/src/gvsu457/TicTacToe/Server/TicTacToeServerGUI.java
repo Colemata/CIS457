@@ -52,8 +52,15 @@ public class TicTacToeServerGUI extends JFrame implements ActionListener {
 
             @Override
             public void windowClosing(WindowEvent event) {
-                ticTacToeServerLogic.closeSockets();
-                dispose();
+                try {
+                    ticTacToeServerLogic.closeSockets();
+                    dispose();
+                } catch (NullPointerException ex) {
+                    ex.printStackTrace();
+                } finally {
+                    dispose();
+                }
+
             }
         });
 
@@ -81,41 +88,59 @@ public class TicTacToeServerGUI extends JFrame implements ActionListener {
         JComponent event = (JComponent) e.getSource();
 
         if (event == button1) {
-            ticTacToeServerLogic.setSpotForUser(0, 0);
-            ticTacToeServerLogic.sendDataToOtherPlayer(1);
-            button1.setIcon(new ImageIcon(oImg));
+            if (ticTacToeServerLogic.getValueForSpot(0, 0) == 0) {
+                ticTacToeServerLogic.setSpotForUser(0, 0);
+                ticTacToeServerLogic.sendDataToOtherPlayer(1);
+                button1.setIcon(new ImageIcon(oImg));
+            }
         } else if (event == button2) {
-            ticTacToeServerLogic.setSpotForUser(0, 1);
-            ticTacToeServerLogic.sendDataToOtherPlayer(2);
-            button2.setIcon(new ImageIcon(oImg));
+            if (ticTacToeServerLogic.getValueForSpot(0, 1) == 0) {
+                ticTacToeServerLogic.setSpotForUser(0, 1);
+                ticTacToeServerLogic.sendDataToOtherPlayer(2);
+                button2.setIcon(new ImageIcon(oImg));
+            }
         } else if (event == button3) {
-            ticTacToeServerLogic.setSpotForUser(0, 2);
-            ticTacToeServerLogic.sendDataToOtherPlayer(3);
-            button3.setIcon(new ImageIcon(oImg));
+            if (ticTacToeServerLogic.getValueForSpot(0, 2) == 0) {
+                ticTacToeServerLogic.setSpotForUser(0, 2);
+                ticTacToeServerLogic.sendDataToOtherPlayer(3);
+                button3.setIcon(new ImageIcon(oImg));
+            }
         } else if (event == button4) {
-            ticTacToeServerLogic.setSpotForUser(1, 0);
-            ticTacToeServerLogic.sendDataToOtherPlayer(4);
-            button4.setIcon(new ImageIcon(oImg));
+            if (ticTacToeServerLogic.getValueForSpot(1, 0) == 0) {
+                ticTacToeServerLogic.setSpotForUser(1, 0);
+                ticTacToeServerLogic.sendDataToOtherPlayer(4);
+                button4.setIcon(new ImageIcon(oImg));
+            }
         } else if (event == button5) {
-            ticTacToeServerLogic.setSpotForUser(1, 1);
-            ticTacToeServerLogic.sendDataToOtherPlayer(5);
-            button5.setIcon(new ImageIcon(oImg));
+            if (ticTacToeServerLogic.getValueForSpot(1, 1) == 0) {
+                ticTacToeServerLogic.setSpotForUser(1, 1);
+                ticTacToeServerLogic.sendDataToOtherPlayer(5);
+                button5.setIcon(new ImageIcon(oImg));
+            }
         } else if (event == button6) {
-            ticTacToeServerLogic.setSpotForUser(1, 2);
-            ticTacToeServerLogic.sendDataToOtherPlayer(6);
-            button6.setIcon(new ImageIcon(oImg));
+            if (ticTacToeServerLogic.getValueForSpot(1, 2) == 0) {
+                ticTacToeServerLogic.setSpotForUser(1, 2);
+                ticTacToeServerLogic.sendDataToOtherPlayer(6);
+                button6.setIcon(new ImageIcon(oImg));
+            }
         } else if (event == button7) {
-            ticTacToeServerLogic.setSpotForUser(2, 0);
-            ticTacToeServerLogic.sendDataToOtherPlayer(7);
-            button7.setIcon(new ImageIcon(oImg));
+            if (ticTacToeServerLogic.getValueForSpot(2, 0) == 0) {
+                ticTacToeServerLogic.setSpotForUser(2, 0);
+                ticTacToeServerLogic.sendDataToOtherPlayer(7);
+                button7.setIcon(new ImageIcon(oImg));
+            }
         } else if (event == button8) {
-            ticTacToeServerLogic.setSpotForUser(2, 1);
-            ticTacToeServerLogic.sendDataToOtherPlayer(8);
-            button8.setIcon(new ImageIcon(oImg));
+            if (ticTacToeServerLogic.getValueForSpot(2, 1) == 0) {
+                ticTacToeServerLogic.setSpotForUser(2, 1);
+                ticTacToeServerLogic.sendDataToOtherPlayer(8);
+                button8.setIcon(new ImageIcon(oImg));
+            }
         } else if (event == button9) {
-            ticTacToeServerLogic.setSpotForUser(2, 2);
-            ticTacToeServerLogic.sendDataToOtherPlayer(9);
-            button9.setIcon(new ImageIcon(oImg));
+            if (ticTacToeServerLogic.getValueForSpot(2, 2) == 0) {
+                ticTacToeServerLogic.setSpotForUser(2, 2);
+                ticTacToeServerLogic.sendDataToOtherPlayer(9);
+                button9.setIcon(new ImageIcon(oImg));
+            }
         }
     }
 

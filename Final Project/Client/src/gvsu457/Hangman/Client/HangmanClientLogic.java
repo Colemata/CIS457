@@ -62,9 +62,11 @@ public class HangmanClientLogic implements Runnable {
                         //Check if there has been any input from the server every 1 second.
                         if (in_server.available() > 0) {
                             String guess = in_server.readUTF();
-                            charGuessList.add(guess);
-                            hangman.addElementToListModel(guess);
-                            setDisplayForWordAndGuessList();
+                            if(!guess.equalsIgnoreCase("skip")) {
+                                charGuessList.add(guess);
+                                hangman.addElementToListModel(guess);
+                                setDisplayForWordAndGuessList();
+                            }
                             int numToShow = in_server.readInt();
                             if (numToShow == 9) {
                                 numToShow++;
@@ -73,9 +75,12 @@ public class HangmanClientLogic implements Runnable {
                                 numToShow = 9;
                             }
                             setHangManImage(numToShow);
-
                         }
                     } catch (IOException e) {
+                        if(isShutdown){
+                            Thread.currentThread().interrupt();
+                        }
+                    }finally {
                         if(isShutdown){
                             Thread.currentThread().interrupt();
                         }
