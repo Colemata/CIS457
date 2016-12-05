@@ -1,52 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <data>
-	<players>
-	
+	<players> 
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <player>
-            <name>coleman</name>
-            <ip>/127.0.0.1</ip>
-            <port>6729</port>
-        </player>
     </players>
 </data>

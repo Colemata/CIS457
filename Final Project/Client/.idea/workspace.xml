@@ -1,33 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="Client:jar" />
+    </artifacts-to-build>
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="6f710c21-2cce-4d28-b71f-96f2436cda76" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Server/DBXML/asdadsdads.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Server/DBXML/asdasdasd.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Server/DBXML/asdfasfsd.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Server/DBXML/asdfsadfsadf.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Server/DBXML/asdgfkjadshfgkjdsgfh.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Server/DBXML/dfasadafs.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Server/DBXML/dsfghldkfsgjhdfsg.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Server/DBXML/sadflkhjsdaflh.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Server/DBXML/sadfsadfsd.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Server/DBXML/sadfsafasfd.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Server/DBXML/sdafkjhdsgflkjhdfsg.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Server/DBXML/sdasadkfljhsadf.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Server/DBXML/tartyrwty.xml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Battleship/Server/BattleshipServerLogic.class" afterPath="$PROJECT_DIR$/out/production/Client/gvsu457/Battleship/Server/BattleshipServerLogic.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/CommandLineClient.class" afterPath="$PROJECT_DIR$/out/production/Client/gvsu457/CommandLineClient.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Client/gvsu457/Hangman/Server/HangmanServerLogic.class" afterPath="$PROJECT_DIR$/out/production/Client/gvsu457/Hangman/Server/HangmanServerLogic.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Server/out/production/Server/gvsu457/ServerThread.class" afterPath="$PROJECT_DIR$/../Server/out/production/Server/gvsu457/ServerThread.class" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../Server/DBXML/coleman.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../Server/DBXML/minesweeper.queue" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../Server/DBXML/placeholder.queue" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../Server/DBXML/taylor.xml" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/gvsu457/Battleship/Server/BattleshipServerLogic.java" afterPath="$PROJECT_DIR$/src/gvsu457/Battleship/Server/BattleshipServerLogic.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/gvsu457/CommandLineClient.java" afterPath="$PROJECT_DIR$/src/gvsu457/CommandLineClient.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/gvsu457/Hangman/Server/HangmanServerLogic.java" afterPath="$PROJECT_DIR$/src/gvsu457/Hangman/Server/HangmanServerLogic.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Server/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../Server/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Server/DBXML/battleship.queue" afterPath="$PROJECT_DIR$/../Server/DBXML/battleship.queue" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Server/DBXML/hangman.queue" afterPath="$PROJECT_DIR$/../Server/DBXML/hangman.queue" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Server/DBXML/tictactoe.queue" afterPath="$PROJECT_DIR$/../Server/DBXML/tictactoe.queue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Server/src/gvsu457/ServerThread.java" afterPath="$PROJECT_DIR$/../Server/src/gvsu457/ServerThread.java" />
     </list>
     <ignored path="Client.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -52,8 +40,8 @@
       <file leaf-file-name="CommandLineClient.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/gvsu457/CommandLineClient.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="400" column="0" lean-forward="false" selection-start-line="400" selection-start-column="2" selection-end-line="400" selection-end-column="50" />
+            <state relative-caret-position="5820">
+              <caret line="400" column="0" lean-forward="false" selection-start-line="400" selection-start-column="0" selection-end-line="400" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -63,7 +51,7 @@
         <entry file="file://$PROJECT_DIR$/src/gvsu457/Hangman/Server/HangmanServerLogic.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="222">
-              <caret line="57" column="30" lean-forward="true" selection-start-line="57" selection-start-column="30" selection-end-line="57" selection-end-column="30" />
+              <caret line="57" column="30" lean-forward="false" selection-start-line="57" selection-start-column="30" selection-end-line="57" selection-end-column="30" />
               <folding />
             </state>
           </provider>
@@ -147,8 +135,8 @@
         <option value="$PROJECT_DIR$/src/gvsu457/TicTacToe/Client/TicTacToeClientLogic.java" />
         <option value="$PROJECT_DIR$/src/gvsu457/TicTacToe/Server/TicTacToeServerLogic.java" />
         <option value="$PROJECT_DIR$/src/gvsu457/Battleship/Server/BattleshipServerLogic.java" />
-        <option value="$PROJECT_DIR$/src/gvsu457/Hangman/Server/HangmanServerLogic.java" />
         <option value="$PROJECT_DIR$/src/gvsu457/CommandLineClient.java" />
+        <option value="$PROJECT_DIR$/src/gvsu457/Hangman/Server/HangmanServerLogic.java" />
       </list>
     </option>
   </component>
@@ -160,10 +148,10 @@
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="-4" />
-    <option name="y" value="-4" />
-    <option name="width" value="1928" />
-    <option name="height" value="1044" />
+    <option name="x" value="65" />
+    <option name="y" value="52" />
+    <option name="width" value="1167" />
+    <option name="height" value="1028" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -208,6 +196,20 @@
               <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Client" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Client" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="gvsu457" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
@@ -215,9 +217,9 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
       <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -638,13 +640,6 @@
       <envs />
       <method />
     </configuration>
-    <configuration default="true" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
-      <TestRunner />
-      <method />
-    </configuration>
-    <configuration default="true" type="PhpLocalRunConfigurationType" factoryName="PHP Console">
-      <method />
-    </configuration>
     <configuration default="true" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <module name="" />
@@ -776,20 +771,21 @@
       <workItem from="1480805221604" duration="5337000" />
       <workItem from="1480816558515" duration="69000" />
       <workItem from="1480884150133" duration="4097000" />
+      <workItem from="1480891075787" duration="88000" />
+      <workItem from="1480947307521" duration="10000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="143598000" />
+    <option name="totallyTimeSpent" value="143696000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-4" y="-4" width="1928" height="1044" extended-state="6" />
-    <editor active="true" />
+    <frame x="65" y="52" width="1167" height="1028" extended-state="4" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32756758" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -801,7 +797,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17412141" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2159383" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -814,6 +810,7 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24973376" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection Results" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3293348" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32756758" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32756758" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
@@ -900,13 +897,7 @@
     <entry file="file://$PROJECT_DIR$/src/gvsu457/Tic2/TicTacToeClientGUI.form" />
     <entry file="file://$PROJECT_DIR$/src/gvsu457/Tic2/TicTacToeClientLogic.java" />
     <entry file="file://$PROJECT_DIR$/src/gvsu457/Tic2/TicTacToeClientGUI.java" />
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_73/src.zip!/javax/imageio/ImageIO.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="194">
-          <caret line="1387" column="0" lean-forward="false" selection-start-line="1387" selection-start-column="0" selection-end-line="1387" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_73/src.zip!/javax/imageio/ImageIO.java" />
     <entry file="file://$PROJECT_DIR$/src/gvsu457/Tic2/Client/TicTacToeClientGUI.form" />
     <entry file="file://$PROJECT_DIR$/src/gvsu457/Tic2/Server/TicTacToeServerGUI.form" />
     <entry file="file://$PROJECT_DIR$/src/gvsu457/Tic2/Client/TicTacToeClientLogic.java" />
@@ -914,13 +905,7 @@
     <entry file="file://$PROJECT_DIR$/src/gvsu457/Tic2/Server/TicTacToeServerGUI.java" />
     <entry file="file://$PROJECT_DIR$/src/gvsu457/Tic2/Server/TicTacToeServerLogic.java" />
     <entry file="file://$PROJECT_DIR$/src/gvsu457/TicTacToe/TicTacToeGUI.java" />
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_73/src.zip!/java/net/InetSocketAddress.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="197">
-          <caret line="142" column="0" lean-forward="false" selection-start-line="142" selection-start-column="0" selection-end-line="142" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_73/src.zip!/java/net/InetSocketAddress.java" />
     <entry file="file://$PROJECT_DIR$/src/gvsu457/Battleship/BattleShipClientGUI.java" />
     <entry file="file://$PROJECT_DIR$/src/gvsu457/Battleship/BattleShipClientGUI.form" />
     <entry file="file://$PROJECT_DIR$/src/gvsu457/NotInUseClasses/IssueClientConnectionForGameMatch.java">
@@ -957,13 +942,7 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/gvsu457/Battleship/asd.java" />
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_73/src.zip!/java/awt/Container.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="1126" column="0" lean-forward="false" selection-start-line="1126" selection-start-column="0" selection-end-line="1126" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_73/src.zip!/java/awt/Container.java" />
     <entry file="file://$PROJECT_DIR$/src/gvsu457/Hangman/Server/HangmanServerGUI.form">
       <provider editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1040,15 +1019,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1377">
           <caret line="93" column="53" lean-forward="false" selection-start-line="93" selection-start-column="53" selection-end-line="93" selection-end-column="53" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#1640#2049#0" expanded="false" />
-            <element signature="e#2048#2049#0" expanded="false" />
-            <element signature="initializer##0;class#TicTacToeServerGUI#0" expanded="false" />
-            <element signature="initializer##0;class#TicTacToeServerGUI#0" expanded="false" />
-            <element signature="e#11717#11718#0" expanded="false" />
-            <element signature="e#11746#11747#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1082,26 +1052,11 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="324">
           <caret line="91" column="58" lean-forward="false" selection-start-line="91" selection-start-column="58" selection-end-line="91" selection-end-column="58" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_73/src.zip!/javax/swing/plaf/basic/BasicButtonListener.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="199">
-          <caret line="251" column="0" lean-forward="false" selection-start-line="251" selection-start-column="0" selection-end-line="251" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_73/src.zip!/java/io/DataInputStream.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="191">
-          <caret line="391" column="0" lean-forward="false" selection-start-line="391" selection-start-column="0" selection-end-line="391" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_73/src.zip!/javax/swing/plaf/basic/BasicButtonListener.java" />
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_73/src.zip!/java/io/DataInputStream.java" />
     <entry file="file://$PROJECT_DIR$/src/gvsu457/Hangman/Client/HangmanClientLogic.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="273">
@@ -1122,7 +1077,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="191">
           <caret line="436" column="0" lean-forward="false" selection-start-line="436" selection-start-column="0" selection-end-line="436" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1136,7 +1090,7 @@
           </nodes>
           <notes />
           <edges />
-          <settings layout="Hierarchic Group" zoom="1.0" x="63.5" y="15.0" />
+          <settings layout="Hierarchic Group" zoom="1.0" x="64.0" y="15.0" />
           <SelectedNodes />
           <Categories />
           <SCOPE>All</SCOPE>
@@ -1172,7 +1126,7 @@
           </nodes>
           <notes />
           <edges />
-          <settings layout="Hierarchic Group" zoom="1.0" x="454.0" y="217.5" />
+          <settings layout="Hierarchic Group" zoom="1.0" x="454.0" y="218.0" />
           <SelectedNodes />
           <Categories />
           <SCOPE>All</SCOPE>
@@ -1182,8 +1136,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/gvsu457/CommandLineClient.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="400" column="0" lean-forward="false" selection-start-line="400" selection-start-column="2" selection-end-line="400" selection-end-column="50" />
+        <state relative-caret-position="5820">
+          <caret line="400" column="0" lean-forward="false" selection-start-line="400" selection-start-column="0" selection-end-line="400" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1191,7 +1145,7 @@
     <entry file="file://$PROJECT_DIR$/src/gvsu457/Hangman/Server/HangmanServerLogic.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="222">
-          <caret line="57" column="30" lean-forward="true" selection-start-line="57" selection-start-column="30" selection-end-line="57" selection-end-column="30" />
+          <caret line="57" column="30" lean-forward="false" selection-start-line="57" selection-start-column="30" selection-end-line="57" selection-end-column="30" />
           <folding />
         </state>
       </provider>
